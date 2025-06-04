@@ -20,8 +20,8 @@
 
 'use strict';
 
-function main() {
-  // [START container_v1beta1_generated_ClusterManager_CompleteIPRotation_async]
+function main(name) {
+  // [START container_v1_generated_ClusterManager_FetchNodePoolUpgradeInfo_async]
   /**
    * This snippet has been automatically generated and should be regarded as a code template only.
    * It will require modifications to work.
@@ -29,29 +29,36 @@ function main() {
    * TODO(developer): Uncomment these variables before running the sample.
    */
   /**
-   *  The name (project, location, cluster name) of the cluster to complete IP
-   *  rotation. Specified in the format `projects/* /locations/* /clusters/*`.
+   *  Required. The name (project, location, cluster, nodepool) of the nodepool
+   *  to get. Specified in the format
+   *  `projects/* /locations/* /clusters/* /nodePools/*` or
+   *  `projects/* /zones/* /clusters/* /nodePools/*`.
    */
   // const name = 'abc123'
+  /**
+   *  API request version that initiates this operation.
+   */
+  // const version = 'abc123'
 
   // Imports the Container library
-  const {ClusterManagerClient} = require('@google-cloud/container').v1beta1;
+  const {ClusterManagerClient} = require('@google-cloud/container').v1;
 
   // Instantiates a client
   const containerClient = new ClusterManagerClient();
 
-  async function callCompleteIPRotation() {
+  async function callFetchNodePoolUpgradeInfo() {
     // Construct request
     const request = {
+      name,
     };
 
     // Run request
-    const response = await containerClient.completeIPRotation(request);
+    const response = await containerClient.fetchNodePoolUpgradeInfo(request);
     console.log(response);
   }
 
-  callCompleteIPRotation();
-  // [END container_v1beta1_generated_ClusterManager_CompleteIPRotation_async]
+  callFetchNodePoolUpgradeInfo();
+  // [END container_v1_generated_ClusterManager_FetchNodePoolUpgradeInfo_async]
 }
 
 process.on('unhandledRejection', err => {
