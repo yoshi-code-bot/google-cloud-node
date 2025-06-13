@@ -20,8 +20,8 @@
 
 'use strict';
 
-function main(subproperty) {
-  // [START analyticsadmin_v1alpha_generated_AnalyticsAdminService_ProvisionSubproperty_async]
+function main(parent) {
+  // [START analyticsadmin_v1alpha_generated_AnalyticsAdminService_ListSubpropertySyncConfigs_async]
   /**
    * This snippet has been automatically generated and should be regarded as a code template only.
    * It will require modifications to work.
@@ -29,18 +29,26 @@ function main(subproperty) {
    * TODO(developer): Uncomment these variables before running the sample.
    */
   /**
-   *  Required. The subproperty to create.
+   *  Required. Resource name of the property.
+   *  Format: properties/property_id
+   *  Example: properties/123
    */
-  // const subproperty = {}
+  // const parent = 'abc123'
   /**
-   *  Optional. The subproperty event filter to create on an ordinary property.
+   *  Optional. The maximum number of resources to return. The service may return
+   *  fewer than this value, even if there are additional pages. If unspecified,
+   *  at most 50 resources will be returned. The maximum value is 200; (higher
+   *  values will be coerced to the maximum)
    */
-  // const subpropertyEventFilter = {}
+  // const pageSize = 1234
   /**
-   *  Optional. The subproperty feature synchronization mode for Custom
-   *  Dimensions and Metrics
+   *  Optional. A page token, received from a previous
+   *  `ListSubpropertySyncConfig` call. Provide this to retrieve the subsequent
+   *  page. When paginating, all other parameters provided to
+   *  `ListSubpropertySyncConfig` must match the call that provided the page
+   *  token.
    */
-  // const customDimensionAndMetricSynchronizationMode = {}
+  // const pageToken = 'abc123'
 
   // Imports the Admin library
   const {AnalyticsAdminServiceClient} = require('@google-analytics/admin').v1alpha;
@@ -48,19 +56,21 @@ function main(subproperty) {
   // Instantiates a client
   const adminClient = new AnalyticsAdminServiceClient();
 
-  async function callProvisionSubproperty() {
+  async function callListSubpropertySyncConfigs() {
     // Construct request
     const request = {
-      subproperty,
+      parent,
     };
 
     // Run request
-    const response = await adminClient.provisionSubproperty(request);
-    console.log(response);
+    const iterable = adminClient.listSubpropertySyncConfigsAsync(request);
+    for await (const response of iterable) {
+        console.log(response);
+    }
   }
 
-  callProvisionSubproperty();
-  // [END analyticsadmin_v1alpha_generated_AnalyticsAdminService_ProvisionSubproperty_async]
+  callListSubpropertySyncConfigs();
+  // [END analyticsadmin_v1alpha_generated_AnalyticsAdminService_ListSubpropertySyncConfigs_async]
 }
 
 process.on('unhandledRejection', err => {

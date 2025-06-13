@@ -20,8 +20,8 @@
 
 'use strict';
 
-function main(subproperty) {
-  // [START analyticsadmin_v1alpha_generated_AnalyticsAdminService_ProvisionSubproperty_async]
+function main(subpropertySyncConfig) {
+  // [START analyticsadmin_v1alpha_generated_AnalyticsAdminService_UpdateSubpropertySyncConfig_async]
   /**
    * This snippet has been automatically generated and should be regarded as a code template only.
    * It will require modifications to work.
@@ -29,18 +29,16 @@ function main(subproperty) {
    * TODO(developer): Uncomment these variables before running the sample.
    */
   /**
-   *  Required. The subproperty to create.
+   *  Required. The SubpropertySyncConfig to update.
    */
-  // const subproperty = {}
+  // const subpropertySyncConfig = {}
   /**
-   *  Optional. The subproperty event filter to create on an ordinary property.
+   *  Optional. The list of fields to update. Field names must be in snake case
+   *  (for example, "field_to_update"). Omitted fields will not be updated. To
+   *  replace the entire entity, use one path with the string "*" to match all
+   *  fields.
    */
-  // const subpropertyEventFilter = {}
-  /**
-   *  Optional. The subproperty feature synchronization mode for Custom
-   *  Dimensions and Metrics
-   */
-  // const customDimensionAndMetricSynchronizationMode = {}
+  // const updateMask = {}
 
   // Imports the Admin library
   const {AnalyticsAdminServiceClient} = require('@google-analytics/admin').v1alpha;
@@ -48,19 +46,19 @@ function main(subproperty) {
   // Instantiates a client
   const adminClient = new AnalyticsAdminServiceClient();
 
-  async function callProvisionSubproperty() {
+  async function callUpdateSubpropertySyncConfig() {
     // Construct request
     const request = {
-      subproperty,
+      subpropertySyncConfig,
     };
 
     // Run request
-    const response = await adminClient.provisionSubproperty(request);
+    const response = await adminClient.updateSubpropertySyncConfig(request);
     console.log(response);
   }
 
-  callProvisionSubproperty();
-  // [END analyticsadmin_v1alpha_generated_AnalyticsAdminService_ProvisionSubproperty_async]
+  callUpdateSubpropertySyncConfig();
+  // [END analyticsadmin_v1alpha_generated_AnalyticsAdminService_UpdateSubpropertySyncConfig_async]
 }
 
 process.on('unhandledRejection', err => {

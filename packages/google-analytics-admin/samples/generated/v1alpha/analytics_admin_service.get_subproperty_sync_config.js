@@ -20,8 +20,8 @@
 
 'use strict';
 
-function main(subproperty) {
-  // [START analyticsadmin_v1alpha_generated_AnalyticsAdminService_ProvisionSubproperty_async]
+function main(name) {
+  // [START analyticsadmin_v1alpha_generated_AnalyticsAdminService_GetSubpropertySyncConfig_async]
   /**
    * This snippet has been automatically generated and should be regarded as a code template only.
    * It will require modifications to work.
@@ -29,18 +29,12 @@ function main(subproperty) {
    * TODO(developer): Uncomment these variables before running the sample.
    */
   /**
-   *  Required. The subproperty to create.
+   *  Required. Resource name of the SubpropertySyncConfig to lookup.
+   *  Format:
+   *  properties/{ordinary_property_id}/subpropertySyncConfigs/{subproperty_id}
+   *  Example: properties/1234/subpropertySyncConfigs/5678
    */
-  // const subproperty = {}
-  /**
-   *  Optional. The subproperty event filter to create on an ordinary property.
-   */
-  // const subpropertyEventFilter = {}
-  /**
-   *  Optional. The subproperty feature synchronization mode for Custom
-   *  Dimensions and Metrics
-   */
-  // const customDimensionAndMetricSynchronizationMode = {}
+  // const name = 'abc123'
 
   // Imports the Admin library
   const {AnalyticsAdminServiceClient} = require('@google-analytics/admin').v1alpha;
@@ -48,19 +42,19 @@ function main(subproperty) {
   // Instantiates a client
   const adminClient = new AnalyticsAdminServiceClient();
 
-  async function callProvisionSubproperty() {
+  async function callGetSubpropertySyncConfig() {
     // Construct request
     const request = {
-      subproperty,
+      name,
     };
 
     // Run request
-    const response = await adminClient.provisionSubproperty(request);
+    const response = await adminClient.getSubpropertySyncConfig(request);
     console.log(response);
   }
 
-  callProvisionSubproperty();
-  // [END analyticsadmin_v1alpha_generated_AnalyticsAdminService_ProvisionSubproperty_async]
+  callGetSubpropertySyncConfig();
+  // [END analyticsadmin_v1alpha_generated_AnalyticsAdminService_GetSubpropertySyncConfig_async]
 }
 
 process.on('unhandledRejection', err => {
