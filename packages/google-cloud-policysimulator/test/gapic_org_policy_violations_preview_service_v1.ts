@@ -21,7 +21,7 @@ import * as assert from 'assert';
 import * as sinon from 'sinon';
 import {SinonStub} from 'sinon';
 import {describe, it} from 'mocha';
-import * as simulatorModule from '../src';
+import * as orgpolicyviolationspreviewserviceModule from '../src';
 
 import {PassThrough} from 'stream';
 
@@ -115,16 +115,16 @@ function stubAsyncIterationCall<ResponseType>(responses?: ResponseType[], error?
     return sinon.stub().returns(asyncIterable);
 }
 
-describe('v1.SimulatorClient', () => {
+describe('v1.OrgPolicyViolationsPreviewServiceClient', () => {
     describe('Common methods', () => {
         it('has apiEndpoint', () => {
-            const client = new simulatorModule.v1.SimulatorClient();
+            const client = new orgpolicyviolationspreviewserviceModule.v1.OrgPolicyViolationsPreviewServiceClient();
             const apiEndpoint = client.apiEndpoint;
             assert.strictEqual(apiEndpoint, 'policysimulator.googleapis.com');
         });
 
         it('has universeDomain', () => {
-            const client = new simulatorModule.v1.SimulatorClient();
+            const client = new orgpolicyviolationspreviewserviceModule.v1.OrgPolicyViolationsPreviewServiceClient();
             const universeDomain = client.universeDomain;
             assert.strictEqual(universeDomain, "googleapis.com");
         });
@@ -132,7 +132,7 @@ describe('v1.SimulatorClient', () => {
         if (typeof process === 'object' && typeof process.emitWarning === 'function') {
             it('throws DeprecationWarning if static servicePath is used', () => {
                 const stub = sinon.stub(process, 'emitWarning');
-                const servicePath = simulatorModule.v1.SimulatorClient.servicePath;
+                const servicePath = orgpolicyviolationspreviewserviceModule.v1.OrgPolicyViolationsPreviewServiceClient.servicePath;
                 assert.strictEqual(servicePath, 'policysimulator.googleapis.com');
                 assert(stub.called);
                 stub.restore();
@@ -140,20 +140,20 @@ describe('v1.SimulatorClient', () => {
 
             it('throws DeprecationWarning if static apiEndpoint is used', () => {
                 const stub = sinon.stub(process, 'emitWarning');
-                const apiEndpoint = simulatorModule.v1.SimulatorClient.apiEndpoint;
+                const apiEndpoint = orgpolicyviolationspreviewserviceModule.v1.OrgPolicyViolationsPreviewServiceClient.apiEndpoint;
                 assert.strictEqual(apiEndpoint, 'policysimulator.googleapis.com');
                 assert(stub.called);
                 stub.restore();
             });
         }
         it('sets apiEndpoint according to universe domain camelCase', () => {
-            const client = new simulatorModule.v1.SimulatorClient({universeDomain: 'example.com'});
+            const client = new orgpolicyviolationspreviewserviceModule.v1.OrgPolicyViolationsPreviewServiceClient({universeDomain: 'example.com'});
             const servicePath = client.apiEndpoint;
             assert.strictEqual(servicePath, 'policysimulator.example.com');
         });
 
         it('sets apiEndpoint according to universe domain snakeCase', () => {
-            const client = new simulatorModule.v1.SimulatorClient({universe_domain: 'example.com'});
+            const client = new orgpolicyviolationspreviewserviceModule.v1.OrgPolicyViolationsPreviewServiceClient({universe_domain: 'example.com'});
             const servicePath = client.apiEndpoint;
             assert.strictEqual(servicePath, 'policysimulator.example.com');
         });
@@ -163,7 +163,7 @@ describe('v1.SimulatorClient', () => {
                 it('sets apiEndpoint from environment variable', () => {
                     const saved = process.env['GOOGLE_CLOUD_UNIVERSE_DOMAIN'];
                     process.env['GOOGLE_CLOUD_UNIVERSE_DOMAIN'] = 'example.com';
-                    const client = new simulatorModule.v1.SimulatorClient();
+                    const client = new orgpolicyviolationspreviewserviceModule.v1.OrgPolicyViolationsPreviewServiceClient();
                     const servicePath = client.apiEndpoint;
                     assert.strictEqual(servicePath, 'policysimulator.example.com');
                     if (saved) {
@@ -176,7 +176,7 @@ describe('v1.SimulatorClient', () => {
                 it('value configured in code has priority over environment variable', () => {
                     const saved = process.env['GOOGLE_CLOUD_UNIVERSE_DOMAIN'];
                     process.env['GOOGLE_CLOUD_UNIVERSE_DOMAIN'] = 'example.com';
-                    const client = new simulatorModule.v1.SimulatorClient({universeDomain: 'configured.example.com'});
+                    const client = new orgpolicyviolationspreviewserviceModule.v1.OrgPolicyViolationsPreviewServiceClient({universeDomain: 'configured.example.com'});
                     const servicePath = client.apiEndpoint;
                     assert.strictEqual(servicePath, 'policysimulator.configured.example.com');
                     if (saved) {
@@ -188,55 +188,55 @@ describe('v1.SimulatorClient', () => {
             });
         }
         it('does not allow setting both universeDomain and universe_domain', () => {
-            assert.throws(() => { new simulatorModule.v1.SimulatorClient({universe_domain: 'example.com', universeDomain: 'example.net'}); });
+            assert.throws(() => { new orgpolicyviolationspreviewserviceModule.v1.OrgPolicyViolationsPreviewServiceClient({universe_domain: 'example.com', universeDomain: 'example.net'}); });
         });
 
         it('has port', () => {
-            const port = simulatorModule.v1.SimulatorClient.port;
+            const port = orgpolicyviolationspreviewserviceModule.v1.OrgPolicyViolationsPreviewServiceClient.port;
             assert(port);
             assert(typeof port === 'number');
         });
 
         it('should create a client with no option', () => {
-            const client = new simulatorModule.v1.SimulatorClient();
+            const client = new orgpolicyviolationspreviewserviceModule.v1.OrgPolicyViolationsPreviewServiceClient();
             assert(client);
         });
 
         it('should create a client with gRPC fallback', () => {
-            const client = new simulatorModule.v1.SimulatorClient({
+            const client = new orgpolicyviolationspreviewserviceModule.v1.OrgPolicyViolationsPreviewServiceClient({
                 fallback: true,
             });
             assert(client);
         });
 
         it('has initialize method and supports deferred initialization', async () => {
-            const client = new simulatorModule.v1.SimulatorClient({
+            const client = new orgpolicyviolationspreviewserviceModule.v1.OrgPolicyViolationsPreviewServiceClient({
               credentials: {client_email: 'bogus', private_key: 'bogus'},
               projectId: 'bogus',
             });
-            assert.strictEqual(client.simulatorStub, undefined);
+            assert.strictEqual(client.orgPolicyViolationsPreviewServiceStub, undefined);
             await client.initialize();
-            assert(client.simulatorStub);
+            assert(client.orgPolicyViolationsPreviewServiceStub);
         });
 
         it('has close method for the initialized client', done => {
-            const client = new simulatorModule.v1.SimulatorClient({
+            const client = new orgpolicyviolationspreviewserviceModule.v1.OrgPolicyViolationsPreviewServiceClient({
               credentials: {client_email: 'bogus', private_key: 'bogus'},
               projectId: 'bogus',
             });
             client.initialize().catch(err => {throw err});
-            assert(client.simulatorStub);
+            assert(client.orgPolicyViolationsPreviewServiceStub);
             client.close().then(() => {
                 done();
             }).catch(err => {throw err});
         });
 
         it('has close method for the non-initialized client', done => {
-            const client = new simulatorModule.v1.SimulatorClient({
+            const client = new orgpolicyviolationspreviewserviceModule.v1.OrgPolicyViolationsPreviewServiceClient({
               credentials: {client_email: 'bogus', private_key: 'bogus'},
               projectId: 'bogus',
             });
-            assert.strictEqual(client.simulatorStub, undefined);
+            assert.strictEqual(client.orgPolicyViolationsPreviewServiceStub, undefined);
             client.close().then(() => {
                 done();
             }).catch(err => {throw err});
@@ -244,7 +244,7 @@ describe('v1.SimulatorClient', () => {
 
         it('has getProjectId method', async () => {
             const fakeProjectId = 'fake-project-id';
-            const client = new simulatorModule.v1.SimulatorClient({
+            const client = new orgpolicyviolationspreviewserviceModule.v1.OrgPolicyViolationsPreviewServiceClient({
               credentials: {client_email: 'bogus', private_key: 'bogus'},
               projectId: 'bogus',
             });
@@ -256,7 +256,7 @@ describe('v1.SimulatorClient', () => {
 
         it('has getProjectId method with callback', async () => {
             const fakeProjectId = 'fake-project-id';
-            const client = new simulatorModule.v1.SimulatorClient({
+            const client = new orgpolicyviolationspreviewserviceModule.v1.OrgPolicyViolationsPreviewServiceClient({
               credentials: {client_email: 'bogus', private_key: 'bogus'},
               projectId: 'bogus',
             });
@@ -275,55 +275,55 @@ describe('v1.SimulatorClient', () => {
         });
     });
 
-    describe('getReplay', () => {
-        it('invokes getReplay without error', async () => {
-            const client = new simulatorModule.v1.SimulatorClient({
+    describe('getOrgPolicyViolationsPreview', () => {
+        it('invokes getOrgPolicyViolationsPreview without error', async () => {
+            const client = new orgpolicyviolationspreviewserviceModule.v1.OrgPolicyViolationsPreviewServiceClient({
               credentials: {client_email: 'bogus', private_key: 'bogus'},
               projectId: 'bogus',
             });
             await client.initialize();
             const request = generateSampleMessage(
-              new protos.google.cloud.policysimulator.v1.GetReplayRequest()
+              new protos.google.cloud.policysimulator.v1.GetOrgPolicyViolationsPreviewRequest()
             );
             const defaultValue1 =
-              getTypeDefaultValue('.google.cloud.policysimulator.v1.GetReplayRequest', ['name']);
+              getTypeDefaultValue('.google.cloud.policysimulator.v1.GetOrgPolicyViolationsPreviewRequest', ['name']);
             request.name = defaultValue1;
             const expectedHeaderRequestParams = `name=${defaultValue1 ?? '' }`;
             const expectedResponse = generateSampleMessage(
-              new protos.google.cloud.policysimulator.v1.Replay()
+              new protos.google.cloud.policysimulator.v1.OrgPolicyViolationsPreview()
             );
-            client.innerApiCalls.getReplay = stubSimpleCall(expectedResponse);
-            const [response] = await client.getReplay(request);
+            client.innerApiCalls.getOrgPolicyViolationsPreview = stubSimpleCall(expectedResponse);
+            const [response] = await client.getOrgPolicyViolationsPreview(request);
             assert.deepStrictEqual(response, expectedResponse);
-            const actualRequest = (client.innerApiCalls.getReplay as SinonStub)
+            const actualRequest = (client.innerApiCalls.getOrgPolicyViolationsPreview as SinonStub)
                 .getCall(0).args[0];
             assert.deepStrictEqual(actualRequest, request);
-            const actualHeaderRequestParams = (client.innerApiCalls.getReplay as SinonStub)
+            const actualHeaderRequestParams = (client.innerApiCalls.getOrgPolicyViolationsPreview as SinonStub)
                 .getCall(0).args[1].otherArgs.headers['x-goog-request-params'];
             assert(actualHeaderRequestParams.includes(expectedHeaderRequestParams));
         });
 
-        it('invokes getReplay without error using callback', async () => {
-            const client = new simulatorModule.v1.SimulatorClient({
+        it('invokes getOrgPolicyViolationsPreview without error using callback', async () => {
+            const client = new orgpolicyviolationspreviewserviceModule.v1.OrgPolicyViolationsPreviewServiceClient({
               credentials: {client_email: 'bogus', private_key: 'bogus'},
               projectId: 'bogus',
             });
             await client.initialize();
             const request = generateSampleMessage(
-              new protos.google.cloud.policysimulator.v1.GetReplayRequest()
+              new protos.google.cloud.policysimulator.v1.GetOrgPolicyViolationsPreviewRequest()
             );
             const defaultValue1 =
-              getTypeDefaultValue('.google.cloud.policysimulator.v1.GetReplayRequest', ['name']);
+              getTypeDefaultValue('.google.cloud.policysimulator.v1.GetOrgPolicyViolationsPreviewRequest', ['name']);
             request.name = defaultValue1;
             const expectedHeaderRequestParams = `name=${defaultValue1 ?? '' }`;
             const expectedResponse = generateSampleMessage(
-              new protos.google.cloud.policysimulator.v1.Replay()
+              new protos.google.cloud.policysimulator.v1.OrgPolicyViolationsPreview()
             );
-            client.innerApiCalls.getReplay = stubSimpleCallWithCallback(expectedResponse);
+            client.innerApiCalls.getOrgPolicyViolationsPreview = stubSimpleCallWithCallback(expectedResponse);
             const promise = new Promise((resolve, reject) => {
-                 client.getReplay(
+                 client.getOrgPolicyViolationsPreview(
                     request,
-                    (err?: Error|null, result?: protos.google.cloud.policysimulator.v1.IReplay|null) => {
+                    (err?: Error|null, result?: protos.google.cloud.policysimulator.v1.IOrgPolicyViolationsPreview|null) => {
                         if (err) {
                             reject(err);
                         } else {
@@ -333,107 +333,107 @@ describe('v1.SimulatorClient', () => {
             });
             const response = await promise;
             assert.deepStrictEqual(response, expectedResponse);
-            const actualRequest = (client.innerApiCalls.getReplay as SinonStub)
+            const actualRequest = (client.innerApiCalls.getOrgPolicyViolationsPreview as SinonStub)
                 .getCall(0).args[0];
             assert.deepStrictEqual(actualRequest, request);
-            const actualHeaderRequestParams = (client.innerApiCalls.getReplay as SinonStub)
+            const actualHeaderRequestParams = (client.innerApiCalls.getOrgPolicyViolationsPreview as SinonStub)
                 .getCall(0).args[1].otherArgs.headers['x-goog-request-params'];
             assert(actualHeaderRequestParams.includes(expectedHeaderRequestParams));
         });
 
-        it('invokes getReplay with error', async () => {
-            const client = new simulatorModule.v1.SimulatorClient({
+        it('invokes getOrgPolicyViolationsPreview with error', async () => {
+            const client = new orgpolicyviolationspreviewserviceModule.v1.OrgPolicyViolationsPreviewServiceClient({
               credentials: {client_email: 'bogus', private_key: 'bogus'},
               projectId: 'bogus',
             });
             await client.initialize();
             const request = generateSampleMessage(
-              new protos.google.cloud.policysimulator.v1.GetReplayRequest()
+              new protos.google.cloud.policysimulator.v1.GetOrgPolicyViolationsPreviewRequest()
             );
             const defaultValue1 =
-              getTypeDefaultValue('.google.cloud.policysimulator.v1.GetReplayRequest', ['name']);
+              getTypeDefaultValue('.google.cloud.policysimulator.v1.GetOrgPolicyViolationsPreviewRequest', ['name']);
             request.name = defaultValue1;
             const expectedHeaderRequestParams = `name=${defaultValue1 ?? '' }`;
             const expectedError = new Error('expected');
-            client.innerApiCalls.getReplay = stubSimpleCall(undefined, expectedError);
-            await assert.rejects(client.getReplay(request), expectedError);
-            const actualRequest = (client.innerApiCalls.getReplay as SinonStub)
+            client.innerApiCalls.getOrgPolicyViolationsPreview = stubSimpleCall(undefined, expectedError);
+            await assert.rejects(client.getOrgPolicyViolationsPreview(request), expectedError);
+            const actualRequest = (client.innerApiCalls.getOrgPolicyViolationsPreview as SinonStub)
                 .getCall(0).args[0];
             assert.deepStrictEqual(actualRequest, request);
-            const actualHeaderRequestParams = (client.innerApiCalls.getReplay as SinonStub)
+            const actualHeaderRequestParams = (client.innerApiCalls.getOrgPolicyViolationsPreview as SinonStub)
                 .getCall(0).args[1].otherArgs.headers['x-goog-request-params'];
             assert(actualHeaderRequestParams.includes(expectedHeaderRequestParams));
         });
 
-        it('invokes getReplay with closed client', async () => {
-            const client = new simulatorModule.v1.SimulatorClient({
+        it('invokes getOrgPolicyViolationsPreview with closed client', async () => {
+            const client = new orgpolicyviolationspreviewserviceModule.v1.OrgPolicyViolationsPreviewServiceClient({
               credentials: {client_email: 'bogus', private_key: 'bogus'},
               projectId: 'bogus',
             });
             await client.initialize();
             const request = generateSampleMessage(
-              new protos.google.cloud.policysimulator.v1.GetReplayRequest()
+              new protos.google.cloud.policysimulator.v1.GetOrgPolicyViolationsPreviewRequest()
             );
             const defaultValue1 =
-              getTypeDefaultValue('.google.cloud.policysimulator.v1.GetReplayRequest', ['name']);
+              getTypeDefaultValue('.google.cloud.policysimulator.v1.GetOrgPolicyViolationsPreviewRequest', ['name']);
             request.name = defaultValue1;
             const expectedError = new Error('The client has already been closed.');
             client.close().catch(err => {throw err});
-            await assert.rejects(client.getReplay(request), expectedError);
+            await assert.rejects(client.getOrgPolicyViolationsPreview(request), expectedError);
         });
     });
 
-    describe('createReplay', () => {
-        it('invokes createReplay without error', async () => {
-            const client = new simulatorModule.v1.SimulatorClient({
+    describe('createOrgPolicyViolationsPreview', () => {
+        it('invokes createOrgPolicyViolationsPreview without error', async () => {
+            const client = new orgpolicyviolationspreviewserviceModule.v1.OrgPolicyViolationsPreviewServiceClient({
               credentials: {client_email: 'bogus', private_key: 'bogus'},
               projectId: 'bogus',
             });
             await client.initialize();
             const request = generateSampleMessage(
-              new protos.google.cloud.policysimulator.v1.CreateReplayRequest()
+              new protos.google.cloud.policysimulator.v1.CreateOrgPolicyViolationsPreviewRequest()
             );
             const defaultValue1 =
-              getTypeDefaultValue('.google.cloud.policysimulator.v1.CreateReplayRequest', ['parent']);
+              getTypeDefaultValue('.google.cloud.policysimulator.v1.CreateOrgPolicyViolationsPreviewRequest', ['parent']);
             request.parent = defaultValue1;
             const expectedHeaderRequestParams = `parent=${defaultValue1 ?? '' }`;
             const expectedResponse = generateSampleMessage(
               new protos.google.longrunning.Operation()
             );
-            client.innerApiCalls.createReplay = stubLongRunningCall(expectedResponse);
-            const [operation] = await client.createReplay(request);
+            client.innerApiCalls.createOrgPolicyViolationsPreview = stubLongRunningCall(expectedResponse);
+            const [operation] = await client.createOrgPolicyViolationsPreview(request);
             const [response] = await operation.promise();
             assert.deepStrictEqual(response, expectedResponse);
-            const actualRequest = (client.innerApiCalls.createReplay as SinonStub)
+            const actualRequest = (client.innerApiCalls.createOrgPolicyViolationsPreview as SinonStub)
                 .getCall(0).args[0];
             assert.deepStrictEqual(actualRequest, request);
-            const actualHeaderRequestParams = (client.innerApiCalls.createReplay as SinonStub)
+            const actualHeaderRequestParams = (client.innerApiCalls.createOrgPolicyViolationsPreview as SinonStub)
                 .getCall(0).args[1].otherArgs.headers['x-goog-request-params'];
             assert(actualHeaderRequestParams.includes(expectedHeaderRequestParams));
         });
 
-        it('invokes createReplay without error using callback', async () => {
-            const client = new simulatorModule.v1.SimulatorClient({
+        it('invokes createOrgPolicyViolationsPreview without error using callback', async () => {
+            const client = new orgpolicyviolationspreviewserviceModule.v1.OrgPolicyViolationsPreviewServiceClient({
               credentials: {client_email: 'bogus', private_key: 'bogus'},
               projectId: 'bogus',
             });
             await client.initialize();
             const request = generateSampleMessage(
-              new protos.google.cloud.policysimulator.v1.CreateReplayRequest()
+              new protos.google.cloud.policysimulator.v1.CreateOrgPolicyViolationsPreviewRequest()
             );
             const defaultValue1 =
-              getTypeDefaultValue('.google.cloud.policysimulator.v1.CreateReplayRequest', ['parent']);
+              getTypeDefaultValue('.google.cloud.policysimulator.v1.CreateOrgPolicyViolationsPreviewRequest', ['parent']);
             request.parent = defaultValue1;
             const expectedHeaderRequestParams = `parent=${defaultValue1 ?? '' }`;
             const expectedResponse = generateSampleMessage(
               new protos.google.longrunning.Operation()
             );
-            client.innerApiCalls.createReplay = stubLongRunningCallWithCallback(expectedResponse);
+            client.innerApiCalls.createOrgPolicyViolationsPreview = stubLongRunningCallWithCallback(expectedResponse);
             const promise = new Promise((resolve, reject) => {
-                 client.createReplay(
+                 client.createOrgPolicyViolationsPreview(
                     request,
                     (err?: Error|null,
-                     result?: LROperation<protos.google.cloud.policysimulator.v1.IReplay, protos.google.cloud.policysimulator.v1.IReplayOperationMetadata>|null
+                     result?: LROperation<protos.google.cloud.policysimulator.v1.IOrgPolicyViolationsPreview, protos.google.cloud.policysimulator.v1.ICreateOrgPolicyViolationsPreviewOperationMetadata>|null
                     ) => {
                         if (err) {
                             reject(err);
@@ -442,68 +442,68 @@ describe('v1.SimulatorClient', () => {
                         }
                     });
             });
-            const operation = await promise as LROperation<protos.google.cloud.policysimulator.v1.IReplay, protos.google.cloud.policysimulator.v1.IReplayOperationMetadata>;
+            const operation = await promise as LROperation<protos.google.cloud.policysimulator.v1.IOrgPolicyViolationsPreview, protos.google.cloud.policysimulator.v1.ICreateOrgPolicyViolationsPreviewOperationMetadata>;
             const [response] = await operation.promise();
             assert.deepStrictEqual(response, expectedResponse);
-            const actualRequest = (client.innerApiCalls.createReplay as SinonStub)
+            const actualRequest = (client.innerApiCalls.createOrgPolicyViolationsPreview as SinonStub)
                 .getCall(0).args[0];
             assert.deepStrictEqual(actualRequest, request);
-            const actualHeaderRequestParams = (client.innerApiCalls.createReplay as SinonStub)
+            const actualHeaderRequestParams = (client.innerApiCalls.createOrgPolicyViolationsPreview as SinonStub)
                 .getCall(0).args[1].otherArgs.headers['x-goog-request-params'];
             assert(actualHeaderRequestParams.includes(expectedHeaderRequestParams));
         });
 
-        it('invokes createReplay with call error', async () => {
-            const client = new simulatorModule.v1.SimulatorClient({
+        it('invokes createOrgPolicyViolationsPreview with call error', async () => {
+            const client = new orgpolicyviolationspreviewserviceModule.v1.OrgPolicyViolationsPreviewServiceClient({
               credentials: {client_email: 'bogus', private_key: 'bogus'},
               projectId: 'bogus',
             });
             await client.initialize();
             const request = generateSampleMessage(
-              new protos.google.cloud.policysimulator.v1.CreateReplayRequest()
+              new protos.google.cloud.policysimulator.v1.CreateOrgPolicyViolationsPreviewRequest()
             );
             const defaultValue1 =
-              getTypeDefaultValue('.google.cloud.policysimulator.v1.CreateReplayRequest', ['parent']);
+              getTypeDefaultValue('.google.cloud.policysimulator.v1.CreateOrgPolicyViolationsPreviewRequest', ['parent']);
             request.parent = defaultValue1;
             const expectedHeaderRequestParams = `parent=${defaultValue1 ?? '' }`;
             const expectedError = new Error('expected');
-            client.innerApiCalls.createReplay = stubLongRunningCall(undefined, expectedError);
-            await assert.rejects(client.createReplay(request), expectedError);
-            const actualRequest = (client.innerApiCalls.createReplay as SinonStub)
+            client.innerApiCalls.createOrgPolicyViolationsPreview = stubLongRunningCall(undefined, expectedError);
+            await assert.rejects(client.createOrgPolicyViolationsPreview(request), expectedError);
+            const actualRequest = (client.innerApiCalls.createOrgPolicyViolationsPreview as SinonStub)
                 .getCall(0).args[0];
             assert.deepStrictEqual(actualRequest, request);
-            const actualHeaderRequestParams = (client.innerApiCalls.createReplay as SinonStub)
+            const actualHeaderRequestParams = (client.innerApiCalls.createOrgPolicyViolationsPreview as SinonStub)
                 .getCall(0).args[1].otherArgs.headers['x-goog-request-params'];
             assert(actualHeaderRequestParams.includes(expectedHeaderRequestParams));
         });
 
-        it('invokes createReplay with LRO error', async () => {
-            const client = new simulatorModule.v1.SimulatorClient({
+        it('invokes createOrgPolicyViolationsPreview with LRO error', async () => {
+            const client = new orgpolicyviolationspreviewserviceModule.v1.OrgPolicyViolationsPreviewServiceClient({
               credentials: {client_email: 'bogus', private_key: 'bogus'},
               projectId: 'bogus',
             });
             await client.initialize();
             const request = generateSampleMessage(
-              new protos.google.cloud.policysimulator.v1.CreateReplayRequest()
+              new protos.google.cloud.policysimulator.v1.CreateOrgPolicyViolationsPreviewRequest()
             );
             const defaultValue1 =
-              getTypeDefaultValue('.google.cloud.policysimulator.v1.CreateReplayRequest', ['parent']);
+              getTypeDefaultValue('.google.cloud.policysimulator.v1.CreateOrgPolicyViolationsPreviewRequest', ['parent']);
             request.parent = defaultValue1;
             const expectedHeaderRequestParams = `parent=${defaultValue1 ?? '' }`;
             const expectedError = new Error('expected');
-            client.innerApiCalls.createReplay = stubLongRunningCall(undefined, undefined, expectedError);
-            const [operation] = await client.createReplay(request);
+            client.innerApiCalls.createOrgPolicyViolationsPreview = stubLongRunningCall(undefined, undefined, expectedError);
+            const [operation] = await client.createOrgPolicyViolationsPreview(request);
             await assert.rejects(operation.promise(), expectedError);
-            const actualRequest = (client.innerApiCalls.createReplay as SinonStub)
+            const actualRequest = (client.innerApiCalls.createOrgPolicyViolationsPreview as SinonStub)
                 .getCall(0).args[0];
             assert.deepStrictEqual(actualRequest, request);
-            const actualHeaderRequestParams = (client.innerApiCalls.createReplay as SinonStub)
+            const actualHeaderRequestParams = (client.innerApiCalls.createOrgPolicyViolationsPreview as SinonStub)
                 .getCall(0).args[1].otherArgs.headers['x-goog-request-params'];
             assert(actualHeaderRequestParams.includes(expectedHeaderRequestParams));
         });
 
-        it('invokes checkCreateReplayProgress without error', async () => {
-            const client = new simulatorModule.v1.SimulatorClient({
+        it('invokes checkCreateOrgPolicyViolationsPreviewProgress without error', async () => {
+            const client = new orgpolicyviolationspreviewserviceModule.v1.OrgPolicyViolationsPreviewServiceClient({
               credentials: {client_email: 'bogus', private_key: 'bogus'},
               projectId: 'bogus',
             });
@@ -516,14 +516,14 @@ describe('v1.SimulatorClient', () => {
             expectedResponse.metadata = {type_url: 'url', value: Buffer.from('')}
 
             client.operationsClient.getOperation = stubSimpleCall(expectedResponse);
-            const decodedOperation = await client.checkCreateReplayProgress(expectedResponse.name);
+            const decodedOperation = await client.checkCreateOrgPolicyViolationsPreviewProgress(expectedResponse.name);
             assert.deepStrictEqual(decodedOperation.name, expectedResponse.name);
             assert(decodedOperation.metadata);
             assert((client.operationsClient.getOperation as SinonStub).getCall(0));
         });
 
-        it('invokes checkCreateReplayProgress with error', async () => {
-            const client = new simulatorModule.v1.SimulatorClient({
+        it('invokes checkCreateOrgPolicyViolationsPreviewProgress with error', async () => {
+            const client = new orgpolicyviolationspreviewserviceModule.v1.OrgPolicyViolationsPreviewServiceClient({
               credentials: {client_email: 'bogus', private_key: 'bogus'},
               projectId: 'bogus',
             });
@@ -531,63 +531,63 @@ describe('v1.SimulatorClient', () => {
             const expectedError = new Error('expected');
 
             client.operationsClient.getOperation = stubSimpleCall(undefined, expectedError);
-            await assert.rejects(client.checkCreateReplayProgress(''), expectedError);
+            await assert.rejects(client.checkCreateOrgPolicyViolationsPreviewProgress(''), expectedError);
             assert((client.operationsClient.getOperation as SinonStub)
                 .getCall(0));
         });
     });
 
-    describe('listReplayResults', () => {
-        it('invokes listReplayResults without error', async () => {
-            const client = new simulatorModule.v1.SimulatorClient({
+    describe('listOrgPolicyViolationsPreviews', () => {
+        it('invokes listOrgPolicyViolationsPreviews without error', async () => {
+            const client = new orgpolicyviolationspreviewserviceModule.v1.OrgPolicyViolationsPreviewServiceClient({
                 credentials: {client_email: 'bogus', private_key: 'bogus'},
                 projectId: 'bogus',
             });
             await client.initialize();
             const request = generateSampleMessage(
-              new protos.google.cloud.policysimulator.v1.ListReplayResultsRequest()
+              new protos.google.cloud.policysimulator.v1.ListOrgPolicyViolationsPreviewsRequest()
             );
             const defaultValue1 =
-              getTypeDefaultValue('.google.cloud.policysimulator.v1.ListReplayResultsRequest', ['parent']);
+              getTypeDefaultValue('.google.cloud.policysimulator.v1.ListOrgPolicyViolationsPreviewsRequest', ['parent']);
             request.parent = defaultValue1;
             const expectedHeaderRequestParams = `parent=${defaultValue1 ?? '' }`;const expectedResponse = [
-              generateSampleMessage(new protos.google.cloud.policysimulator.v1.ReplayResult()),
-              generateSampleMessage(new protos.google.cloud.policysimulator.v1.ReplayResult()),
-              generateSampleMessage(new protos.google.cloud.policysimulator.v1.ReplayResult()),
+              generateSampleMessage(new protos.google.cloud.policysimulator.v1.OrgPolicyViolationsPreview()),
+              generateSampleMessage(new protos.google.cloud.policysimulator.v1.OrgPolicyViolationsPreview()),
+              generateSampleMessage(new protos.google.cloud.policysimulator.v1.OrgPolicyViolationsPreview()),
             ];
-            client.innerApiCalls.listReplayResults = stubSimpleCall(expectedResponse);
-            const [response] = await client.listReplayResults(request);
+            client.innerApiCalls.listOrgPolicyViolationsPreviews = stubSimpleCall(expectedResponse);
+            const [response] = await client.listOrgPolicyViolationsPreviews(request);
             assert.deepStrictEqual(response, expectedResponse);
-            const actualRequest = (client.innerApiCalls.listReplayResults as SinonStub)
+            const actualRequest = (client.innerApiCalls.listOrgPolicyViolationsPreviews as SinonStub)
                 .getCall(0).args[0];
             assert.deepStrictEqual(actualRequest, request);
-            const actualHeaderRequestParams = (client.innerApiCalls.listReplayResults as SinonStub)
+            const actualHeaderRequestParams = (client.innerApiCalls.listOrgPolicyViolationsPreviews as SinonStub)
                 .getCall(0).args[1].otherArgs.headers['x-goog-request-params'];
             assert(actualHeaderRequestParams.includes(expectedHeaderRequestParams));
         });
 
-        it('invokes listReplayResults without error using callback', async () => {
-            const client = new simulatorModule.v1.SimulatorClient({
+        it('invokes listOrgPolicyViolationsPreviews without error using callback', async () => {
+            const client = new orgpolicyviolationspreviewserviceModule.v1.OrgPolicyViolationsPreviewServiceClient({
                 credentials: {client_email: 'bogus', private_key: 'bogus'},
                 projectId: 'bogus',
             });
             await client.initialize();
             const request = generateSampleMessage(
-              new protos.google.cloud.policysimulator.v1.ListReplayResultsRequest()
+              new protos.google.cloud.policysimulator.v1.ListOrgPolicyViolationsPreviewsRequest()
             );
             const defaultValue1 =
-              getTypeDefaultValue('.google.cloud.policysimulator.v1.ListReplayResultsRequest', ['parent']);
+              getTypeDefaultValue('.google.cloud.policysimulator.v1.ListOrgPolicyViolationsPreviewsRequest', ['parent']);
             request.parent = defaultValue1;
             const expectedHeaderRequestParams = `parent=${defaultValue1 ?? '' }`;const expectedResponse = [
-              generateSampleMessage(new protos.google.cloud.policysimulator.v1.ReplayResult()),
-              generateSampleMessage(new protos.google.cloud.policysimulator.v1.ReplayResult()),
-              generateSampleMessage(new protos.google.cloud.policysimulator.v1.ReplayResult()),
+              generateSampleMessage(new protos.google.cloud.policysimulator.v1.OrgPolicyViolationsPreview()),
+              generateSampleMessage(new protos.google.cloud.policysimulator.v1.OrgPolicyViolationsPreview()),
+              generateSampleMessage(new protos.google.cloud.policysimulator.v1.OrgPolicyViolationsPreview()),
             ];
-            client.innerApiCalls.listReplayResults = stubSimpleCallWithCallback(expectedResponse);
+            client.innerApiCalls.listOrgPolicyViolationsPreviews = stubSimpleCallWithCallback(expectedResponse);
             const promise = new Promise((resolve, reject) => {
-                 client.listReplayResults(
+                 client.listOrgPolicyViolationsPreviews(
                     request,
-                    (err?: Error|null, result?: protos.google.cloud.policysimulator.v1.IReplayResult[]|null) => {
+                    (err?: Error|null, result?: protos.google.cloud.policysimulator.v1.IOrgPolicyViolationsPreview[]|null) => {
                         if (err) {
                             reject(err);
                         } else {
@@ -597,61 +597,61 @@ describe('v1.SimulatorClient', () => {
             });
             const response = await promise;
             assert.deepStrictEqual(response, expectedResponse);
-            const actualRequest = (client.innerApiCalls.listReplayResults as SinonStub)
+            const actualRequest = (client.innerApiCalls.listOrgPolicyViolationsPreviews as SinonStub)
                 .getCall(0).args[0];
             assert.deepStrictEqual(actualRequest, request);
-            const actualHeaderRequestParams = (client.innerApiCalls.listReplayResults as SinonStub)
+            const actualHeaderRequestParams = (client.innerApiCalls.listOrgPolicyViolationsPreviews as SinonStub)
                 .getCall(0).args[1].otherArgs.headers['x-goog-request-params'];
             assert(actualHeaderRequestParams.includes(expectedHeaderRequestParams));
         });
 
-        it('invokes listReplayResults with error', async () => {
-            const client = new simulatorModule.v1.SimulatorClient({
+        it('invokes listOrgPolicyViolationsPreviews with error', async () => {
+            const client = new orgpolicyviolationspreviewserviceModule.v1.OrgPolicyViolationsPreviewServiceClient({
                 credentials: {client_email: 'bogus', private_key: 'bogus'},
                 projectId: 'bogus',
             });
             await client.initialize();
             const request = generateSampleMessage(
-              new protos.google.cloud.policysimulator.v1.ListReplayResultsRequest()
+              new protos.google.cloud.policysimulator.v1.ListOrgPolicyViolationsPreviewsRequest()
             );
             const defaultValue1 =
-              getTypeDefaultValue('.google.cloud.policysimulator.v1.ListReplayResultsRequest', ['parent']);
+              getTypeDefaultValue('.google.cloud.policysimulator.v1.ListOrgPolicyViolationsPreviewsRequest', ['parent']);
             request.parent = defaultValue1;
             const expectedHeaderRequestParams = `parent=${defaultValue1 ?? '' }`;
             const expectedError = new Error('expected');
-            client.innerApiCalls.listReplayResults = stubSimpleCall(undefined, expectedError);
-            await assert.rejects(client.listReplayResults(request), expectedError);
-            const actualRequest = (client.innerApiCalls.listReplayResults as SinonStub)
+            client.innerApiCalls.listOrgPolicyViolationsPreviews = stubSimpleCall(undefined, expectedError);
+            await assert.rejects(client.listOrgPolicyViolationsPreviews(request), expectedError);
+            const actualRequest = (client.innerApiCalls.listOrgPolicyViolationsPreviews as SinonStub)
                 .getCall(0).args[0];
             assert.deepStrictEqual(actualRequest, request);
-            const actualHeaderRequestParams = (client.innerApiCalls.listReplayResults as SinonStub)
+            const actualHeaderRequestParams = (client.innerApiCalls.listOrgPolicyViolationsPreviews as SinonStub)
                 .getCall(0).args[1].otherArgs.headers['x-goog-request-params'];
             assert(actualHeaderRequestParams.includes(expectedHeaderRequestParams));
         });
 
-        it('invokes listReplayResultsStream without error', async () => {
-            const client = new simulatorModule.v1.SimulatorClient({
+        it('invokes listOrgPolicyViolationsPreviewsStream without error', async () => {
+            const client = new orgpolicyviolationspreviewserviceModule.v1.OrgPolicyViolationsPreviewServiceClient({
                 credentials: {client_email: 'bogus', private_key: 'bogus'},
                 projectId: 'bogus',
             });
             await client.initialize();
             const request = generateSampleMessage(
-              new protos.google.cloud.policysimulator.v1.ListReplayResultsRequest()
+              new protos.google.cloud.policysimulator.v1.ListOrgPolicyViolationsPreviewsRequest()
             );
             const defaultValue1 =
-              getTypeDefaultValue('.google.cloud.policysimulator.v1.ListReplayResultsRequest', ['parent']);
+              getTypeDefaultValue('.google.cloud.policysimulator.v1.ListOrgPolicyViolationsPreviewsRequest', ['parent']);
             request.parent = defaultValue1;
             const expectedHeaderRequestParams = `parent=${defaultValue1 ?? '' }`;
             const expectedResponse = [
-              generateSampleMessage(new protos.google.cloud.policysimulator.v1.ReplayResult()),
-              generateSampleMessage(new protos.google.cloud.policysimulator.v1.ReplayResult()),
-              generateSampleMessage(new protos.google.cloud.policysimulator.v1.ReplayResult()),
+              generateSampleMessage(new protos.google.cloud.policysimulator.v1.OrgPolicyViolationsPreview()),
+              generateSampleMessage(new protos.google.cloud.policysimulator.v1.OrgPolicyViolationsPreview()),
+              generateSampleMessage(new protos.google.cloud.policysimulator.v1.OrgPolicyViolationsPreview()),
             ];
-            client.descriptors.page.listReplayResults.createStream = stubPageStreamingCall(expectedResponse);
-            const stream = client.listReplayResultsStream(request);
+            client.descriptors.page.listOrgPolicyViolationsPreviews.createStream = stubPageStreamingCall(expectedResponse);
+            const stream = client.listOrgPolicyViolationsPreviewsStream(request);
             const promise = new Promise((resolve, reject) => {
-                const responses: protos.google.cloud.policysimulator.v1.ReplayResult[] = [];
-                stream.on('data', (response: protos.google.cloud.policysimulator.v1.ReplayResult) => {
+                const responses: protos.google.cloud.policysimulator.v1.OrgPolicyViolationsPreview[] = [];
+                stream.on('data', (response: protos.google.cloud.policysimulator.v1.OrgPolicyViolationsPreview) => {
                     responses.push(response);
                 });
                 stream.on('end', () => {
@@ -663,35 +663,35 @@ describe('v1.SimulatorClient', () => {
             });
             const responses = await promise;
             assert.deepStrictEqual(responses, expectedResponse);
-            assert((client.descriptors.page.listReplayResults.createStream as SinonStub)
-                .getCall(0).calledWith(client.innerApiCalls.listReplayResults, request));
+            assert((client.descriptors.page.listOrgPolicyViolationsPreviews.createStream as SinonStub)
+                .getCall(0).calledWith(client.innerApiCalls.listOrgPolicyViolationsPreviews, request));
             assert(
-                (client.descriptors.page.listReplayResults.createStream as SinonStub)
+                (client.descriptors.page.listOrgPolicyViolationsPreviews.createStream as SinonStub)
                     .getCall(0).args[2].otherArgs.headers['x-goog-request-params'].includes(
                         expectedHeaderRequestParams
                     )
             );
         });
 
-        it('invokes listReplayResultsStream with error', async () => {
-            const client = new simulatorModule.v1.SimulatorClient({
+        it('invokes listOrgPolicyViolationsPreviewsStream with error', async () => {
+            const client = new orgpolicyviolationspreviewserviceModule.v1.OrgPolicyViolationsPreviewServiceClient({
                 credentials: {client_email: 'bogus', private_key: 'bogus'},
                 projectId: 'bogus',
             });
             await client.initialize();
             const request = generateSampleMessage(
-              new protos.google.cloud.policysimulator.v1.ListReplayResultsRequest()
+              new protos.google.cloud.policysimulator.v1.ListOrgPolicyViolationsPreviewsRequest()
             );
             const defaultValue1 =
-              getTypeDefaultValue('.google.cloud.policysimulator.v1.ListReplayResultsRequest', ['parent']);
+              getTypeDefaultValue('.google.cloud.policysimulator.v1.ListOrgPolicyViolationsPreviewsRequest', ['parent']);
             request.parent = defaultValue1;
             const expectedHeaderRequestParams = `parent=${defaultValue1 ?? '' }`;
             const expectedError = new Error('expected');
-            client.descriptors.page.listReplayResults.createStream = stubPageStreamingCall(undefined, expectedError);
-            const stream = client.listReplayResultsStream(request);
+            client.descriptors.page.listOrgPolicyViolationsPreviews.createStream = stubPageStreamingCall(undefined, expectedError);
+            const stream = client.listOrgPolicyViolationsPreviewsStream(request);
             const promise = new Promise((resolve, reject) => {
-                const responses: protos.google.cloud.policysimulator.v1.ReplayResult[] = [];
-                stream.on('data', (response: protos.google.cloud.policysimulator.v1.ReplayResult) => {
+                const responses: protos.google.cloud.policysimulator.v1.OrgPolicyViolationsPreview[] = [];
+                stream.on('data', (response: protos.google.cloud.policysimulator.v1.OrgPolicyViolationsPreview) => {
                     responses.push(response);
                 });
                 stream.on('end', () => {
@@ -702,79 +702,324 @@ describe('v1.SimulatorClient', () => {
                 });
             });
             await assert.rejects(promise, expectedError);
-            assert((client.descriptors.page.listReplayResults.createStream as SinonStub)
-                .getCall(0).calledWith(client.innerApiCalls.listReplayResults, request));
+            assert((client.descriptors.page.listOrgPolicyViolationsPreviews.createStream as SinonStub)
+                .getCall(0).calledWith(client.innerApiCalls.listOrgPolicyViolationsPreviews, request));
             assert(
-                (client.descriptors.page.listReplayResults.createStream as SinonStub)
+                (client.descriptors.page.listOrgPolicyViolationsPreviews.createStream as SinonStub)
                     .getCall(0).args[2].otherArgs.headers['x-goog-request-params'].includes(
                          expectedHeaderRequestParams
                     ) 
             );
         });
 
-        it('uses async iteration with listReplayResults without error', async () => {
-            const client = new simulatorModule.v1.SimulatorClient({
+        it('uses async iteration with listOrgPolicyViolationsPreviews without error', async () => {
+            const client = new orgpolicyviolationspreviewserviceModule.v1.OrgPolicyViolationsPreviewServiceClient({
               credentials: {client_email: 'bogus', private_key: 'bogus'},
               projectId: 'bogus',
             });
             await client.initialize();
             const request = generateSampleMessage(
-              new protos.google.cloud.policysimulator.v1.ListReplayResultsRequest()
+              new protos.google.cloud.policysimulator.v1.ListOrgPolicyViolationsPreviewsRequest()
             );
             const defaultValue1 =
-              getTypeDefaultValue('.google.cloud.policysimulator.v1.ListReplayResultsRequest', ['parent']);
+              getTypeDefaultValue('.google.cloud.policysimulator.v1.ListOrgPolicyViolationsPreviewsRequest', ['parent']);
             request.parent = defaultValue1;
             const expectedHeaderRequestParams = `parent=${defaultValue1 ?? '' }`;
             const expectedResponse = [
-              generateSampleMessage(new protos.google.cloud.policysimulator.v1.ReplayResult()),
-              generateSampleMessage(new protos.google.cloud.policysimulator.v1.ReplayResult()),
-              generateSampleMessage(new protos.google.cloud.policysimulator.v1.ReplayResult()),
+              generateSampleMessage(new protos.google.cloud.policysimulator.v1.OrgPolicyViolationsPreview()),
+              generateSampleMessage(new protos.google.cloud.policysimulator.v1.OrgPolicyViolationsPreview()),
+              generateSampleMessage(new protos.google.cloud.policysimulator.v1.OrgPolicyViolationsPreview()),
             ];
-            client.descriptors.page.listReplayResults.asyncIterate = stubAsyncIterationCall(expectedResponse);
-            const responses: protos.google.cloud.policysimulator.v1.IReplayResult[] = [];
-            const iterable = client.listReplayResultsAsync(request);
+            client.descriptors.page.listOrgPolicyViolationsPreviews.asyncIterate = stubAsyncIterationCall(expectedResponse);
+            const responses: protos.google.cloud.policysimulator.v1.IOrgPolicyViolationsPreview[] = [];
+            const iterable = client.listOrgPolicyViolationsPreviewsAsync(request);
             for await (const resource of iterable) {
                 responses.push(resource!);
             }
             assert.deepStrictEqual(responses, expectedResponse);
             assert.deepStrictEqual(
-                (client.descriptors.page.listReplayResults.asyncIterate as SinonStub)
+                (client.descriptors.page.listOrgPolicyViolationsPreviews.asyncIterate as SinonStub)
                     .getCall(0).args[1], request);
             assert(
-                (client.descriptors.page.listReplayResults.asyncIterate as SinonStub)
+                (client.descriptors.page.listOrgPolicyViolationsPreviews.asyncIterate as SinonStub)
                     .getCall(0).args[2].otherArgs.headers['x-goog-request-params'].includes(
                         expectedHeaderRequestParams
                     )
             );
         });
 
-        it('uses async iteration with listReplayResults with error', async () => {
-            const client = new simulatorModule.v1.SimulatorClient({
+        it('uses async iteration with listOrgPolicyViolationsPreviews with error', async () => {
+            const client = new orgpolicyviolationspreviewserviceModule.v1.OrgPolicyViolationsPreviewServiceClient({
                 credentials: {client_email: 'bogus', private_key: 'bogus'},
                 projectId: 'bogus',
             });
             await client.initialize();
             const request = generateSampleMessage(
-              new protos.google.cloud.policysimulator.v1.ListReplayResultsRequest()
+              new protos.google.cloud.policysimulator.v1.ListOrgPolicyViolationsPreviewsRequest()
             );
             const defaultValue1 =
-              getTypeDefaultValue('.google.cloud.policysimulator.v1.ListReplayResultsRequest', ['parent']);
+              getTypeDefaultValue('.google.cloud.policysimulator.v1.ListOrgPolicyViolationsPreviewsRequest', ['parent']);
             request.parent = defaultValue1;
             const expectedHeaderRequestParams = `parent=${defaultValue1 ?? '' }`;
             const expectedError = new Error('expected');
-            client.descriptors.page.listReplayResults.asyncIterate = stubAsyncIterationCall(undefined, expectedError);
-            const iterable = client.listReplayResultsAsync(request);
+            client.descriptors.page.listOrgPolicyViolationsPreviews.asyncIterate = stubAsyncIterationCall(undefined, expectedError);
+            const iterable = client.listOrgPolicyViolationsPreviewsAsync(request);
             await assert.rejects(async () => {
-                const responses: protos.google.cloud.policysimulator.v1.IReplayResult[] = [];
+                const responses: protos.google.cloud.policysimulator.v1.IOrgPolicyViolationsPreview[] = [];
                 for await (const resource of iterable) {
                     responses.push(resource!);
                 }
             });
             assert.deepStrictEqual(
-                (client.descriptors.page.listReplayResults.asyncIterate as SinonStub)
+                (client.descriptors.page.listOrgPolicyViolationsPreviews.asyncIterate as SinonStub)
                     .getCall(0).args[1], request);
             assert(
-                (client.descriptors.page.listReplayResults.asyncIterate as SinonStub)
+                (client.descriptors.page.listOrgPolicyViolationsPreviews.asyncIterate as SinonStub)
+                    .getCall(0).args[2].otherArgs.headers['x-goog-request-params'].includes(
+                        expectedHeaderRequestParams
+                    )
+            );
+        });
+    });
+
+    describe('listOrgPolicyViolations', () => {
+        it('invokes listOrgPolicyViolations without error', async () => {
+            const client = new orgpolicyviolationspreviewserviceModule.v1.OrgPolicyViolationsPreviewServiceClient({
+                credentials: {client_email: 'bogus', private_key: 'bogus'},
+                projectId: 'bogus',
+            });
+            await client.initialize();
+            const request = generateSampleMessage(
+              new protos.google.cloud.policysimulator.v1.ListOrgPolicyViolationsRequest()
+            );
+            const defaultValue1 =
+              getTypeDefaultValue('.google.cloud.policysimulator.v1.ListOrgPolicyViolationsRequest', ['parent']);
+            request.parent = defaultValue1;
+            const expectedHeaderRequestParams = `parent=${defaultValue1 ?? '' }`;const expectedResponse = [
+              generateSampleMessage(new protos.google.cloud.policysimulator.v1.OrgPolicyViolation()),
+              generateSampleMessage(new protos.google.cloud.policysimulator.v1.OrgPolicyViolation()),
+              generateSampleMessage(new protos.google.cloud.policysimulator.v1.OrgPolicyViolation()),
+            ];
+            client.innerApiCalls.listOrgPolicyViolations = stubSimpleCall(expectedResponse);
+            const [response] = await client.listOrgPolicyViolations(request);
+            assert.deepStrictEqual(response, expectedResponse);
+            const actualRequest = (client.innerApiCalls.listOrgPolicyViolations as SinonStub)
+                .getCall(0).args[0];
+            assert.deepStrictEqual(actualRequest, request);
+            const actualHeaderRequestParams = (client.innerApiCalls.listOrgPolicyViolations as SinonStub)
+                .getCall(0).args[1].otherArgs.headers['x-goog-request-params'];
+            assert(actualHeaderRequestParams.includes(expectedHeaderRequestParams));
+        });
+
+        it('invokes listOrgPolicyViolations without error using callback', async () => {
+            const client = new orgpolicyviolationspreviewserviceModule.v1.OrgPolicyViolationsPreviewServiceClient({
+                credentials: {client_email: 'bogus', private_key: 'bogus'},
+                projectId: 'bogus',
+            });
+            await client.initialize();
+            const request = generateSampleMessage(
+              new protos.google.cloud.policysimulator.v1.ListOrgPolicyViolationsRequest()
+            );
+            const defaultValue1 =
+              getTypeDefaultValue('.google.cloud.policysimulator.v1.ListOrgPolicyViolationsRequest', ['parent']);
+            request.parent = defaultValue1;
+            const expectedHeaderRequestParams = `parent=${defaultValue1 ?? '' }`;const expectedResponse = [
+              generateSampleMessage(new protos.google.cloud.policysimulator.v1.OrgPolicyViolation()),
+              generateSampleMessage(new protos.google.cloud.policysimulator.v1.OrgPolicyViolation()),
+              generateSampleMessage(new protos.google.cloud.policysimulator.v1.OrgPolicyViolation()),
+            ];
+            client.innerApiCalls.listOrgPolicyViolations = stubSimpleCallWithCallback(expectedResponse);
+            const promise = new Promise((resolve, reject) => {
+                 client.listOrgPolicyViolations(
+                    request,
+                    (err?: Error|null, result?: protos.google.cloud.policysimulator.v1.IOrgPolicyViolation[]|null) => {
+                        if (err) {
+                            reject(err);
+                        } else {
+                            resolve(result);
+                        }
+                    });
+            });
+            const response = await promise;
+            assert.deepStrictEqual(response, expectedResponse);
+            const actualRequest = (client.innerApiCalls.listOrgPolicyViolations as SinonStub)
+                .getCall(0).args[0];
+            assert.deepStrictEqual(actualRequest, request);
+            const actualHeaderRequestParams = (client.innerApiCalls.listOrgPolicyViolations as SinonStub)
+                .getCall(0).args[1].otherArgs.headers['x-goog-request-params'];
+            assert(actualHeaderRequestParams.includes(expectedHeaderRequestParams));
+        });
+
+        it('invokes listOrgPolicyViolations with error', async () => {
+            const client = new orgpolicyviolationspreviewserviceModule.v1.OrgPolicyViolationsPreviewServiceClient({
+                credentials: {client_email: 'bogus', private_key: 'bogus'},
+                projectId: 'bogus',
+            });
+            await client.initialize();
+            const request = generateSampleMessage(
+              new protos.google.cloud.policysimulator.v1.ListOrgPolicyViolationsRequest()
+            );
+            const defaultValue1 =
+              getTypeDefaultValue('.google.cloud.policysimulator.v1.ListOrgPolicyViolationsRequest', ['parent']);
+            request.parent = defaultValue1;
+            const expectedHeaderRequestParams = `parent=${defaultValue1 ?? '' }`;
+            const expectedError = new Error('expected');
+            client.innerApiCalls.listOrgPolicyViolations = stubSimpleCall(undefined, expectedError);
+            await assert.rejects(client.listOrgPolicyViolations(request), expectedError);
+            const actualRequest = (client.innerApiCalls.listOrgPolicyViolations as SinonStub)
+                .getCall(0).args[0];
+            assert.deepStrictEqual(actualRequest, request);
+            const actualHeaderRequestParams = (client.innerApiCalls.listOrgPolicyViolations as SinonStub)
+                .getCall(0).args[1].otherArgs.headers['x-goog-request-params'];
+            assert(actualHeaderRequestParams.includes(expectedHeaderRequestParams));
+        });
+
+        it('invokes listOrgPolicyViolationsStream without error', async () => {
+            const client = new orgpolicyviolationspreviewserviceModule.v1.OrgPolicyViolationsPreviewServiceClient({
+                credentials: {client_email: 'bogus', private_key: 'bogus'},
+                projectId: 'bogus',
+            });
+            await client.initialize();
+            const request = generateSampleMessage(
+              new protos.google.cloud.policysimulator.v1.ListOrgPolicyViolationsRequest()
+            );
+            const defaultValue1 =
+              getTypeDefaultValue('.google.cloud.policysimulator.v1.ListOrgPolicyViolationsRequest', ['parent']);
+            request.parent = defaultValue1;
+            const expectedHeaderRequestParams = `parent=${defaultValue1 ?? '' }`;
+            const expectedResponse = [
+              generateSampleMessage(new protos.google.cloud.policysimulator.v1.OrgPolicyViolation()),
+              generateSampleMessage(new protos.google.cloud.policysimulator.v1.OrgPolicyViolation()),
+              generateSampleMessage(new protos.google.cloud.policysimulator.v1.OrgPolicyViolation()),
+            ];
+            client.descriptors.page.listOrgPolicyViolations.createStream = stubPageStreamingCall(expectedResponse);
+            const stream = client.listOrgPolicyViolationsStream(request);
+            const promise = new Promise((resolve, reject) => {
+                const responses: protos.google.cloud.policysimulator.v1.OrgPolicyViolation[] = [];
+                stream.on('data', (response: protos.google.cloud.policysimulator.v1.OrgPolicyViolation) => {
+                    responses.push(response);
+                });
+                stream.on('end', () => {
+                    resolve(responses);
+                });
+                stream.on('error', (err: Error) => {
+                    reject(err);
+                });
+            });
+            const responses = await promise;
+            assert.deepStrictEqual(responses, expectedResponse);
+            assert((client.descriptors.page.listOrgPolicyViolations.createStream as SinonStub)
+                .getCall(0).calledWith(client.innerApiCalls.listOrgPolicyViolations, request));
+            assert(
+                (client.descriptors.page.listOrgPolicyViolations.createStream as SinonStub)
+                    .getCall(0).args[2].otherArgs.headers['x-goog-request-params'].includes(
+                        expectedHeaderRequestParams
+                    )
+            );
+        });
+
+        it('invokes listOrgPolicyViolationsStream with error', async () => {
+            const client = new orgpolicyviolationspreviewserviceModule.v1.OrgPolicyViolationsPreviewServiceClient({
+                credentials: {client_email: 'bogus', private_key: 'bogus'},
+                projectId: 'bogus',
+            });
+            await client.initialize();
+            const request = generateSampleMessage(
+              new protos.google.cloud.policysimulator.v1.ListOrgPolicyViolationsRequest()
+            );
+            const defaultValue1 =
+              getTypeDefaultValue('.google.cloud.policysimulator.v1.ListOrgPolicyViolationsRequest', ['parent']);
+            request.parent = defaultValue1;
+            const expectedHeaderRequestParams = `parent=${defaultValue1 ?? '' }`;
+            const expectedError = new Error('expected');
+            client.descriptors.page.listOrgPolicyViolations.createStream = stubPageStreamingCall(undefined, expectedError);
+            const stream = client.listOrgPolicyViolationsStream(request);
+            const promise = new Promise((resolve, reject) => {
+                const responses: protos.google.cloud.policysimulator.v1.OrgPolicyViolation[] = [];
+                stream.on('data', (response: protos.google.cloud.policysimulator.v1.OrgPolicyViolation) => {
+                    responses.push(response);
+                });
+                stream.on('end', () => {
+                    resolve(responses);
+                });
+                stream.on('error', (err: Error) => {
+                    reject(err);
+                });
+            });
+            await assert.rejects(promise, expectedError);
+            assert((client.descriptors.page.listOrgPolicyViolations.createStream as SinonStub)
+                .getCall(0).calledWith(client.innerApiCalls.listOrgPolicyViolations, request));
+            assert(
+                (client.descriptors.page.listOrgPolicyViolations.createStream as SinonStub)
+                    .getCall(0).args[2].otherArgs.headers['x-goog-request-params'].includes(
+                         expectedHeaderRequestParams
+                    ) 
+            );
+        });
+
+        it('uses async iteration with listOrgPolicyViolations without error', async () => {
+            const client = new orgpolicyviolationspreviewserviceModule.v1.OrgPolicyViolationsPreviewServiceClient({
+              credentials: {client_email: 'bogus', private_key: 'bogus'},
+              projectId: 'bogus',
+            });
+            await client.initialize();
+            const request = generateSampleMessage(
+              new protos.google.cloud.policysimulator.v1.ListOrgPolicyViolationsRequest()
+            );
+            const defaultValue1 =
+              getTypeDefaultValue('.google.cloud.policysimulator.v1.ListOrgPolicyViolationsRequest', ['parent']);
+            request.parent = defaultValue1;
+            const expectedHeaderRequestParams = `parent=${defaultValue1 ?? '' }`;
+            const expectedResponse = [
+              generateSampleMessage(new protos.google.cloud.policysimulator.v1.OrgPolicyViolation()),
+              generateSampleMessage(new protos.google.cloud.policysimulator.v1.OrgPolicyViolation()),
+              generateSampleMessage(new protos.google.cloud.policysimulator.v1.OrgPolicyViolation()),
+            ];
+            client.descriptors.page.listOrgPolicyViolations.asyncIterate = stubAsyncIterationCall(expectedResponse);
+            const responses: protos.google.cloud.policysimulator.v1.IOrgPolicyViolation[] = [];
+            const iterable = client.listOrgPolicyViolationsAsync(request);
+            for await (const resource of iterable) {
+                responses.push(resource!);
+            }
+            assert.deepStrictEqual(responses, expectedResponse);
+            assert.deepStrictEqual(
+                (client.descriptors.page.listOrgPolicyViolations.asyncIterate as SinonStub)
+                    .getCall(0).args[1], request);
+            assert(
+                (client.descriptors.page.listOrgPolicyViolations.asyncIterate as SinonStub)
+                    .getCall(0).args[2].otherArgs.headers['x-goog-request-params'].includes(
+                        expectedHeaderRequestParams
+                    )
+            );
+        });
+
+        it('uses async iteration with listOrgPolicyViolations with error', async () => {
+            const client = new orgpolicyviolationspreviewserviceModule.v1.OrgPolicyViolationsPreviewServiceClient({
+                credentials: {client_email: 'bogus', private_key: 'bogus'},
+                projectId: 'bogus',
+            });
+            await client.initialize();
+            const request = generateSampleMessage(
+              new protos.google.cloud.policysimulator.v1.ListOrgPolicyViolationsRequest()
+            );
+            const defaultValue1 =
+              getTypeDefaultValue('.google.cloud.policysimulator.v1.ListOrgPolicyViolationsRequest', ['parent']);
+            request.parent = defaultValue1;
+            const expectedHeaderRequestParams = `parent=${defaultValue1 ?? '' }`;
+            const expectedError = new Error('expected');
+            client.descriptors.page.listOrgPolicyViolations.asyncIterate = stubAsyncIterationCall(undefined, expectedError);
+            const iterable = client.listOrgPolicyViolationsAsync(request);
+            await assert.rejects(async () => {
+                const responses: protos.google.cloud.policysimulator.v1.IOrgPolicyViolation[] = [];
+                for await (const resource of iterable) {
+                    responses.push(resource!);
+                }
+            });
+            assert.deepStrictEqual(
+                (client.descriptors.page.listOrgPolicyViolations.asyncIterate as SinonStub)
+                    .getCall(0).args[1], request);
+            assert(
+                (client.descriptors.page.listOrgPolicyViolations.asyncIterate as SinonStub)
                     .getCall(0).args[2].otherArgs.headers['x-goog-request-params'].includes(
                         expectedHeaderRequestParams
                     )
@@ -783,7 +1028,7 @@ describe('v1.SimulatorClient', () => {
     });
     describe('getOperation', () => {
         it('invokes getOperation without error', async () => {
-            const client = new simulatorModule.v1.SimulatorClient({
+            const client = new orgpolicyviolationspreviewserviceModule.v1.OrgPolicyViolationsPreviewServiceClient({
               credentials: {client_email: 'bogus', private_key: 'bogus'},
               projectId: 'bogus',
             });
@@ -802,7 +1047,7 @@ describe('v1.SimulatorClient', () => {
             );
         });
         it('invokes getOperation without error using callback', async () => {
-            const client = new simulatorModule.v1.SimulatorClient({
+            const client = new orgpolicyviolationspreviewserviceModule.v1.OrgPolicyViolationsPreviewServiceClient({
               credentials: {client_email: 'bogus', private_key: 'bogus'},
               projectId: 'bogus',
             });
@@ -834,7 +1079,7 @@ describe('v1.SimulatorClient', () => {
                 .getCall(0));
         });
         it('invokes getOperation with error', async () => {
-            const client = new simulatorModule.v1.SimulatorClient({
+            const client = new orgpolicyviolationspreviewserviceModule.v1.OrgPolicyViolationsPreviewServiceClient({
               credentials: {client_email: 'bogus', private_key: 'bogus'},
               projectId: 'bogus',
             });
@@ -850,7 +1095,7 @@ describe('v1.SimulatorClient', () => {
     });
     describe('cancelOperation', () => {
         it('invokes cancelOperation without error', async () => {
-            const client = new simulatorModule.v1.SimulatorClient({
+            const client = new orgpolicyviolationspreviewserviceModule.v1.OrgPolicyViolationsPreviewServiceClient({
               credentials: {client_email: 'bogus', private_key: 'bogus'},
               projectId: 'bogus',
             });
@@ -869,7 +1114,7 @@ describe('v1.SimulatorClient', () => {
             );
         });
         it('invokes cancelOperation without error using callback', async () => {
-            const client = new simulatorModule.v1.SimulatorClient({
+            const client = new orgpolicyviolationspreviewserviceModule.v1.OrgPolicyViolationsPreviewServiceClient({
               credentials: {client_email: 'bogus', private_key: 'bogus'},
               projectId: 'bogus',
             });
@@ -901,7 +1146,7 @@ describe('v1.SimulatorClient', () => {
                 .getCall(0));
         });
         it('invokes cancelOperation with error', async () => {
-            const client = new simulatorModule.v1.SimulatorClient({
+            const client = new orgpolicyviolationspreviewserviceModule.v1.OrgPolicyViolationsPreviewServiceClient({
               credentials: {client_email: 'bogus', private_key: 'bogus'},
               projectId: 'bogus',
             });
@@ -917,7 +1162,7 @@ describe('v1.SimulatorClient', () => {
     });
     describe('deleteOperation', () => {
         it('invokes deleteOperation without error', async () => {
-            const client = new simulatorModule.v1.SimulatorClient({
+            const client = new orgpolicyviolationspreviewserviceModule.v1.OrgPolicyViolationsPreviewServiceClient({
               credentials: {client_email: 'bogus', private_key: 'bogus'},
               projectId: 'bogus',
             });
@@ -936,7 +1181,7 @@ describe('v1.SimulatorClient', () => {
             );
         });
         it('invokes deleteOperation without error using callback', async () => {
-            const client = new simulatorModule.v1.SimulatorClient({
+            const client = new orgpolicyviolationspreviewserviceModule.v1.OrgPolicyViolationsPreviewServiceClient({
               credentials: {client_email: 'bogus', private_key: 'bogus'},
               projectId: 'bogus',
             });
@@ -968,7 +1213,7 @@ describe('v1.SimulatorClient', () => {
                 .getCall(0));
         });
         it('invokes deleteOperation with error', async () => {
-            const client = new simulatorModule.v1.SimulatorClient({
+            const client = new orgpolicyviolationspreviewserviceModule.v1.OrgPolicyViolationsPreviewServiceClient({
               credentials: {client_email: 'bogus', private_key: 'bogus'},
               projectId: 'bogus',
             });
@@ -984,7 +1229,7 @@ describe('v1.SimulatorClient', () => {
     });
     describe('listOperationsAsync', () => {
         it('uses async iteration with listOperations without error', async () => {
-            const client = new simulatorModule.v1.SimulatorClient({
+            const client = new orgpolicyviolationspreviewserviceModule.v1.OrgPolicyViolationsPreviewServiceClient({
               credentials: {client_email: 'bogus', private_key: 'bogus'},
               projectId: 'bogus',
             });
@@ -1014,7 +1259,7 @@ describe('v1.SimulatorClient', () => {
                     .getCall(0).args[1], request);
         });
         it('uses async iteration with listOperations with error', async () => {
-            const client = new simulatorModule.v1.SimulatorClient({
+            const client = new orgpolicyviolationspreviewserviceModule.v1.OrgPolicyViolationsPreviewServiceClient({
                 credentials: {client_email: 'bogus', private_key: 'bogus'},
                 projectId: 'bogus',
             });
@@ -1045,7 +1290,7 @@ describe('v1.SimulatorClient', () => {
                 organization: "organizationValue",
                 custom_constraint: "customConstraintValue",
             };
-            const client = new simulatorModule.v1.SimulatorClient({
+            const client = new orgpolicyviolationspreviewserviceModule.v1.OrgPolicyViolationsPreviewServiceClient({
                 credentials: {client_email: 'bogus', private_key: 'bogus'},
                 projectId: 'bogus',
             });
@@ -1083,7 +1328,7 @@ describe('v1.SimulatorClient', () => {
                 folder: "folderValue",
                 constraint: "constraintValue",
             };
-            const client = new simulatorModule.v1.SimulatorClient({
+            const client = new orgpolicyviolationspreviewserviceModule.v1.OrgPolicyViolationsPreviewServiceClient({
                 credentials: {client_email: 'bogus', private_key: 'bogus'},
                 projectId: 'bogus',
             });
@@ -1122,7 +1367,7 @@ describe('v1.SimulatorClient', () => {
                 location: "locationValue",
                 replay: "replayValue",
             };
-            const client = new simulatorModule.v1.SimulatorClient({
+            const client = new orgpolicyviolationspreviewserviceModule.v1.OrgPolicyViolationsPreviewServiceClient({
                 credentials: {client_email: 'bogus', private_key: 'bogus'},
                 projectId: 'bogus',
             });
@@ -1169,7 +1414,7 @@ describe('v1.SimulatorClient', () => {
                 replay: "replayValue",
                 replay_result: "replayResultValue",
             };
-            const client = new simulatorModule.v1.SimulatorClient({
+            const client = new orgpolicyviolationspreviewserviceModule.v1.OrgPolicyViolationsPreviewServiceClient({
                 credentials: {client_email: 'bogus', private_key: 'bogus'},
                 projectId: 'bogus',
             });
@@ -1221,7 +1466,7 @@ describe('v1.SimulatorClient', () => {
                 folder: "folderValue",
                 policy: "policyValue",
             };
-            const client = new simulatorModule.v1.SimulatorClient({
+            const client = new orgpolicyviolationspreviewserviceModule.v1.OrgPolicyViolationsPreviewServiceClient({
                 credentials: {client_email: 'bogus', private_key: 'bogus'},
                 projectId: 'bogus',
             });
@@ -1261,7 +1506,7 @@ describe('v1.SimulatorClient', () => {
                 org_policy_violations_preview: "orgPolicyViolationsPreviewValue",
                 org_policy_violation: "orgPolicyViolationValue",
             };
-            const client = new simulatorModule.v1.SimulatorClient({
+            const client = new orgpolicyviolationspreviewserviceModule.v1.OrgPolicyViolationsPreviewServiceClient({
                 credentials: {client_email: 'bogus', private_key: 'bogus'},
                 projectId: 'bogus',
             });
@@ -1314,7 +1559,7 @@ describe('v1.SimulatorClient', () => {
                 location: "locationValue",
                 org_policy_violations_preview: "orgPolicyViolationsPreviewValue",
             };
-            const client = new simulatorModule.v1.SimulatorClient({
+            const client = new orgpolicyviolationspreviewserviceModule.v1.OrgPolicyViolationsPreviewServiceClient({
                 credentials: {client_email: 'bogus', private_key: 'bogus'},
                 projectId: 'bogus',
             });
@@ -1353,13 +1598,43 @@ describe('v1.SimulatorClient', () => {
             });
         });
 
+        describe('organization', async () => {
+            const fakePath = "/rendered/path/organization";
+            const expectedParameters = {
+                organization: "organizationValue",
+            };
+            const client = new orgpolicyviolationspreviewserviceModule.v1.OrgPolicyViolationsPreviewServiceClient({
+                credentials: {client_email: 'bogus', private_key: 'bogus'},
+                projectId: 'bogus',
+            });
+            await client.initialize();
+            client.pathTemplates.organizationPathTemplate.render =
+                sinon.stub().returns(fakePath);
+            client.pathTemplates.organizationPathTemplate.match =
+                sinon.stub().returns(expectedParameters);
+
+            it('organizationPath', () => {
+                const result = client.organizationPath("organizationValue");
+                assert.strictEqual(result, fakePath);
+                assert((client.pathTemplates.organizationPathTemplate.render as SinonStub)
+                    .getCall(-1).calledWith(expectedParameters));
+            });
+
+            it('matchOrganizationFromOrganizationName', () => {
+                const result = client.matchOrganizationFromOrganizationName(fakePath);
+                assert.strictEqual(result, "organizationValue");
+                assert((client.pathTemplates.organizationPathTemplate.match as SinonStub)
+                    .getCall(-1).calledWith(fakePath));
+            });
+        });
+
         describe('organizationConstraint', async () => {
             const fakePath = "/rendered/path/organizationConstraint";
             const expectedParameters = {
                 organization: "organizationValue",
                 constraint: "constraintValue",
             };
-            const client = new simulatorModule.v1.SimulatorClient({
+            const client = new orgpolicyviolationspreviewserviceModule.v1.OrgPolicyViolationsPreviewServiceClient({
                 credentials: {client_email: 'bogus', private_key: 'bogus'},
                 projectId: 'bogus',
             });
@@ -1391,6 +1666,44 @@ describe('v1.SimulatorClient', () => {
             });
         });
 
+        describe('organizationLocation', async () => {
+            const fakePath = "/rendered/path/organizationLocation";
+            const expectedParameters = {
+                organization: "organizationValue",
+                location: "locationValue",
+            };
+            const client = new orgpolicyviolationspreviewserviceModule.v1.OrgPolicyViolationsPreviewServiceClient({
+                credentials: {client_email: 'bogus', private_key: 'bogus'},
+                projectId: 'bogus',
+            });
+            await client.initialize();
+            client.pathTemplates.organizationLocationPathTemplate.render =
+                sinon.stub().returns(fakePath);
+            client.pathTemplates.organizationLocationPathTemplate.match =
+                sinon.stub().returns(expectedParameters);
+
+            it('organizationLocationPath', () => {
+                const result = client.organizationLocationPath("organizationValue", "locationValue");
+                assert.strictEqual(result, fakePath);
+                assert((client.pathTemplates.organizationLocationPathTemplate.render as SinonStub)
+                    .getCall(-1).calledWith(expectedParameters));
+            });
+
+            it('matchOrganizationFromOrganizationLocationName', () => {
+                const result = client.matchOrganizationFromOrganizationLocationName(fakePath);
+                assert.strictEqual(result, "organizationValue");
+                assert((client.pathTemplates.organizationLocationPathTemplate.match as SinonStub)
+                    .getCall(-1).calledWith(fakePath));
+            });
+
+            it('matchLocationFromOrganizationLocationName', () => {
+                const result = client.matchLocationFromOrganizationLocationName(fakePath);
+                assert.strictEqual(result, "locationValue");
+                assert((client.pathTemplates.organizationLocationPathTemplate.match as SinonStub)
+                    .getCall(-1).calledWith(fakePath));
+            });
+        });
+
         describe('organizationLocationReplay', async () => {
             const fakePath = "/rendered/path/organizationLocationReplay";
             const expectedParameters = {
@@ -1398,7 +1711,7 @@ describe('v1.SimulatorClient', () => {
                 location: "locationValue",
                 replay: "replayValue",
             };
-            const client = new simulatorModule.v1.SimulatorClient({
+            const client = new orgpolicyviolationspreviewserviceModule.v1.OrgPolicyViolationsPreviewServiceClient({
                 credentials: {client_email: 'bogus', private_key: 'bogus'},
                 projectId: 'bogus',
             });
@@ -1445,7 +1758,7 @@ describe('v1.SimulatorClient', () => {
                 replay: "replayValue",
                 replay_result: "replayResultValue",
             };
-            const client = new simulatorModule.v1.SimulatorClient({
+            const client = new orgpolicyviolationspreviewserviceModule.v1.OrgPolicyViolationsPreviewServiceClient({
                 credentials: {client_email: 'bogus', private_key: 'bogus'},
                 projectId: 'bogus',
             });
@@ -1497,7 +1810,7 @@ describe('v1.SimulatorClient', () => {
                 organization: "organizationValue",
                 policy: "policyValue",
             };
-            const client = new simulatorModule.v1.SimulatorClient({
+            const client = new orgpolicyviolationspreviewserviceModule.v1.OrgPolicyViolationsPreviewServiceClient({
                 credentials: {client_email: 'bogus', private_key: 'bogus'},
                 projectId: 'bogus',
             });
@@ -1535,7 +1848,7 @@ describe('v1.SimulatorClient', () => {
                 project: "projectValue",
                 constraint: "constraintValue",
             };
-            const client = new simulatorModule.v1.SimulatorClient({
+            const client = new orgpolicyviolationspreviewserviceModule.v1.OrgPolicyViolationsPreviewServiceClient({
                 credentials: {client_email: 'bogus', private_key: 'bogus'},
                 projectId: 'bogus',
             });
@@ -1574,7 +1887,7 @@ describe('v1.SimulatorClient', () => {
                 location: "locationValue",
                 replay: "replayValue",
             };
-            const client = new simulatorModule.v1.SimulatorClient({
+            const client = new orgpolicyviolationspreviewserviceModule.v1.OrgPolicyViolationsPreviewServiceClient({
                 credentials: {client_email: 'bogus', private_key: 'bogus'},
                 projectId: 'bogus',
             });
@@ -1621,7 +1934,7 @@ describe('v1.SimulatorClient', () => {
                 replay: "replayValue",
                 replay_result: "replayResultValue",
             };
-            const client = new simulatorModule.v1.SimulatorClient({
+            const client = new orgpolicyviolationspreviewserviceModule.v1.OrgPolicyViolationsPreviewServiceClient({
                 credentials: {client_email: 'bogus', private_key: 'bogus'},
                 projectId: 'bogus',
             });
@@ -1673,7 +1986,7 @@ describe('v1.SimulatorClient', () => {
                 project: "projectValue",
                 policy: "policyValue",
             };
-            const client = new simulatorModule.v1.SimulatorClient({
+            const client = new orgpolicyviolationspreviewserviceModule.v1.OrgPolicyViolationsPreviewServiceClient({
                 credentials: {client_email: 'bogus', private_key: 'bogus'},
                 projectId: 'bogus',
             });

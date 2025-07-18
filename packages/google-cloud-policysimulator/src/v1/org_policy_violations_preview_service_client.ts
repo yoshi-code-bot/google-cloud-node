@@ -26,29 +26,28 @@ import {loggingUtils as logging, decodeAnyProtosInArray} from 'google-gax';
 
 /**
  * Client JSON configuration object, loaded from
- * `src/v1/simulator_client_config.json`.
+ * `src/v1/org_policy_violations_preview_service_client_config.json`.
  * This file defines retry strategy and timeouts for all API methods in this library.
  */
-import * as gapicConfig from './simulator_client_config.json';
+import * as gapicConfig from './org_policy_violations_preview_service_client_config.json';
 const version = require('../../../package.json').version;
 
 /**
- *  Policy Simulator API service.
+ *  Violations Preview API service for OrgPolicy.
  *
- *  Policy Simulator is a collection of endpoints for creating, running, and
- *  viewing a {@link protos.google.cloud.policysimulator.v1.Replay|Replay}. A
- *  {@link protos.google.cloud.policysimulator.v1.Replay|Replay} is a type of simulation that
- *  lets you see how your principals' access to resources might change if you
- *  changed your IAM policy.
- *
- *  During a {@link protos.google.cloud.policysimulator.v1.Replay|Replay}, Policy Simulator
- *  re-evaluates, or replays, past access attempts under both the current policy
- *  and  your proposed policy, and compares those results to determine how your
- *  principals' access might change under the proposed policy.
+ *  An
+ *  {@link protos.google.cloud.policysimulator.v1.OrgPolicyViolationsPreview|OrgPolicyViolationsPreview}
+ *  is a preview of the violations that will exist as soon as a proposed
+ *  OrgPolicy change is submitted. To create an
+ *  {@link protos.google.cloud.policysimulator.v1.OrgPolicyViolationsPreview|OrgPolicyViolationsPreview},
+ *  the API user specifies the changes they wish to make and requests the
+ *  generation of a preview via {@link protos.|GenerateViolationsPreview}. the OrgPolicy
+ *  Simulator service then scans the API user's currently existing resources to
+ *  determine these resources violate the newly set OrgPolicy.
  * @class
  * @memberof v1
  */
-export class SimulatorClient {
+export class OrgPolicyViolationsPreviewServiceClient {
   private _terminated = false;
   private _opts: ClientOptions;
   private _providedCustomServicePath: boolean;
@@ -71,10 +70,10 @@ export class SimulatorClient {
   innerApiCalls: {[name: string]: Function};
   pathTemplates: {[name: string]: gax.PathTemplate};
   operationsClient: gax.OperationsClient;
-  simulatorStub?: Promise<{[name: string]: Function}>;
+  orgPolicyViolationsPreviewServiceStub?: Promise<{[name: string]: Function}>;
 
   /**
-   * Construct an instance of SimulatorClient.
+   * Construct an instance of OrgPolicyViolationsPreviewServiceClient.
    *
    * @param {object} [options] - The configuration object.
    * The options accepted by the constructor are described in detail
@@ -109,12 +108,12 @@ export class SimulatorClient {
    *     HTTP implementation. Load only fallback version and pass it to the constructor:
    *     ```
    *     const gax = require('google-gax/build/src/fallback'); // avoids loading google-gax with gRPC
-   *     const client = new SimulatorClient({fallback: true}, gax);
+   *     const client = new OrgPolicyViolationsPreviewServiceClient({fallback: true}, gax);
    *     ```
    */
   constructor(opts?: ClientOptions, gaxInstance?: typeof gax | typeof gax.fallback) {
     // Ensure that options include all the required fields.
-    const staticMembers = this.constructor as typeof SimulatorClient;
+    const staticMembers = this.constructor as typeof OrgPolicyViolationsPreviewServiceClient;
     if (opts?.universe_domain && opts?.universeDomain && opts?.universe_domain !== opts?.universeDomain) {
       throw new Error('Please set either universe_domain or universeDomain, but not both.');
     }
@@ -210,8 +209,14 @@ export class SimulatorClient {
       orgPolicyViolationsPreviewPathTemplate: new this._gaxModule.PathTemplate(
         'organizations/{organization}/locations/{location}/orgPolicyViolationsPreviews/{org_policy_violations_preview}'
       ),
+      organizationPathTemplate: new this._gaxModule.PathTemplate(
+        'organizations/{organization}'
+      ),
       organizationConstraintPathTemplate: new this._gaxModule.PathTemplate(
         'organizations/{organization}/constraints/{constraint}'
+      ),
+      organizationLocationPathTemplate: new this._gaxModule.PathTemplate(
+        'organizations/{organization}/locations/{location}'
       ),
       organizationLocationReplayPathTemplate: new this._gaxModule.PathTemplate(
         'organizations/{organization}/locations/{location}/replays/{replay}'
@@ -240,8 +245,10 @@ export class SimulatorClient {
     // (e.g. 50 results at a time, with tokens to get subsequent
     // pages). Denote the keys used for pagination and results.
     this.descriptors.page = {
-      listReplayResults:
-          new this._gaxModule.PageDescriptor('pageToken', 'nextPageToken', 'replayResults')
+      listOrgPolicyViolationsPreviews:
+          new this._gaxModule.PageDescriptor('pageToken', 'nextPageToken', 'orgPolicyViolationsPreviews'),
+      listOrgPolicyViolations:
+          new this._gaxModule.PageDescriptor('pageToken', 'nextPageToken', 'orgPolicyViolations')
     };
 
     const protoFilesRoot = this._gaxModule.protobufFromJSON(jsonProtos);
@@ -259,21 +266,21 @@ export class SimulatorClient {
       }];
     }
     this.operationsClient = this._gaxModule.lro(lroOptions).operationsClient(opts);
-    const createReplayResponse = protoFilesRoot.lookup(
-      '.google.cloud.policysimulator.v1.Replay') as gax.protobuf.Type;
-    const createReplayMetadata = protoFilesRoot.lookup(
-      '.google.cloud.policysimulator.v1.ReplayOperationMetadata') as gax.protobuf.Type;
+    const createOrgPolicyViolationsPreviewResponse = protoFilesRoot.lookup(
+      '.google.cloud.policysimulator.v1.OrgPolicyViolationsPreview') as gax.protobuf.Type;
+    const createOrgPolicyViolationsPreviewMetadata = protoFilesRoot.lookup(
+      '.google.cloud.policysimulator.v1.CreateOrgPolicyViolationsPreviewOperationMetadata') as gax.protobuf.Type;
 
     this.descriptors.longrunning = {
-      createReplay: new this._gaxModule.LongrunningDescriptor(
+      createOrgPolicyViolationsPreview: new this._gaxModule.LongrunningDescriptor(
         this.operationsClient,
-        createReplayResponse.decode.bind(createReplayResponse),
-        createReplayMetadata.decode.bind(createReplayMetadata))
+        createOrgPolicyViolationsPreviewResponse.decode.bind(createOrgPolicyViolationsPreviewResponse),
+        createOrgPolicyViolationsPreviewMetadata.decode.bind(createOrgPolicyViolationsPreviewMetadata))
     };
 
     // Put together the default options sent with requests.
     this._defaults = this._gaxGrpc.constructSettings(
-        'google.cloud.policysimulator.v1.Simulator', gapicConfig as gax.ClientConfig,
+        'google.cloud.policysimulator.v1.OrgPolicyViolationsPreviewService', gapicConfig as gax.ClientConfig,
         opts.clientConfig || {}, {'x-goog-api-client': clientHeader.join(' ')});
 
     // Set up a dictionary of "inner API calls"; the core implementation
@@ -298,25 +305,25 @@ export class SimulatorClient {
    */
   initialize() {
     // If the client stub promise is already initialized, return immediately.
-    if (this.simulatorStub) {
-      return this.simulatorStub;
+    if (this.orgPolicyViolationsPreviewServiceStub) {
+      return this.orgPolicyViolationsPreviewServiceStub;
     }
 
     // Put together the "service stub" for
-    // google.cloud.policysimulator.v1.Simulator.
-    this.simulatorStub = this._gaxGrpc.createStub(
+    // google.cloud.policysimulator.v1.OrgPolicyViolationsPreviewService.
+    this.orgPolicyViolationsPreviewServiceStub = this._gaxGrpc.createStub(
         this._opts.fallback ?
-          (this._protos as protobuf.Root).lookupService('google.cloud.policysimulator.v1.Simulator') :
+          (this._protos as protobuf.Root).lookupService('google.cloud.policysimulator.v1.OrgPolicyViolationsPreviewService') :
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          (this._protos as any).google.cloud.policysimulator.v1.Simulator,
+          (this._protos as any).google.cloud.policysimulator.v1.OrgPolicyViolationsPreviewService,
         this._opts, this._providedCustomServicePath) as Promise<{[method: string]: Function}>;
 
     // Iterate over each of the methods that the service provides
     // and create an API call method for each.
-    const simulatorStubMethods =
-        ['getReplay', 'createReplay', 'listReplayResults'];
-    for (const methodName of simulatorStubMethods) {
-      const callPromise = this.simulatorStub.then(
+    const orgPolicyViolationsPreviewServiceStubMethods =
+        ['listOrgPolicyViolationsPreviews', 'getOrgPolicyViolationsPreview', 'createOrgPolicyViolationsPreview', 'listOrgPolicyViolations'];
+    for (const methodName of orgPolicyViolationsPreviewServiceStubMethods) {
+      const callPromise = this.orgPolicyViolationsPreviewServiceStub.then(
         stub => (...args: Array<{}>) => {
           if (this._terminated) {
             return Promise.reject('The client has already been closed.');
@@ -342,7 +349,7 @@ export class SimulatorClient {
       this.innerApiCalls[methodName] = apiCall;
     }
 
-    return this.simulatorStub;
+    return this.orgPolicyViolationsPreviewServiceStub;
   }
 
   /**
@@ -419,63 +426,58 @@ export class SimulatorClient {
   // -- Service calls --
   // -------------------
 /**
- * Gets the specified {@link protos.google.cloud.policysimulator.v1.Replay|Replay}. Each
- * `Replay` is available for at least 7 days.
+ * GetOrgPolicyViolationsPreview gets the specified
+ * {@link protos.google.cloud.policysimulator.v1.OrgPolicyViolationsPreview|OrgPolicyViolationsPreview}.
+ * Each
+ * {@link protos.google.cloud.policysimulator.v1.OrgPolicyViolationsPreview|OrgPolicyViolationsPreview}
+ * is available for at least 7 days.
  *
  * @param {Object} request
  *   The request object that will be sent.
  * @param {string} request.name
- *   Required. The name of the {@link protos.google.cloud.policysimulator.v1.Replay|Replay}
- *   to retrieve, in the following format:
- *
- *   `{projects|folders|organizations}/{resource-id}/locations/global/replays/{replay-id}`,
- *   where `{resource-id}` is the ID of the project, folder, or organization
- *   that owns the `Replay`.
- *
- *   Example:
- *   `projects/my-example-project/locations/global/replays/506a5f7f-38ce-4d7d-8e03-479ce1833c36`
+ *   Required. The name of the OrgPolicyViolationsPreview to get.
  * @param {object} [options]
  *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
  * @returns {Promise} - The promise which resolves to an array.
- *   The first element of the array is an object representing {@link protos.google.cloud.policysimulator.v1.Replay|Replay}.
+ *   The first element of the array is an object representing {@link protos.google.cloud.policysimulator.v1.OrgPolicyViolationsPreview|OrgPolicyViolationsPreview}.
  *   Please see the {@link https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#regular-methods | documentation }
  *   for more details and examples.
- * @example <caption>include:samples/generated/v1/simulator.get_replay.js</caption>
- * region_tag:policysimulator_v1_generated_Simulator_GetReplay_async
+ * @example <caption>include:samples/generated/v1/org_policy_violations_preview_service.get_org_policy_violations_preview.js</caption>
+ * region_tag:policysimulator_v1_generated_OrgPolicyViolationsPreviewService_GetOrgPolicyViolationsPreview_async
  */
-  getReplay(
-      request?: protos.google.cloud.policysimulator.v1.IGetReplayRequest,
+  getOrgPolicyViolationsPreview(
+      request?: protos.google.cloud.policysimulator.v1.IGetOrgPolicyViolationsPreviewRequest,
       options?: CallOptions):
       Promise<[
-        protos.google.cloud.policysimulator.v1.IReplay,
-        protos.google.cloud.policysimulator.v1.IGetReplayRequest|undefined, {}|undefined
+        protos.google.cloud.policysimulator.v1.IOrgPolicyViolationsPreview,
+        protos.google.cloud.policysimulator.v1.IGetOrgPolicyViolationsPreviewRequest|undefined, {}|undefined
       ]>;
-  getReplay(
-      request: protos.google.cloud.policysimulator.v1.IGetReplayRequest,
+  getOrgPolicyViolationsPreview(
+      request: protos.google.cloud.policysimulator.v1.IGetOrgPolicyViolationsPreviewRequest,
       options: CallOptions,
       callback: Callback<
-          protos.google.cloud.policysimulator.v1.IReplay,
-          protos.google.cloud.policysimulator.v1.IGetReplayRequest|null|undefined,
+          protos.google.cloud.policysimulator.v1.IOrgPolicyViolationsPreview,
+          protos.google.cloud.policysimulator.v1.IGetOrgPolicyViolationsPreviewRequest|null|undefined,
           {}|null|undefined>): void;
-  getReplay(
-      request: protos.google.cloud.policysimulator.v1.IGetReplayRequest,
+  getOrgPolicyViolationsPreview(
+      request: protos.google.cloud.policysimulator.v1.IGetOrgPolicyViolationsPreviewRequest,
       callback: Callback<
-          protos.google.cloud.policysimulator.v1.IReplay,
-          protos.google.cloud.policysimulator.v1.IGetReplayRequest|null|undefined,
+          protos.google.cloud.policysimulator.v1.IOrgPolicyViolationsPreview,
+          protos.google.cloud.policysimulator.v1.IGetOrgPolicyViolationsPreviewRequest|null|undefined,
           {}|null|undefined>): void;
-  getReplay(
-      request?: protos.google.cloud.policysimulator.v1.IGetReplayRequest,
+  getOrgPolicyViolationsPreview(
+      request?: protos.google.cloud.policysimulator.v1.IGetOrgPolicyViolationsPreviewRequest,
       optionsOrCallback?: CallOptions|Callback<
-          protos.google.cloud.policysimulator.v1.IReplay,
-          protos.google.cloud.policysimulator.v1.IGetReplayRequest|null|undefined,
+          protos.google.cloud.policysimulator.v1.IOrgPolicyViolationsPreview,
+          protos.google.cloud.policysimulator.v1.IGetOrgPolicyViolationsPreviewRequest|null|undefined,
           {}|null|undefined>,
       callback?: Callback<
-          protos.google.cloud.policysimulator.v1.IReplay,
-          protos.google.cloud.policysimulator.v1.IGetReplayRequest|null|undefined,
+          protos.google.cloud.policysimulator.v1.IOrgPolicyViolationsPreview,
+          protos.google.cloud.policysimulator.v1.IGetOrgPolicyViolationsPreviewRequest|null|undefined,
           {}|null|undefined>):
       Promise<[
-        protos.google.cloud.policysimulator.v1.IReplay,
-        protos.google.cloud.policysimulator.v1.IGetReplayRequest|undefined, {}|undefined
+        protos.google.cloud.policysimulator.v1.IOrgPolicyViolationsPreview,
+        protos.google.cloud.policysimulator.v1.IGetOrgPolicyViolationsPreviewRequest|undefined, {}|undefined
       ]>|void {
     request = request || {};
     let options: CallOptions;
@@ -495,23 +497,23 @@ export class SimulatorClient {
       'name': request.name ?? '',
     });
     this.initialize().catch(err => {throw err});
-    this._log.info('getReplay request %j', request);
+    this._log.info('getOrgPolicyViolationsPreview request %j', request);
     const wrappedCallback: Callback<
-        protos.google.cloud.policysimulator.v1.IReplay,
-        protos.google.cloud.policysimulator.v1.IGetReplayRequest|null|undefined,
+        protos.google.cloud.policysimulator.v1.IOrgPolicyViolationsPreview,
+        protos.google.cloud.policysimulator.v1.IGetOrgPolicyViolationsPreviewRequest|null|undefined,
         {}|null|undefined>|undefined = callback
       ? (error, response, options, rawResponse) => {
-          this._log.info('getReplay response %j', response);
+          this._log.info('getOrgPolicyViolationsPreview response %j', response);
           callback!(error, response, options, rawResponse); // We verified callback above.
         }
       : undefined;
-    return this.innerApiCalls.getReplay(request, options, wrappedCallback)
+    return this.innerApiCalls.getOrgPolicyViolationsPreview(request, options, wrappedCallback)
       ?.then(([response, options, rawResponse]: [
-        protos.google.cloud.policysimulator.v1.IReplay,
-        protos.google.cloud.policysimulator.v1.IGetReplayRequest|undefined,
+        protos.google.cloud.policysimulator.v1.IOrgPolicyViolationsPreview,
+        protos.google.cloud.policysimulator.v1.IGetOrgPolicyViolationsPreviewRequest|undefined,
         {}|undefined
       ]) => {
-        this._log.info('getReplay response %j', response);
+        this._log.info('getOrgPolicyViolationsPreview response %j', response);
         return [response, options, rawResponse];
       }).catch((error: any) => {
         if (error && 'statusDetails' in error && error.statusDetails instanceof Array) {
@@ -523,20 +525,29 @@ export class SimulatorClient {
   }
 
 /**
- * Creates and starts a {@link protos.google.cloud.policysimulator.v1.Replay|Replay} using
- * the given {@link protos.google.cloud.policysimulator.v1.ReplayConfig|ReplayConfig}.
+ * CreateOrgPolicyViolationsPreview creates an
+ * {@link protos.google.cloud.policysimulator.v1.OrgPolicyViolationsPreview|OrgPolicyViolationsPreview}
+ * for the proposed changes in the provided
+ * {@link protos.|OrgPolicyViolationsPreview.OrgPolicyOverlay}. The changes to OrgPolicy
+ * are specified by this `OrgPolicyOverlay`. The resources to scan are
+ * inferred from these specified changes.
  *
  * @param {Object} request
  *   The request object that will be sent.
  * @param {string} request.parent
- *   Required. The parent resource where this
- *   {@link protos.google.cloud.policysimulator.v1.Replay|Replay} will be created. This
- *   resource must be a project, folder, or organization with a location.
+ *   Required. The organization under which this
+ *   {@link protos.google.cloud.policysimulator.v1.OrgPolicyViolationsPreview|OrgPolicyViolationsPreview}
+ *   will be created.
  *
- *   Example: `projects/my-example-project/locations/global`
- * @param {google.cloud.policysimulator.v1.Replay} request.replay
- *   Required. The {@link protos.google.cloud.policysimulator.v1.Replay|Replay} to create.
- *   Set `Replay.ReplayConfig` to configure the replay.
+ *   Example: `organizations/my-example-org/locations/global`
+ * @param {google.cloud.policysimulator.v1.OrgPolicyViolationsPreview} request.orgPolicyViolationsPreview
+ *   Required. The
+ *   {@link protos.google.cloud.policysimulator.v1.OrgPolicyViolationsPreview|OrgPolicyViolationsPreview}
+ *   to generate.
+ * @param {string} [request.orgPolicyViolationsPreviewId]
+ *   Optional. An optional user-specified ID for the
+ *   {@link protos.google.cloud.policysimulator.v1.OrgPolicyViolationsPreview|OrgPolicyViolationsPreview}.
+ *   If not provided, a random ID will be generated.
  * @param {object} [options]
  *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
  * @returns {Promise} - The promise which resolves to an array.
@@ -545,41 +556,41 @@ export class SimulatorClient {
  *   you can `await` for.
  *   Please see the {@link https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#long-running-operations | documentation }
  *   for more details and examples.
- * @example <caption>include:samples/generated/v1/simulator.create_replay.js</caption>
- * region_tag:policysimulator_v1_generated_Simulator_CreateReplay_async
+ * @example <caption>include:samples/generated/v1/org_policy_violations_preview_service.create_org_policy_violations_preview.js</caption>
+ * region_tag:policysimulator_v1_generated_OrgPolicyViolationsPreviewService_CreateOrgPolicyViolationsPreview_async
  */
-  createReplay(
-      request?: protos.google.cloud.policysimulator.v1.ICreateReplayRequest,
+  createOrgPolicyViolationsPreview(
+      request?: protos.google.cloud.policysimulator.v1.ICreateOrgPolicyViolationsPreviewRequest,
       options?: CallOptions):
       Promise<[
-        LROperation<protos.google.cloud.policysimulator.v1.IReplay, protos.google.cloud.policysimulator.v1.IReplayOperationMetadata>,
+        LROperation<protos.google.cloud.policysimulator.v1.IOrgPolicyViolationsPreview, protos.google.cloud.policysimulator.v1.ICreateOrgPolicyViolationsPreviewOperationMetadata>,
         protos.google.longrunning.IOperation|undefined, {}|undefined
       ]>;
-  createReplay(
-      request: protos.google.cloud.policysimulator.v1.ICreateReplayRequest,
+  createOrgPolicyViolationsPreview(
+      request: protos.google.cloud.policysimulator.v1.ICreateOrgPolicyViolationsPreviewRequest,
       options: CallOptions,
       callback: Callback<
-          LROperation<protos.google.cloud.policysimulator.v1.IReplay, protos.google.cloud.policysimulator.v1.IReplayOperationMetadata>,
+          LROperation<protos.google.cloud.policysimulator.v1.IOrgPolicyViolationsPreview, protos.google.cloud.policysimulator.v1.ICreateOrgPolicyViolationsPreviewOperationMetadata>,
           protos.google.longrunning.IOperation|null|undefined,
           {}|null|undefined>): void;
-  createReplay(
-      request: protos.google.cloud.policysimulator.v1.ICreateReplayRequest,
+  createOrgPolicyViolationsPreview(
+      request: protos.google.cloud.policysimulator.v1.ICreateOrgPolicyViolationsPreviewRequest,
       callback: Callback<
-          LROperation<protos.google.cloud.policysimulator.v1.IReplay, protos.google.cloud.policysimulator.v1.IReplayOperationMetadata>,
+          LROperation<protos.google.cloud.policysimulator.v1.IOrgPolicyViolationsPreview, protos.google.cloud.policysimulator.v1.ICreateOrgPolicyViolationsPreviewOperationMetadata>,
           protos.google.longrunning.IOperation|null|undefined,
           {}|null|undefined>): void;
-  createReplay(
-      request?: protos.google.cloud.policysimulator.v1.ICreateReplayRequest,
+  createOrgPolicyViolationsPreview(
+      request?: protos.google.cloud.policysimulator.v1.ICreateOrgPolicyViolationsPreviewRequest,
       optionsOrCallback?: CallOptions|Callback<
-          LROperation<protos.google.cloud.policysimulator.v1.IReplay, protos.google.cloud.policysimulator.v1.IReplayOperationMetadata>,
+          LROperation<protos.google.cloud.policysimulator.v1.IOrgPolicyViolationsPreview, protos.google.cloud.policysimulator.v1.ICreateOrgPolicyViolationsPreviewOperationMetadata>,
           protos.google.longrunning.IOperation|null|undefined,
           {}|null|undefined>,
       callback?: Callback<
-          LROperation<protos.google.cloud.policysimulator.v1.IReplay, protos.google.cloud.policysimulator.v1.IReplayOperationMetadata>,
+          LROperation<protos.google.cloud.policysimulator.v1.IOrgPolicyViolationsPreview, protos.google.cloud.policysimulator.v1.ICreateOrgPolicyViolationsPreviewOperationMetadata>,
           protos.google.longrunning.IOperation|null|undefined,
           {}|null|undefined>):
       Promise<[
-        LROperation<protos.google.cloud.policysimulator.v1.IReplay, protos.google.cloud.policysimulator.v1.IReplayOperationMetadata>,
+        LROperation<protos.google.cloud.policysimulator.v1.IOrgPolicyViolationsPreview, protos.google.cloud.policysimulator.v1.ICreateOrgPolicyViolationsPreviewOperationMetadata>,
         protos.google.longrunning.IOperation|undefined, {}|undefined
       ]>|void {
     request = request || {};
@@ -601,117 +612,114 @@ export class SimulatorClient {
     });
     this.initialize().catch(err => {throw err});
     const wrappedCallback: Callback<
-          LROperation<protos.google.cloud.policysimulator.v1.IReplay, protos.google.cloud.policysimulator.v1.IReplayOperationMetadata>,
+          LROperation<protos.google.cloud.policysimulator.v1.IOrgPolicyViolationsPreview, protos.google.cloud.policysimulator.v1.ICreateOrgPolicyViolationsPreviewOperationMetadata>,
           protos.google.longrunning.IOperation|null|undefined,
           {}|null|undefined>|undefined = callback
       ? (error, response, rawResponse, _) => {
-          this._log.info('createReplay response %j', rawResponse);
+          this._log.info('createOrgPolicyViolationsPreview response %j', rawResponse);
           callback!(error, response, rawResponse, _); // We verified callback above.
         }
       : undefined;
-    this._log.info('createReplay request %j', request);
-    return this.innerApiCalls.createReplay(request, options, wrappedCallback)
+    this._log.info('createOrgPolicyViolationsPreview request %j', request);
+    return this.innerApiCalls.createOrgPolicyViolationsPreview(request, options, wrappedCallback)
     ?.then(([response, rawResponse, _]: [
-      LROperation<protos.google.cloud.policysimulator.v1.IReplay, protos.google.cloud.policysimulator.v1.IReplayOperationMetadata>,
+      LROperation<protos.google.cloud.policysimulator.v1.IOrgPolicyViolationsPreview, protos.google.cloud.policysimulator.v1.ICreateOrgPolicyViolationsPreviewOperationMetadata>,
       protos.google.longrunning.IOperation|undefined, {}|undefined
     ]) => {
-      this._log.info('createReplay response %j', rawResponse);
+      this._log.info('createOrgPolicyViolationsPreview response %j', rawResponse);
       return [response, rawResponse, _];
     });
   }
 /**
- * Check the status of the long running operation returned by `createReplay()`.
+ * Check the status of the long running operation returned by `createOrgPolicyViolationsPreview()`.
  * @param {String} name
  *   The operation name that will be passed.
  * @returns {Promise} - The promise which resolves to an object.
  *   The decoded operation object has result and metadata field to get information from.
  *   Please see the {@link https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#long-running-operations | documentation }
  *   for more details and examples.
- * @example <caption>include:samples/generated/v1/simulator.create_replay.js</caption>
- * region_tag:policysimulator_v1_generated_Simulator_CreateReplay_async
+ * @example <caption>include:samples/generated/v1/org_policy_violations_preview_service.create_org_policy_violations_preview.js</caption>
+ * region_tag:policysimulator_v1_generated_OrgPolicyViolationsPreviewService_CreateOrgPolicyViolationsPreview_async
  */
-  async checkCreateReplayProgress(name: string): Promise<LROperation<protos.google.cloud.policysimulator.v1.Replay, protos.google.cloud.policysimulator.v1.ReplayOperationMetadata>>{
-    this._log.info('createReplay long-running');
+  async checkCreateOrgPolicyViolationsPreviewProgress(name: string): Promise<LROperation<protos.google.cloud.policysimulator.v1.OrgPolicyViolationsPreview, protos.google.cloud.policysimulator.v1.CreateOrgPolicyViolationsPreviewOperationMetadata>>{
+    this._log.info('createOrgPolicyViolationsPreview long-running');
     const request = new this._gaxModule.operationsProtos.google.longrunning.GetOperationRequest({name});
     const [operation] = await this.operationsClient.getOperation(request);
-    const decodeOperation = new this._gaxModule.Operation(operation, this.descriptors.longrunning.createReplay, this._gaxModule.createDefaultBackoffSettings());
-    return decodeOperation as LROperation<protos.google.cloud.policysimulator.v1.Replay, protos.google.cloud.policysimulator.v1.ReplayOperationMetadata>;
+    const decodeOperation = new this._gaxModule.Operation(operation, this.descriptors.longrunning.createOrgPolicyViolationsPreview, this._gaxModule.createDefaultBackoffSettings());
+    return decodeOperation as LROperation<protos.google.cloud.policysimulator.v1.OrgPolicyViolationsPreview, protos.google.cloud.policysimulator.v1.CreateOrgPolicyViolationsPreviewOperationMetadata>;
   }
  /**
- * Lists the results of running a
- * {@link protos.google.cloud.policysimulator.v1.Replay|Replay}.
+ * ListOrgPolicyViolationsPreviews lists each
+ * {@link protos.google.cloud.policysimulator.v1.OrgPolicyViolationsPreview|OrgPolicyViolationsPreview}
+ * in an organization. Each
+ * {@link protos.google.cloud.policysimulator.v1.OrgPolicyViolationsPreview|OrgPolicyViolationsPreview}
+ * is available for at least 7 days.
  *
  * @param {Object} request
  *   The request object that will be sent.
  * @param {string} request.parent
- *   Required. The {@link protos.google.cloud.policysimulator.v1.Replay|Replay} whose
- *   results are listed, in the following format:
+ *   Required. The parent the violations are scoped to.
+ *   Format:
+ *   `organizations/{organization}/locations/{location}`
  *
- *   `{projects|folders|organizations}/{resource-id}/locations/global/replays/{replay-id}`
+ *   Example: `organizations/my-example-org/locations/global`
+ * @param {number} [request.pageSize]
+ *   Optional. The maximum number of items to return. The service may return
+ *   fewer than this value. If unspecified, at most 5 items will be returned.
+ *   The maximum value is 10; values above 10 will be coerced to 10.
+ * @param {string} [request.pageToken]
+ *   Optional. A page token, received from a previous call. Provide this to
+ *   retrieve the subsequent page.
  *
- *   Example:
- *   `projects/my-project/locations/global/replays/506a5f7f-38ce-4d7d-8e03-479ce1833c36`
- * @param {number} request.pageSize
- *   The maximum number of
- *   {@link protos.google.cloud.policysimulator.v1.ReplayResult|ReplayResult} objects to
- *   return. Defaults to 5000.
- *
- *   The maximum value is 5000; values above 5000 are rounded down to 5000.
- * @param {string} request.pageToken
- *   A page token, received from a previous
- *   {@link protos.google.cloud.policysimulator.v1.Simulator.ListReplayResults|Simulator.ListReplayResults}
- *   call. Provide this token to retrieve the next page of results.
- *
- *   When paginating, all other parameters provided to
- *   [Simulator.ListReplayResults[] must match the call that provided the page
- *   token.
+ *   When paginating, all other parameters must match the call that provided the
+ *   page token.
  * @param {object} [options]
  *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
  * @returns {Promise} - The promise which resolves to an array.
- *   The first element of the array is Array of {@link protos.google.cloud.policysimulator.v1.ReplayResult|ReplayResult}.
+ *   The first element of the array is Array of {@link protos.google.cloud.policysimulator.v1.OrgPolicyViolationsPreview|OrgPolicyViolationsPreview}.
  *   The client library will perform auto-pagination by default: it will call the API as many
  *   times as needed and will merge results from all the pages into this array.
  *   Note that it can affect your quota.
- *   We recommend using `listReplayResultsAsync()`
+ *   We recommend using `listOrgPolicyViolationsPreviewsAsync()`
  *   method described below for async iteration which you can stop as needed.
  *   Please see the {@link https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#auto-pagination | documentation }
  *   for more details and examples.
  */
-  listReplayResults(
-      request?: protos.google.cloud.policysimulator.v1.IListReplayResultsRequest,
+  listOrgPolicyViolationsPreviews(
+      request?: protos.google.cloud.policysimulator.v1.IListOrgPolicyViolationsPreviewsRequest,
       options?: CallOptions):
       Promise<[
-        protos.google.cloud.policysimulator.v1.IReplayResult[],
-        protos.google.cloud.policysimulator.v1.IListReplayResultsRequest|null,
-        protos.google.cloud.policysimulator.v1.IListReplayResultsResponse
+        protos.google.cloud.policysimulator.v1.IOrgPolicyViolationsPreview[],
+        protos.google.cloud.policysimulator.v1.IListOrgPolicyViolationsPreviewsRequest|null,
+        protos.google.cloud.policysimulator.v1.IListOrgPolicyViolationsPreviewsResponse
       ]>;
-  listReplayResults(
-      request: protos.google.cloud.policysimulator.v1.IListReplayResultsRequest,
+  listOrgPolicyViolationsPreviews(
+      request: protos.google.cloud.policysimulator.v1.IListOrgPolicyViolationsPreviewsRequest,
       options: CallOptions,
       callback: PaginationCallback<
-          protos.google.cloud.policysimulator.v1.IListReplayResultsRequest,
-          protos.google.cloud.policysimulator.v1.IListReplayResultsResponse|null|undefined,
-          protos.google.cloud.policysimulator.v1.IReplayResult>): void;
-  listReplayResults(
-      request: protos.google.cloud.policysimulator.v1.IListReplayResultsRequest,
+          protos.google.cloud.policysimulator.v1.IListOrgPolicyViolationsPreviewsRequest,
+          protos.google.cloud.policysimulator.v1.IListOrgPolicyViolationsPreviewsResponse|null|undefined,
+          protos.google.cloud.policysimulator.v1.IOrgPolicyViolationsPreview>): void;
+  listOrgPolicyViolationsPreviews(
+      request: protos.google.cloud.policysimulator.v1.IListOrgPolicyViolationsPreviewsRequest,
       callback: PaginationCallback<
-          protos.google.cloud.policysimulator.v1.IListReplayResultsRequest,
-          protos.google.cloud.policysimulator.v1.IListReplayResultsResponse|null|undefined,
-          protos.google.cloud.policysimulator.v1.IReplayResult>): void;
-  listReplayResults(
-      request?: protos.google.cloud.policysimulator.v1.IListReplayResultsRequest,
+          protos.google.cloud.policysimulator.v1.IListOrgPolicyViolationsPreviewsRequest,
+          protos.google.cloud.policysimulator.v1.IListOrgPolicyViolationsPreviewsResponse|null|undefined,
+          protos.google.cloud.policysimulator.v1.IOrgPolicyViolationsPreview>): void;
+  listOrgPolicyViolationsPreviews(
+      request?: protos.google.cloud.policysimulator.v1.IListOrgPolicyViolationsPreviewsRequest,
       optionsOrCallback?: CallOptions|PaginationCallback<
-          protos.google.cloud.policysimulator.v1.IListReplayResultsRequest,
-          protos.google.cloud.policysimulator.v1.IListReplayResultsResponse|null|undefined,
-          protos.google.cloud.policysimulator.v1.IReplayResult>,
+          protos.google.cloud.policysimulator.v1.IListOrgPolicyViolationsPreviewsRequest,
+          protos.google.cloud.policysimulator.v1.IListOrgPolicyViolationsPreviewsResponse|null|undefined,
+          protos.google.cloud.policysimulator.v1.IOrgPolicyViolationsPreview>,
       callback?: PaginationCallback<
-          protos.google.cloud.policysimulator.v1.IListReplayResultsRequest,
-          protos.google.cloud.policysimulator.v1.IListReplayResultsResponse|null|undefined,
-          protos.google.cloud.policysimulator.v1.IReplayResult>):
+          protos.google.cloud.policysimulator.v1.IListOrgPolicyViolationsPreviewsRequest,
+          protos.google.cloud.policysimulator.v1.IListOrgPolicyViolationsPreviewsResponse|null|undefined,
+          protos.google.cloud.policysimulator.v1.IOrgPolicyViolationsPreview>):
       Promise<[
-        protos.google.cloud.policysimulator.v1.IReplayResult[],
-        protos.google.cloud.policysimulator.v1.IListReplayResultsRequest|null,
-        protos.google.cloud.policysimulator.v1.IListReplayResultsResponse
+        protos.google.cloud.policysimulator.v1.IOrgPolicyViolationsPreview[],
+        protos.google.cloud.policysimulator.v1.IListOrgPolicyViolationsPreviewsRequest|null,
+        protos.google.cloud.policysimulator.v1.IListOrgPolicyViolationsPreviewsResponse
       ]>|void {
     request = request || {};
     let options: CallOptions;
@@ -732,66 +740,60 @@ export class SimulatorClient {
     });
     this.initialize().catch(err => {throw err});
     const wrappedCallback: PaginationCallback<
-      protos.google.cloud.policysimulator.v1.IListReplayResultsRequest,
-      protos.google.cloud.policysimulator.v1.IListReplayResultsResponse|null|undefined,
-      protos.google.cloud.policysimulator.v1.IReplayResult>|undefined = callback
+      protos.google.cloud.policysimulator.v1.IListOrgPolicyViolationsPreviewsRequest,
+      protos.google.cloud.policysimulator.v1.IListOrgPolicyViolationsPreviewsResponse|null|undefined,
+      protos.google.cloud.policysimulator.v1.IOrgPolicyViolationsPreview>|undefined = callback
       ? (error, values, nextPageRequest, rawResponse) => {
-          this._log.info('listReplayResults values %j', values);
+          this._log.info('listOrgPolicyViolationsPreviews values %j', values);
           callback!(error, values, nextPageRequest, rawResponse); // We verified callback above.
         }
       : undefined;
-    this._log.info('listReplayResults request %j', request);
+    this._log.info('listOrgPolicyViolationsPreviews request %j', request);
     return this.innerApiCalls
-      .listReplayResults(request, options, wrappedCallback)
+      .listOrgPolicyViolationsPreviews(request, options, wrappedCallback)
       ?.then(([response, input, output]: [
-        protos.google.cloud.policysimulator.v1.IReplayResult[],
-        protos.google.cloud.policysimulator.v1.IListReplayResultsRequest|null,
-        protos.google.cloud.policysimulator.v1.IListReplayResultsResponse
+        protos.google.cloud.policysimulator.v1.IOrgPolicyViolationsPreview[],
+        protos.google.cloud.policysimulator.v1.IListOrgPolicyViolationsPreviewsRequest|null,
+        protos.google.cloud.policysimulator.v1.IListOrgPolicyViolationsPreviewsResponse
       ]) => {
-        this._log.info('listReplayResults values %j', response);
+        this._log.info('listOrgPolicyViolationsPreviews values %j', response);
         return [response, input, output];
       });
   }
 
 /**
- * Equivalent to `listReplayResults`, but returns a NodeJS Stream object.
+ * Equivalent to `listOrgPolicyViolationsPreviews`, but returns a NodeJS Stream object.
  * @param {Object} request
  *   The request object that will be sent.
  * @param {string} request.parent
- *   Required. The {@link protos.google.cloud.policysimulator.v1.Replay|Replay} whose
- *   results are listed, in the following format:
+ *   Required. The parent the violations are scoped to.
+ *   Format:
+ *   `organizations/{organization}/locations/{location}`
  *
- *   `{projects|folders|organizations}/{resource-id}/locations/global/replays/{replay-id}`
+ *   Example: `organizations/my-example-org/locations/global`
+ * @param {number} [request.pageSize]
+ *   Optional. The maximum number of items to return. The service may return
+ *   fewer than this value. If unspecified, at most 5 items will be returned.
+ *   The maximum value is 10; values above 10 will be coerced to 10.
+ * @param {string} [request.pageToken]
+ *   Optional. A page token, received from a previous call. Provide this to
+ *   retrieve the subsequent page.
  *
- *   Example:
- *   `projects/my-project/locations/global/replays/506a5f7f-38ce-4d7d-8e03-479ce1833c36`
- * @param {number} request.pageSize
- *   The maximum number of
- *   {@link protos.google.cloud.policysimulator.v1.ReplayResult|ReplayResult} objects to
- *   return. Defaults to 5000.
- *
- *   The maximum value is 5000; values above 5000 are rounded down to 5000.
- * @param {string} request.pageToken
- *   A page token, received from a previous
- *   {@link protos.google.cloud.policysimulator.v1.Simulator.ListReplayResults|Simulator.ListReplayResults}
- *   call. Provide this token to retrieve the next page of results.
- *
- *   When paginating, all other parameters provided to
- *   [Simulator.ListReplayResults[] must match the call that provided the page
- *   token.
+ *   When paginating, all other parameters must match the call that provided the
+ *   page token.
  * @param {object} [options]
  *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
  * @returns {Stream}
- *   An object stream which emits an object representing {@link protos.google.cloud.policysimulator.v1.ReplayResult|ReplayResult} on 'data' event.
+ *   An object stream which emits an object representing {@link protos.google.cloud.policysimulator.v1.OrgPolicyViolationsPreview|OrgPolicyViolationsPreview} on 'data' event.
  *   The client library will perform auto-pagination by default: it will call the API as many
  *   times as needed. Note that it can affect your quota.
- *   We recommend using `listReplayResultsAsync()`
+ *   We recommend using `listOrgPolicyViolationsPreviewsAsync()`
  *   method described below for async iteration which you can stop as needed.
  *   Please see the {@link https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#auto-pagination | documentation }
  *   for more details and examples.
  */
-  listReplayResultsStream(
-      request?: protos.google.cloud.policysimulator.v1.IListReplayResultsRequest,
+  listOrgPolicyViolationsPreviewsStream(
+      request?: protos.google.cloud.policysimulator.v1.IListOrgPolicyViolationsPreviewsRequest,
       options?: CallOptions):
     Transform{
     request = request || {};
@@ -803,61 +805,55 @@ export class SimulatorClient {
     ] = this._gaxModule.routingHeader.fromParams({
       'parent': request.parent ?? '',
     });
-    const defaultCallSettings = this._defaults['listReplayResults'];
+    const defaultCallSettings = this._defaults['listOrgPolicyViolationsPreviews'];
     const callSettings = defaultCallSettings.merge(options);
     this.initialize().catch(err => {throw err});
-    this._log.info('listReplayResults stream %j', request);
-    return this.descriptors.page.listReplayResults.createStream(
-      this.innerApiCalls.listReplayResults as GaxCall,
+    this._log.info('listOrgPolicyViolationsPreviews stream %j', request);
+    return this.descriptors.page.listOrgPolicyViolationsPreviews.createStream(
+      this.innerApiCalls.listOrgPolicyViolationsPreviews as GaxCall,
       request,
       callSettings
     );
   }
 
 /**
- * Equivalent to `listReplayResults`, but returns an iterable object.
+ * Equivalent to `listOrgPolicyViolationsPreviews`, but returns an iterable object.
  *
  * `for`-`await`-`of` syntax is used with the iterable to get response elements on-demand.
  * @param {Object} request
  *   The request object that will be sent.
  * @param {string} request.parent
- *   Required. The {@link protos.google.cloud.policysimulator.v1.Replay|Replay} whose
- *   results are listed, in the following format:
+ *   Required. The parent the violations are scoped to.
+ *   Format:
+ *   `organizations/{organization}/locations/{location}`
  *
- *   `{projects|folders|organizations}/{resource-id}/locations/global/replays/{replay-id}`
+ *   Example: `organizations/my-example-org/locations/global`
+ * @param {number} [request.pageSize]
+ *   Optional. The maximum number of items to return. The service may return
+ *   fewer than this value. If unspecified, at most 5 items will be returned.
+ *   The maximum value is 10; values above 10 will be coerced to 10.
+ * @param {string} [request.pageToken]
+ *   Optional. A page token, received from a previous call. Provide this to
+ *   retrieve the subsequent page.
  *
- *   Example:
- *   `projects/my-project/locations/global/replays/506a5f7f-38ce-4d7d-8e03-479ce1833c36`
- * @param {number} request.pageSize
- *   The maximum number of
- *   {@link protos.google.cloud.policysimulator.v1.ReplayResult|ReplayResult} objects to
- *   return. Defaults to 5000.
- *
- *   The maximum value is 5000; values above 5000 are rounded down to 5000.
- * @param {string} request.pageToken
- *   A page token, received from a previous
- *   {@link protos.google.cloud.policysimulator.v1.Simulator.ListReplayResults|Simulator.ListReplayResults}
- *   call. Provide this token to retrieve the next page of results.
- *
- *   When paginating, all other parameters provided to
- *   [Simulator.ListReplayResults[] must match the call that provided the page
- *   token.
+ *   When paginating, all other parameters must match the call that provided the
+ *   page token.
  * @param {object} [options]
  *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
  * @returns {Object}
  *   An iterable Object that allows {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols | async iteration }.
  *   When you iterate the returned iterable, each element will be an object representing
- *   {@link protos.google.cloud.policysimulator.v1.ReplayResult|ReplayResult}. The API will be called under the hood as needed, once per the page,
+ *   {@link protos.google.cloud.policysimulator.v1.OrgPolicyViolationsPreview|OrgPolicyViolationsPreview}. The API will be called under the hood as needed, once per the page,
  *   so you can stop the iteration when you don't need more results.
  *   Please see the {@link https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#auto-pagination | documentation }
  *   for more details and examples.
- * @example <caption>include:samples/generated/v1/simulator.list_replay_results.js</caption>
- * region_tag:policysimulator_v1_generated_Simulator_ListReplayResults_async
+ * @example <caption>include:samples/generated/v1/org_policy_violations_preview_service.list_org_policy_violations_previews.js</caption>
+ * region_tag:policysimulator_v1_generated_OrgPolicyViolationsPreviewService_ListOrgPolicyViolationsPreviews_async
  */
-  listReplayResultsAsync(
-      request?: protos.google.cloud.policysimulator.v1.IListReplayResultsRequest,
+  listOrgPolicyViolationsPreviewsAsync(
+      request?: protos.google.cloud.policysimulator.v1.IListOrgPolicyViolationsPreviewsRequest,
       options?: CallOptions):
-    AsyncIterable<protos.google.cloud.policysimulator.v1.IReplayResult>{
+    AsyncIterable<protos.google.cloud.policysimulator.v1.IOrgPolicyViolationsPreview>{
     request = request || {};
     options = options || {};
     options.otherArgs = options.otherArgs || {};
@@ -867,15 +863,232 @@ export class SimulatorClient {
     ] = this._gaxModule.routingHeader.fromParams({
       'parent': request.parent ?? '',
     });
-    const defaultCallSettings = this._defaults['listReplayResults'];
+    const defaultCallSettings = this._defaults['listOrgPolicyViolationsPreviews'];
     const callSettings = defaultCallSettings.merge(options);
     this.initialize().catch(err => {throw err});
-    this._log.info('listReplayResults iterate %j', request);
-    return this.descriptors.page.listReplayResults.asyncIterate(
-      this.innerApiCalls['listReplayResults'] as GaxCall,
+    this._log.info('listOrgPolicyViolationsPreviews iterate %j', request);
+    return this.descriptors.page.listOrgPolicyViolationsPreviews.asyncIterate(
+      this.innerApiCalls['listOrgPolicyViolationsPreviews'] as GaxCall,
       request as {},
       callSettings
-    ) as AsyncIterable<protos.google.cloud.policysimulator.v1.IReplayResult>;
+    ) as AsyncIterable<protos.google.cloud.policysimulator.v1.IOrgPolicyViolationsPreview>;
+  }
+ /**
+ * ListOrgPolicyViolations lists the {@link protos.|OrgPolicyViolations} that are present
+ * in an
+ * {@link protos.google.cloud.policysimulator.v1.OrgPolicyViolationsPreview|OrgPolicyViolationsPreview}.
+ *
+ * @param {Object} request
+ *   The request object that will be sent.
+ * @param {string} request.parent
+ *   Required. The OrgPolicyViolationsPreview to get OrgPolicyViolations from.
+ *   Format:
+ *   organizations/{organization}/locations/{location}/orgPolicyViolationsPreviews/{orgPolicyViolationsPreview}
+ * @param {number} [request.pageSize]
+ *   Optional. The maximum number of items to return. The service may return
+ *   fewer than this value. If unspecified, at most 1000 items will be returned.
+ *   The maximum value is 1000; values above 1000 will be coerced to 1000.
+ * @param {string} [request.pageToken]
+ *   Optional. A page token, received from a previous call. Provide this to
+ *   retrieve the subsequent page.
+ *
+ *   When paginating, all other parameters must match the call that provided the
+ *   page token.
+ * @param {object} [options]
+ *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
+ * @returns {Promise} - The promise which resolves to an array.
+ *   The first element of the array is Array of {@link protos.google.cloud.policysimulator.v1.OrgPolicyViolation|OrgPolicyViolation}.
+ *   The client library will perform auto-pagination by default: it will call the API as many
+ *   times as needed and will merge results from all the pages into this array.
+ *   Note that it can affect your quota.
+ *   We recommend using `listOrgPolicyViolationsAsync()`
+ *   method described below for async iteration which you can stop as needed.
+ *   Please see the {@link https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#auto-pagination | documentation }
+ *   for more details and examples.
+ */
+  listOrgPolicyViolations(
+      request?: protos.google.cloud.policysimulator.v1.IListOrgPolicyViolationsRequest,
+      options?: CallOptions):
+      Promise<[
+        protos.google.cloud.policysimulator.v1.IOrgPolicyViolation[],
+        protos.google.cloud.policysimulator.v1.IListOrgPolicyViolationsRequest|null,
+        protos.google.cloud.policysimulator.v1.IListOrgPolicyViolationsResponse
+      ]>;
+  listOrgPolicyViolations(
+      request: protos.google.cloud.policysimulator.v1.IListOrgPolicyViolationsRequest,
+      options: CallOptions,
+      callback: PaginationCallback<
+          protos.google.cloud.policysimulator.v1.IListOrgPolicyViolationsRequest,
+          protos.google.cloud.policysimulator.v1.IListOrgPolicyViolationsResponse|null|undefined,
+          protos.google.cloud.policysimulator.v1.IOrgPolicyViolation>): void;
+  listOrgPolicyViolations(
+      request: protos.google.cloud.policysimulator.v1.IListOrgPolicyViolationsRequest,
+      callback: PaginationCallback<
+          protos.google.cloud.policysimulator.v1.IListOrgPolicyViolationsRequest,
+          protos.google.cloud.policysimulator.v1.IListOrgPolicyViolationsResponse|null|undefined,
+          protos.google.cloud.policysimulator.v1.IOrgPolicyViolation>): void;
+  listOrgPolicyViolations(
+      request?: protos.google.cloud.policysimulator.v1.IListOrgPolicyViolationsRequest,
+      optionsOrCallback?: CallOptions|PaginationCallback<
+          protos.google.cloud.policysimulator.v1.IListOrgPolicyViolationsRequest,
+          protos.google.cloud.policysimulator.v1.IListOrgPolicyViolationsResponse|null|undefined,
+          protos.google.cloud.policysimulator.v1.IOrgPolicyViolation>,
+      callback?: PaginationCallback<
+          protos.google.cloud.policysimulator.v1.IListOrgPolicyViolationsRequest,
+          protos.google.cloud.policysimulator.v1.IListOrgPolicyViolationsResponse|null|undefined,
+          protos.google.cloud.policysimulator.v1.IOrgPolicyViolation>):
+      Promise<[
+        protos.google.cloud.policysimulator.v1.IOrgPolicyViolation[],
+        protos.google.cloud.policysimulator.v1.IListOrgPolicyViolationsRequest|null,
+        protos.google.cloud.policysimulator.v1.IListOrgPolicyViolationsResponse
+      ]>|void {
+    request = request || {};
+    let options: CallOptions;
+    if (typeof optionsOrCallback === 'function' && callback === undefined) {
+      callback = optionsOrCallback;
+      options = {};
+    }
+    else {
+      options = optionsOrCallback as CallOptions;
+    }
+    options = options || {};
+    options.otherArgs = options.otherArgs || {};
+    options.otherArgs.headers = options.otherArgs.headers || {};
+    options.otherArgs.headers[
+      'x-goog-request-params'
+    ] = this._gaxModule.routingHeader.fromParams({
+      'parent': request.parent ?? '',
+    });
+    this.initialize().catch(err => {throw err});
+    const wrappedCallback: PaginationCallback<
+      protos.google.cloud.policysimulator.v1.IListOrgPolicyViolationsRequest,
+      protos.google.cloud.policysimulator.v1.IListOrgPolicyViolationsResponse|null|undefined,
+      protos.google.cloud.policysimulator.v1.IOrgPolicyViolation>|undefined = callback
+      ? (error, values, nextPageRequest, rawResponse) => {
+          this._log.info('listOrgPolicyViolations values %j', values);
+          callback!(error, values, nextPageRequest, rawResponse); // We verified callback above.
+        }
+      : undefined;
+    this._log.info('listOrgPolicyViolations request %j', request);
+    return this.innerApiCalls
+      .listOrgPolicyViolations(request, options, wrappedCallback)
+      ?.then(([response, input, output]: [
+        protos.google.cloud.policysimulator.v1.IOrgPolicyViolation[],
+        protos.google.cloud.policysimulator.v1.IListOrgPolicyViolationsRequest|null,
+        protos.google.cloud.policysimulator.v1.IListOrgPolicyViolationsResponse
+      ]) => {
+        this._log.info('listOrgPolicyViolations values %j', response);
+        return [response, input, output];
+      });
+  }
+
+/**
+ * Equivalent to `listOrgPolicyViolations`, but returns a NodeJS Stream object.
+ * @param {Object} request
+ *   The request object that will be sent.
+ * @param {string} request.parent
+ *   Required. The OrgPolicyViolationsPreview to get OrgPolicyViolations from.
+ *   Format:
+ *   organizations/{organization}/locations/{location}/orgPolicyViolationsPreviews/{orgPolicyViolationsPreview}
+ * @param {number} [request.pageSize]
+ *   Optional. The maximum number of items to return. The service may return
+ *   fewer than this value. If unspecified, at most 1000 items will be returned.
+ *   The maximum value is 1000; values above 1000 will be coerced to 1000.
+ * @param {string} [request.pageToken]
+ *   Optional. A page token, received from a previous call. Provide this to
+ *   retrieve the subsequent page.
+ *
+ *   When paginating, all other parameters must match the call that provided the
+ *   page token.
+ * @param {object} [options]
+ *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
+ * @returns {Stream}
+ *   An object stream which emits an object representing {@link protos.google.cloud.policysimulator.v1.OrgPolicyViolation|OrgPolicyViolation} on 'data' event.
+ *   The client library will perform auto-pagination by default: it will call the API as many
+ *   times as needed. Note that it can affect your quota.
+ *   We recommend using `listOrgPolicyViolationsAsync()`
+ *   method described below for async iteration which you can stop as needed.
+ *   Please see the {@link https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#auto-pagination | documentation }
+ *   for more details and examples.
+ */
+  listOrgPolicyViolationsStream(
+      request?: protos.google.cloud.policysimulator.v1.IListOrgPolicyViolationsRequest,
+      options?: CallOptions):
+    Transform{
+    request = request || {};
+    options = options || {};
+    options.otherArgs = options.otherArgs || {};
+    options.otherArgs.headers = options.otherArgs.headers || {};
+    options.otherArgs.headers[
+      'x-goog-request-params'
+    ] = this._gaxModule.routingHeader.fromParams({
+      'parent': request.parent ?? '',
+    });
+    const defaultCallSettings = this._defaults['listOrgPolicyViolations'];
+    const callSettings = defaultCallSettings.merge(options);
+    this.initialize().catch(err => {throw err});
+    this._log.info('listOrgPolicyViolations stream %j', request);
+    return this.descriptors.page.listOrgPolicyViolations.createStream(
+      this.innerApiCalls.listOrgPolicyViolations as GaxCall,
+      request,
+      callSettings
+    );
+  }
+
+/**
+ * Equivalent to `listOrgPolicyViolations`, but returns an iterable object.
+ *
+ * `for`-`await`-`of` syntax is used with the iterable to get response elements on-demand.
+ * @param {Object} request
+ *   The request object that will be sent.
+ * @param {string} request.parent
+ *   Required. The OrgPolicyViolationsPreview to get OrgPolicyViolations from.
+ *   Format:
+ *   organizations/{organization}/locations/{location}/orgPolicyViolationsPreviews/{orgPolicyViolationsPreview}
+ * @param {number} [request.pageSize]
+ *   Optional. The maximum number of items to return. The service may return
+ *   fewer than this value. If unspecified, at most 1000 items will be returned.
+ *   The maximum value is 1000; values above 1000 will be coerced to 1000.
+ * @param {string} [request.pageToken]
+ *   Optional. A page token, received from a previous call. Provide this to
+ *   retrieve the subsequent page.
+ *
+ *   When paginating, all other parameters must match the call that provided the
+ *   page token.
+ * @param {object} [options]
+ *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
+ * @returns {Object}
+ *   An iterable Object that allows {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols | async iteration }.
+ *   When you iterate the returned iterable, each element will be an object representing
+ *   {@link protos.google.cloud.policysimulator.v1.OrgPolicyViolation|OrgPolicyViolation}. The API will be called under the hood as needed, once per the page,
+ *   so you can stop the iteration when you don't need more results.
+ *   Please see the {@link https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#auto-pagination | documentation }
+ *   for more details and examples.
+ * @example <caption>include:samples/generated/v1/org_policy_violations_preview_service.list_org_policy_violations.js</caption>
+ * region_tag:policysimulator_v1_generated_OrgPolicyViolationsPreviewService_ListOrgPolicyViolations_async
+ */
+  listOrgPolicyViolationsAsync(
+      request?: protos.google.cloud.policysimulator.v1.IListOrgPolicyViolationsRequest,
+      options?: CallOptions):
+    AsyncIterable<protos.google.cloud.policysimulator.v1.IOrgPolicyViolation>{
+    request = request || {};
+    options = options || {};
+    options.otherArgs = options.otherArgs || {};
+    options.otherArgs.headers = options.otherArgs.headers || {};
+    options.otherArgs.headers[
+      'x-goog-request-params'
+    ] = this._gaxModule.routingHeader.fromParams({
+      'parent': request.parent ?? '',
+    });
+    const defaultCallSettings = this._defaults['listOrgPolicyViolations'];
+    const callSettings = defaultCallSettings.merge(options);
+    this.initialize().catch(err => {throw err});
+    this._log.info('listOrgPolicyViolations iterate %j', request);
+    return this.descriptors.page.listOrgPolicyViolations.asyncIterate(
+      this.innerApiCalls['listOrgPolicyViolations'] as GaxCall,
+      request as {},
+      callSettings
+    ) as AsyncIterable<protos.google.cloud.policysimulator.v1.IOrgPolicyViolation>;
   }
 /**
    * Gets the latest state of a long-running operation.  Clients can use this
@@ -1436,6 +1649,29 @@ export class SimulatorClient {
   }
 
   /**
+   * Return a fully-qualified organization resource name string.
+   *
+   * @param {string} organization
+   * @returns {string} Resource name string.
+   */
+  organizationPath(organization:string) {
+    return this.pathTemplates.organizationPathTemplate.render({
+      organization: organization,
+    });
+  }
+
+  /**
+   * Parse the organization from Organization resource.
+   *
+   * @param {string} organizationName
+   *   A fully-qualified path representing Organization resource.
+   * @returns {string} A string representing the organization.
+   */
+  matchOrganizationFromOrganizationName(organizationName: string) {
+    return this.pathTemplates.organizationPathTemplate.match(organizationName).organization;
+  }
+
+  /**
    * Return a fully-qualified organizationConstraint resource name string.
    *
    * @param {string} organization
@@ -1469,6 +1705,42 @@ export class SimulatorClient {
    */
   matchConstraintFromOrganizationConstraintName(organizationConstraintName: string) {
     return this.pathTemplates.organizationConstraintPathTemplate.match(organizationConstraintName).constraint;
+  }
+
+  /**
+   * Return a fully-qualified organizationLocation resource name string.
+   *
+   * @param {string} organization
+   * @param {string} location
+   * @returns {string} Resource name string.
+   */
+  organizationLocationPath(organization:string,location:string) {
+    return this.pathTemplates.organizationLocationPathTemplate.render({
+      organization: organization,
+      location: location,
+    });
+  }
+
+  /**
+   * Parse the organization from OrganizationLocation resource.
+   *
+   * @param {string} organizationLocationName
+   *   A fully-qualified path representing OrganizationLocation resource.
+   * @returns {string} A string representing the organization.
+   */
+  matchOrganizationFromOrganizationLocationName(organizationLocationName: string) {
+    return this.pathTemplates.organizationLocationPathTemplate.match(organizationLocationName).organization;
+  }
+
+  /**
+   * Parse the location from OrganizationLocation resource.
+   *
+   * @param {string} organizationLocationName
+   *   A fully-qualified path representing OrganizationLocation resource.
+   * @returns {string} A string representing the location.
+   */
+  matchLocationFromOrganizationLocationName(organizationLocationName: string) {
+    return this.pathTemplates.organizationLocationPathTemplate.match(organizationLocationName).location;
   }
 
   /**
@@ -1808,8 +2080,8 @@ export class SimulatorClient {
    * @returns {Promise} A promise that resolves when the client is closed.
    */
   close(): Promise<void> {
-    if (this.simulatorStub && !this._terminated) {
-      return this.simulatorStub.then(stub => {
+    if (this.orgPolicyViolationsPreviewServiceStub && !this._terminated) {
+      return this.orgPolicyViolationsPreviewServiceStub.then(stub => {
         this._log.info('ending gRPC channel');
         this._terminated = true;
         stub.close();
