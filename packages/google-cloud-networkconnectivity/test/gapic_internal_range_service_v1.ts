@@ -21,7 +21,7 @@ import * as assert from 'assert';
 import * as sinon from 'sinon';
 import {SinonStub} from 'sinon';
 import {describe, it} from 'mocha';
-import * as policybasedroutingserviceModule from '../src';
+import * as internalrangeserviceModule from '../src';
 
 import {PassThrough} from 'stream';
 
@@ -115,16 +115,16 @@ function stubAsyncIterationCall<ResponseType>(responses?: ResponseType[], error?
     return sinon.stub().returns(asyncIterable);
 }
 
-describe('v1.PolicyBasedRoutingServiceClient', () => {
+describe('v1.InternalRangeServiceClient', () => {
     describe('Common methods', () => {
         it('has apiEndpoint', () => {
-            const client = new policybasedroutingserviceModule.v1.PolicyBasedRoutingServiceClient();
+            const client = new internalrangeserviceModule.v1.InternalRangeServiceClient();
             const apiEndpoint = client.apiEndpoint;
             assert.strictEqual(apiEndpoint, 'networkconnectivity.googleapis.com');
         });
 
         it('has universeDomain', () => {
-            const client = new policybasedroutingserviceModule.v1.PolicyBasedRoutingServiceClient();
+            const client = new internalrangeserviceModule.v1.InternalRangeServiceClient();
             const universeDomain = client.universeDomain;
             assert.strictEqual(universeDomain, "googleapis.com");
         });
@@ -132,7 +132,7 @@ describe('v1.PolicyBasedRoutingServiceClient', () => {
         if (typeof process === 'object' && typeof process.emitWarning === 'function') {
             it('throws DeprecationWarning if static servicePath is used', () => {
                 const stub = sinon.stub(process, 'emitWarning');
-                const servicePath = policybasedroutingserviceModule.v1.PolicyBasedRoutingServiceClient.servicePath;
+                const servicePath = internalrangeserviceModule.v1.InternalRangeServiceClient.servicePath;
                 assert.strictEqual(servicePath, 'networkconnectivity.googleapis.com');
                 assert(stub.called);
                 stub.restore();
@@ -140,20 +140,20 @@ describe('v1.PolicyBasedRoutingServiceClient', () => {
 
             it('throws DeprecationWarning if static apiEndpoint is used', () => {
                 const stub = sinon.stub(process, 'emitWarning');
-                const apiEndpoint = policybasedroutingserviceModule.v1.PolicyBasedRoutingServiceClient.apiEndpoint;
+                const apiEndpoint = internalrangeserviceModule.v1.InternalRangeServiceClient.apiEndpoint;
                 assert.strictEqual(apiEndpoint, 'networkconnectivity.googleapis.com');
                 assert(stub.called);
                 stub.restore();
             });
         }
         it('sets apiEndpoint according to universe domain camelCase', () => {
-            const client = new policybasedroutingserviceModule.v1.PolicyBasedRoutingServiceClient({universeDomain: 'example.com'});
+            const client = new internalrangeserviceModule.v1.InternalRangeServiceClient({universeDomain: 'example.com'});
             const servicePath = client.apiEndpoint;
             assert.strictEqual(servicePath, 'networkconnectivity.example.com');
         });
 
         it('sets apiEndpoint according to universe domain snakeCase', () => {
-            const client = new policybasedroutingserviceModule.v1.PolicyBasedRoutingServiceClient({universe_domain: 'example.com'});
+            const client = new internalrangeserviceModule.v1.InternalRangeServiceClient({universe_domain: 'example.com'});
             const servicePath = client.apiEndpoint;
             assert.strictEqual(servicePath, 'networkconnectivity.example.com');
         });
@@ -163,7 +163,7 @@ describe('v1.PolicyBasedRoutingServiceClient', () => {
                 it('sets apiEndpoint from environment variable', () => {
                     const saved = process.env['GOOGLE_CLOUD_UNIVERSE_DOMAIN'];
                     process.env['GOOGLE_CLOUD_UNIVERSE_DOMAIN'] = 'example.com';
-                    const client = new policybasedroutingserviceModule.v1.PolicyBasedRoutingServiceClient();
+                    const client = new internalrangeserviceModule.v1.InternalRangeServiceClient();
                     const servicePath = client.apiEndpoint;
                     assert.strictEqual(servicePath, 'networkconnectivity.example.com');
                     if (saved) {
@@ -176,7 +176,7 @@ describe('v1.PolicyBasedRoutingServiceClient', () => {
                 it('value configured in code has priority over environment variable', () => {
                     const saved = process.env['GOOGLE_CLOUD_UNIVERSE_DOMAIN'];
                     process.env['GOOGLE_CLOUD_UNIVERSE_DOMAIN'] = 'example.com';
-                    const client = new policybasedroutingserviceModule.v1.PolicyBasedRoutingServiceClient({universeDomain: 'configured.example.com'});
+                    const client = new internalrangeserviceModule.v1.InternalRangeServiceClient({universeDomain: 'configured.example.com'});
                     const servicePath = client.apiEndpoint;
                     assert.strictEqual(servicePath, 'networkconnectivity.configured.example.com');
                     if (saved) {
@@ -188,55 +188,55 @@ describe('v1.PolicyBasedRoutingServiceClient', () => {
             });
         }
         it('does not allow setting both universeDomain and universe_domain', () => {
-            assert.throws(() => { new policybasedroutingserviceModule.v1.PolicyBasedRoutingServiceClient({universe_domain: 'example.com', universeDomain: 'example.net'}); });
+            assert.throws(() => { new internalrangeserviceModule.v1.InternalRangeServiceClient({universe_domain: 'example.com', universeDomain: 'example.net'}); });
         });
 
         it('has port', () => {
-            const port = policybasedroutingserviceModule.v1.PolicyBasedRoutingServiceClient.port;
+            const port = internalrangeserviceModule.v1.InternalRangeServiceClient.port;
             assert(port);
             assert(typeof port === 'number');
         });
 
         it('should create a client with no option', () => {
-            const client = new policybasedroutingserviceModule.v1.PolicyBasedRoutingServiceClient();
+            const client = new internalrangeserviceModule.v1.InternalRangeServiceClient();
             assert(client);
         });
 
         it('should create a client with gRPC fallback', () => {
-            const client = new policybasedroutingserviceModule.v1.PolicyBasedRoutingServiceClient({
+            const client = new internalrangeserviceModule.v1.InternalRangeServiceClient({
                 fallback: true,
             });
             assert(client);
         });
 
         it('has initialize method and supports deferred initialization', async () => {
-            const client = new policybasedroutingserviceModule.v1.PolicyBasedRoutingServiceClient({
+            const client = new internalrangeserviceModule.v1.InternalRangeServiceClient({
               credentials: {client_email: 'bogus', private_key: 'bogus'},
               projectId: 'bogus',
             });
-            assert.strictEqual(client.policyBasedRoutingServiceStub, undefined);
+            assert.strictEqual(client.internalRangeServiceStub, undefined);
             await client.initialize();
-            assert(client.policyBasedRoutingServiceStub);
+            assert(client.internalRangeServiceStub);
         });
 
         it('has close method for the initialized client', done => {
-            const client = new policybasedroutingserviceModule.v1.PolicyBasedRoutingServiceClient({
+            const client = new internalrangeserviceModule.v1.InternalRangeServiceClient({
               credentials: {client_email: 'bogus', private_key: 'bogus'},
               projectId: 'bogus',
             });
             client.initialize().catch(err => {throw err});
-            assert(client.policyBasedRoutingServiceStub);
+            assert(client.internalRangeServiceStub);
             client.close().then(() => {
                 done();
             }).catch(err => {throw err});
         });
 
         it('has close method for the non-initialized client', done => {
-            const client = new policybasedroutingserviceModule.v1.PolicyBasedRoutingServiceClient({
+            const client = new internalrangeserviceModule.v1.InternalRangeServiceClient({
               credentials: {client_email: 'bogus', private_key: 'bogus'},
               projectId: 'bogus',
             });
-            assert.strictEqual(client.policyBasedRoutingServiceStub, undefined);
+            assert.strictEqual(client.internalRangeServiceStub, undefined);
             client.close().then(() => {
                 done();
             }).catch(err => {throw err});
@@ -244,7 +244,7 @@ describe('v1.PolicyBasedRoutingServiceClient', () => {
 
         it('has getProjectId method', async () => {
             const fakeProjectId = 'fake-project-id';
-            const client = new policybasedroutingserviceModule.v1.PolicyBasedRoutingServiceClient({
+            const client = new internalrangeserviceModule.v1.InternalRangeServiceClient({
               credentials: {client_email: 'bogus', private_key: 'bogus'},
               projectId: 'bogus',
             });
@@ -256,7 +256,7 @@ describe('v1.PolicyBasedRoutingServiceClient', () => {
 
         it('has getProjectId method with callback', async () => {
             const fakeProjectId = 'fake-project-id';
-            const client = new policybasedroutingserviceModule.v1.PolicyBasedRoutingServiceClient({
+            const client = new internalrangeserviceModule.v1.InternalRangeServiceClient({
               credentials: {client_email: 'bogus', private_key: 'bogus'},
               projectId: 'bogus',
             });
@@ -275,55 +275,55 @@ describe('v1.PolicyBasedRoutingServiceClient', () => {
         });
     });
 
-    describe('getPolicyBasedRoute', () => {
-        it('invokes getPolicyBasedRoute without error', async () => {
-            const client = new policybasedroutingserviceModule.v1.PolicyBasedRoutingServiceClient({
+    describe('getInternalRange', () => {
+        it('invokes getInternalRange without error', async () => {
+            const client = new internalrangeserviceModule.v1.InternalRangeServiceClient({
               credentials: {client_email: 'bogus', private_key: 'bogus'},
               projectId: 'bogus',
             });
             await client.initialize();
             const request = generateSampleMessage(
-              new protos.google.cloud.networkconnectivity.v1.GetPolicyBasedRouteRequest()
+              new protos.google.cloud.networkconnectivity.v1.GetInternalRangeRequest()
             );
             const defaultValue1 =
-              getTypeDefaultValue('.google.cloud.networkconnectivity.v1.GetPolicyBasedRouteRequest', ['name']);
+              getTypeDefaultValue('.google.cloud.networkconnectivity.v1.GetInternalRangeRequest', ['name']);
             request.name = defaultValue1;
             const expectedHeaderRequestParams = `name=${defaultValue1 ?? '' }`;
             const expectedResponse = generateSampleMessage(
-              new protos.google.cloud.networkconnectivity.v1.PolicyBasedRoute()
+              new protos.google.cloud.networkconnectivity.v1.InternalRange()
             );
-            client.innerApiCalls.getPolicyBasedRoute = stubSimpleCall(expectedResponse);
-            const [response] = await client.getPolicyBasedRoute(request);
+            client.innerApiCalls.getInternalRange = stubSimpleCall(expectedResponse);
+            const [response] = await client.getInternalRange(request);
             assert.deepStrictEqual(response, expectedResponse);
-            const actualRequest = (client.innerApiCalls.getPolicyBasedRoute as SinonStub)
+            const actualRequest = (client.innerApiCalls.getInternalRange as SinonStub)
                 .getCall(0).args[0];
             assert.deepStrictEqual(actualRequest, request);
-            const actualHeaderRequestParams = (client.innerApiCalls.getPolicyBasedRoute as SinonStub)
+            const actualHeaderRequestParams = (client.innerApiCalls.getInternalRange as SinonStub)
                 .getCall(0).args[1].otherArgs.headers['x-goog-request-params'];
             assert(actualHeaderRequestParams.includes(expectedHeaderRequestParams));
         });
 
-        it('invokes getPolicyBasedRoute without error using callback', async () => {
-            const client = new policybasedroutingserviceModule.v1.PolicyBasedRoutingServiceClient({
+        it('invokes getInternalRange without error using callback', async () => {
+            const client = new internalrangeserviceModule.v1.InternalRangeServiceClient({
               credentials: {client_email: 'bogus', private_key: 'bogus'},
               projectId: 'bogus',
             });
             await client.initialize();
             const request = generateSampleMessage(
-              new protos.google.cloud.networkconnectivity.v1.GetPolicyBasedRouteRequest()
+              new protos.google.cloud.networkconnectivity.v1.GetInternalRangeRequest()
             );
             const defaultValue1 =
-              getTypeDefaultValue('.google.cloud.networkconnectivity.v1.GetPolicyBasedRouteRequest', ['name']);
+              getTypeDefaultValue('.google.cloud.networkconnectivity.v1.GetInternalRangeRequest', ['name']);
             request.name = defaultValue1;
             const expectedHeaderRequestParams = `name=${defaultValue1 ?? '' }`;
             const expectedResponse = generateSampleMessage(
-              new protos.google.cloud.networkconnectivity.v1.PolicyBasedRoute()
+              new protos.google.cloud.networkconnectivity.v1.InternalRange()
             );
-            client.innerApiCalls.getPolicyBasedRoute = stubSimpleCallWithCallback(expectedResponse);
+            client.innerApiCalls.getInternalRange = stubSimpleCallWithCallback(expectedResponse);
             const promise = new Promise((resolve, reject) => {
-                 client.getPolicyBasedRoute(
+                 client.getInternalRange(
                     request,
-                    (err?: Error|null, result?: protos.google.cloud.networkconnectivity.v1.IPolicyBasedRoute|null) => {
+                    (err?: Error|null, result?: protos.google.cloud.networkconnectivity.v1.IInternalRange|null) => {
                         if (err) {
                             reject(err);
                         } else {
@@ -333,107 +333,107 @@ describe('v1.PolicyBasedRoutingServiceClient', () => {
             });
             const response = await promise;
             assert.deepStrictEqual(response, expectedResponse);
-            const actualRequest = (client.innerApiCalls.getPolicyBasedRoute as SinonStub)
+            const actualRequest = (client.innerApiCalls.getInternalRange as SinonStub)
                 .getCall(0).args[0];
             assert.deepStrictEqual(actualRequest, request);
-            const actualHeaderRequestParams = (client.innerApiCalls.getPolicyBasedRoute as SinonStub)
+            const actualHeaderRequestParams = (client.innerApiCalls.getInternalRange as SinonStub)
                 .getCall(0).args[1].otherArgs.headers['x-goog-request-params'];
             assert(actualHeaderRequestParams.includes(expectedHeaderRequestParams));
         });
 
-        it('invokes getPolicyBasedRoute with error', async () => {
-            const client = new policybasedroutingserviceModule.v1.PolicyBasedRoutingServiceClient({
+        it('invokes getInternalRange with error', async () => {
+            const client = new internalrangeserviceModule.v1.InternalRangeServiceClient({
               credentials: {client_email: 'bogus', private_key: 'bogus'},
               projectId: 'bogus',
             });
             await client.initialize();
             const request = generateSampleMessage(
-              new protos.google.cloud.networkconnectivity.v1.GetPolicyBasedRouteRequest()
+              new protos.google.cloud.networkconnectivity.v1.GetInternalRangeRequest()
             );
             const defaultValue1 =
-              getTypeDefaultValue('.google.cloud.networkconnectivity.v1.GetPolicyBasedRouteRequest', ['name']);
+              getTypeDefaultValue('.google.cloud.networkconnectivity.v1.GetInternalRangeRequest', ['name']);
             request.name = defaultValue1;
             const expectedHeaderRequestParams = `name=${defaultValue1 ?? '' }`;
             const expectedError = new Error('expected');
-            client.innerApiCalls.getPolicyBasedRoute = stubSimpleCall(undefined, expectedError);
-            await assert.rejects(client.getPolicyBasedRoute(request), expectedError);
-            const actualRequest = (client.innerApiCalls.getPolicyBasedRoute as SinonStub)
+            client.innerApiCalls.getInternalRange = stubSimpleCall(undefined, expectedError);
+            await assert.rejects(client.getInternalRange(request), expectedError);
+            const actualRequest = (client.innerApiCalls.getInternalRange as SinonStub)
                 .getCall(0).args[0];
             assert.deepStrictEqual(actualRequest, request);
-            const actualHeaderRequestParams = (client.innerApiCalls.getPolicyBasedRoute as SinonStub)
+            const actualHeaderRequestParams = (client.innerApiCalls.getInternalRange as SinonStub)
                 .getCall(0).args[1].otherArgs.headers['x-goog-request-params'];
             assert(actualHeaderRequestParams.includes(expectedHeaderRequestParams));
         });
 
-        it('invokes getPolicyBasedRoute with closed client', async () => {
-            const client = new policybasedroutingserviceModule.v1.PolicyBasedRoutingServiceClient({
+        it('invokes getInternalRange with closed client', async () => {
+            const client = new internalrangeserviceModule.v1.InternalRangeServiceClient({
               credentials: {client_email: 'bogus', private_key: 'bogus'},
               projectId: 'bogus',
             });
             await client.initialize();
             const request = generateSampleMessage(
-              new protos.google.cloud.networkconnectivity.v1.GetPolicyBasedRouteRequest()
+              new protos.google.cloud.networkconnectivity.v1.GetInternalRangeRequest()
             );
             const defaultValue1 =
-              getTypeDefaultValue('.google.cloud.networkconnectivity.v1.GetPolicyBasedRouteRequest', ['name']);
+              getTypeDefaultValue('.google.cloud.networkconnectivity.v1.GetInternalRangeRequest', ['name']);
             request.name = defaultValue1;
             const expectedError = new Error('The client has already been closed.');
             client.close().catch(err => {throw err});
-            await assert.rejects(client.getPolicyBasedRoute(request), expectedError);
+            await assert.rejects(client.getInternalRange(request), expectedError);
         });
     });
 
-    describe('createPolicyBasedRoute', () => {
-        it('invokes createPolicyBasedRoute without error', async () => {
-            const client = new policybasedroutingserviceModule.v1.PolicyBasedRoutingServiceClient({
+    describe('createInternalRange', () => {
+        it('invokes createInternalRange without error', async () => {
+            const client = new internalrangeserviceModule.v1.InternalRangeServiceClient({
               credentials: {client_email: 'bogus', private_key: 'bogus'},
               projectId: 'bogus',
             });
             await client.initialize();
             const request = generateSampleMessage(
-              new protos.google.cloud.networkconnectivity.v1.CreatePolicyBasedRouteRequest()
+              new protos.google.cloud.networkconnectivity.v1.CreateInternalRangeRequest()
             );
             const defaultValue1 =
-              getTypeDefaultValue('.google.cloud.networkconnectivity.v1.CreatePolicyBasedRouteRequest', ['parent']);
+              getTypeDefaultValue('.google.cloud.networkconnectivity.v1.CreateInternalRangeRequest', ['parent']);
             request.parent = defaultValue1;
             const expectedHeaderRequestParams = `parent=${defaultValue1 ?? '' }`;
             const expectedResponse = generateSampleMessage(
               new protos.google.longrunning.Operation()
             );
-            client.innerApiCalls.createPolicyBasedRoute = stubLongRunningCall(expectedResponse);
-            const [operation] = await client.createPolicyBasedRoute(request);
+            client.innerApiCalls.createInternalRange = stubLongRunningCall(expectedResponse);
+            const [operation] = await client.createInternalRange(request);
             const [response] = await operation.promise();
             assert.deepStrictEqual(response, expectedResponse);
-            const actualRequest = (client.innerApiCalls.createPolicyBasedRoute as SinonStub)
+            const actualRequest = (client.innerApiCalls.createInternalRange as SinonStub)
                 .getCall(0).args[0];
             assert.deepStrictEqual(actualRequest, request);
-            const actualHeaderRequestParams = (client.innerApiCalls.createPolicyBasedRoute as SinonStub)
+            const actualHeaderRequestParams = (client.innerApiCalls.createInternalRange as SinonStub)
                 .getCall(0).args[1].otherArgs.headers['x-goog-request-params'];
             assert(actualHeaderRequestParams.includes(expectedHeaderRequestParams));
         });
 
-        it('invokes createPolicyBasedRoute without error using callback', async () => {
-            const client = new policybasedroutingserviceModule.v1.PolicyBasedRoutingServiceClient({
+        it('invokes createInternalRange without error using callback', async () => {
+            const client = new internalrangeserviceModule.v1.InternalRangeServiceClient({
               credentials: {client_email: 'bogus', private_key: 'bogus'},
               projectId: 'bogus',
             });
             await client.initialize();
             const request = generateSampleMessage(
-              new protos.google.cloud.networkconnectivity.v1.CreatePolicyBasedRouteRequest()
+              new protos.google.cloud.networkconnectivity.v1.CreateInternalRangeRequest()
             );
             const defaultValue1 =
-              getTypeDefaultValue('.google.cloud.networkconnectivity.v1.CreatePolicyBasedRouteRequest', ['parent']);
+              getTypeDefaultValue('.google.cloud.networkconnectivity.v1.CreateInternalRangeRequest', ['parent']);
             request.parent = defaultValue1;
             const expectedHeaderRequestParams = `parent=${defaultValue1 ?? '' }`;
             const expectedResponse = generateSampleMessage(
               new protos.google.longrunning.Operation()
             );
-            client.innerApiCalls.createPolicyBasedRoute = stubLongRunningCallWithCallback(expectedResponse);
+            client.innerApiCalls.createInternalRange = stubLongRunningCallWithCallback(expectedResponse);
             const promise = new Promise((resolve, reject) => {
-                 client.createPolicyBasedRoute(
+                 client.createInternalRange(
                     request,
                     (err?: Error|null,
-                     result?: LROperation<protos.google.cloud.networkconnectivity.v1.IPolicyBasedRoute, protos.google.cloud.networkconnectivity.v1.IOperationMetadata>|null
+                     result?: LROperation<protos.google.cloud.networkconnectivity.v1.IInternalRange, protos.google.cloud.networkconnectivity.v1.IOperationMetadata>|null
                     ) => {
                         if (err) {
                             reject(err);
@@ -442,68 +442,68 @@ describe('v1.PolicyBasedRoutingServiceClient', () => {
                         }
                     });
             });
-            const operation = await promise as LROperation<protos.google.cloud.networkconnectivity.v1.IPolicyBasedRoute, protos.google.cloud.networkconnectivity.v1.IOperationMetadata>;
+            const operation = await promise as LROperation<protos.google.cloud.networkconnectivity.v1.IInternalRange, protos.google.cloud.networkconnectivity.v1.IOperationMetadata>;
             const [response] = await operation.promise();
             assert.deepStrictEqual(response, expectedResponse);
-            const actualRequest = (client.innerApiCalls.createPolicyBasedRoute as SinonStub)
+            const actualRequest = (client.innerApiCalls.createInternalRange as SinonStub)
                 .getCall(0).args[0];
             assert.deepStrictEqual(actualRequest, request);
-            const actualHeaderRequestParams = (client.innerApiCalls.createPolicyBasedRoute as SinonStub)
+            const actualHeaderRequestParams = (client.innerApiCalls.createInternalRange as SinonStub)
                 .getCall(0).args[1].otherArgs.headers['x-goog-request-params'];
             assert(actualHeaderRequestParams.includes(expectedHeaderRequestParams));
         });
 
-        it('invokes createPolicyBasedRoute with call error', async () => {
-            const client = new policybasedroutingserviceModule.v1.PolicyBasedRoutingServiceClient({
+        it('invokes createInternalRange with call error', async () => {
+            const client = new internalrangeserviceModule.v1.InternalRangeServiceClient({
               credentials: {client_email: 'bogus', private_key: 'bogus'},
               projectId: 'bogus',
             });
             await client.initialize();
             const request = generateSampleMessage(
-              new protos.google.cloud.networkconnectivity.v1.CreatePolicyBasedRouteRequest()
+              new protos.google.cloud.networkconnectivity.v1.CreateInternalRangeRequest()
             );
             const defaultValue1 =
-              getTypeDefaultValue('.google.cloud.networkconnectivity.v1.CreatePolicyBasedRouteRequest', ['parent']);
+              getTypeDefaultValue('.google.cloud.networkconnectivity.v1.CreateInternalRangeRequest', ['parent']);
             request.parent = defaultValue1;
             const expectedHeaderRequestParams = `parent=${defaultValue1 ?? '' }`;
             const expectedError = new Error('expected');
-            client.innerApiCalls.createPolicyBasedRoute = stubLongRunningCall(undefined, expectedError);
-            await assert.rejects(client.createPolicyBasedRoute(request), expectedError);
-            const actualRequest = (client.innerApiCalls.createPolicyBasedRoute as SinonStub)
+            client.innerApiCalls.createInternalRange = stubLongRunningCall(undefined, expectedError);
+            await assert.rejects(client.createInternalRange(request), expectedError);
+            const actualRequest = (client.innerApiCalls.createInternalRange as SinonStub)
                 .getCall(0).args[0];
             assert.deepStrictEqual(actualRequest, request);
-            const actualHeaderRequestParams = (client.innerApiCalls.createPolicyBasedRoute as SinonStub)
+            const actualHeaderRequestParams = (client.innerApiCalls.createInternalRange as SinonStub)
                 .getCall(0).args[1].otherArgs.headers['x-goog-request-params'];
             assert(actualHeaderRequestParams.includes(expectedHeaderRequestParams));
         });
 
-        it('invokes createPolicyBasedRoute with LRO error', async () => {
-            const client = new policybasedroutingserviceModule.v1.PolicyBasedRoutingServiceClient({
+        it('invokes createInternalRange with LRO error', async () => {
+            const client = new internalrangeserviceModule.v1.InternalRangeServiceClient({
               credentials: {client_email: 'bogus', private_key: 'bogus'},
               projectId: 'bogus',
             });
             await client.initialize();
             const request = generateSampleMessage(
-              new protos.google.cloud.networkconnectivity.v1.CreatePolicyBasedRouteRequest()
+              new protos.google.cloud.networkconnectivity.v1.CreateInternalRangeRequest()
             );
             const defaultValue1 =
-              getTypeDefaultValue('.google.cloud.networkconnectivity.v1.CreatePolicyBasedRouteRequest', ['parent']);
+              getTypeDefaultValue('.google.cloud.networkconnectivity.v1.CreateInternalRangeRequest', ['parent']);
             request.parent = defaultValue1;
             const expectedHeaderRequestParams = `parent=${defaultValue1 ?? '' }`;
             const expectedError = new Error('expected');
-            client.innerApiCalls.createPolicyBasedRoute = stubLongRunningCall(undefined, undefined, expectedError);
-            const [operation] = await client.createPolicyBasedRoute(request);
+            client.innerApiCalls.createInternalRange = stubLongRunningCall(undefined, undefined, expectedError);
+            const [operation] = await client.createInternalRange(request);
             await assert.rejects(operation.promise(), expectedError);
-            const actualRequest = (client.innerApiCalls.createPolicyBasedRoute as SinonStub)
+            const actualRequest = (client.innerApiCalls.createInternalRange as SinonStub)
                 .getCall(0).args[0];
             assert.deepStrictEqual(actualRequest, request);
-            const actualHeaderRequestParams = (client.innerApiCalls.createPolicyBasedRoute as SinonStub)
+            const actualHeaderRequestParams = (client.innerApiCalls.createInternalRange as SinonStub)
                 .getCall(0).args[1].otherArgs.headers['x-goog-request-params'];
             assert(actualHeaderRequestParams.includes(expectedHeaderRequestParams));
         });
 
-        it('invokes checkCreatePolicyBasedRouteProgress without error', async () => {
-            const client = new policybasedroutingserviceModule.v1.PolicyBasedRoutingServiceClient({
+        it('invokes checkCreateInternalRangeProgress without error', async () => {
+            const client = new internalrangeserviceModule.v1.InternalRangeServiceClient({
               credentials: {client_email: 'bogus', private_key: 'bogus'},
               projectId: 'bogus',
             });
@@ -516,14 +516,14 @@ describe('v1.PolicyBasedRoutingServiceClient', () => {
             expectedResponse.metadata = {type_url: 'url', value: Buffer.from('')}
 
             client.operationsClient.getOperation = stubSimpleCall(expectedResponse);
-            const decodedOperation = await client.checkCreatePolicyBasedRouteProgress(expectedResponse.name);
+            const decodedOperation = await client.checkCreateInternalRangeProgress(expectedResponse.name);
             assert.deepStrictEqual(decodedOperation.name, expectedResponse.name);
             assert(decodedOperation.metadata);
             assert((client.operationsClient.getOperation as SinonStub).getCall(0));
         });
 
-        it('invokes checkCreatePolicyBasedRouteProgress with error', async () => {
-            const client = new policybasedroutingserviceModule.v1.PolicyBasedRoutingServiceClient({
+        it('invokes checkCreateInternalRangeProgress with error', async () => {
+            const client = new internalrangeserviceModule.v1.InternalRangeServiceClient({
               credentials: {client_email: 'bogus', private_key: 'bogus'},
               projectId: 'bogus',
             });
@@ -531,60 +531,218 @@ describe('v1.PolicyBasedRoutingServiceClient', () => {
             const expectedError = new Error('expected');
 
             client.operationsClient.getOperation = stubSimpleCall(undefined, expectedError);
-            await assert.rejects(client.checkCreatePolicyBasedRouteProgress(''), expectedError);
+            await assert.rejects(client.checkCreateInternalRangeProgress(''), expectedError);
             assert((client.operationsClient.getOperation as SinonStub)
                 .getCall(0));
         });
     });
 
-    describe('deletePolicyBasedRoute', () => {
-        it('invokes deletePolicyBasedRoute without error', async () => {
-            const client = new policybasedroutingserviceModule.v1.PolicyBasedRoutingServiceClient({
+    describe('updateInternalRange', () => {
+        it('invokes updateInternalRange without error', async () => {
+            const client = new internalrangeserviceModule.v1.InternalRangeServiceClient({
               credentials: {client_email: 'bogus', private_key: 'bogus'},
               projectId: 'bogus',
             });
             await client.initialize();
             const request = generateSampleMessage(
-              new protos.google.cloud.networkconnectivity.v1.DeletePolicyBasedRouteRequest()
+              new protos.google.cloud.networkconnectivity.v1.UpdateInternalRangeRequest()
             );
+            request.internalRange ??= {};
             const defaultValue1 =
-              getTypeDefaultValue('.google.cloud.networkconnectivity.v1.DeletePolicyBasedRouteRequest', ['name']);
-            request.name = defaultValue1;
-            const expectedHeaderRequestParams = `name=${defaultValue1 ?? '' }`;
+              getTypeDefaultValue('.google.cloud.networkconnectivity.v1.UpdateInternalRangeRequest', ['internalRange', 'name']);
+            request.internalRange.name = defaultValue1;
+            const expectedHeaderRequestParams = `internal_range.name=${defaultValue1 ?? '' }`;
             const expectedResponse = generateSampleMessage(
               new protos.google.longrunning.Operation()
             );
-            client.innerApiCalls.deletePolicyBasedRoute = stubLongRunningCall(expectedResponse);
-            const [operation] = await client.deletePolicyBasedRoute(request);
+            client.innerApiCalls.updateInternalRange = stubLongRunningCall(expectedResponse);
+            const [operation] = await client.updateInternalRange(request);
             const [response] = await operation.promise();
             assert.deepStrictEqual(response, expectedResponse);
-            const actualRequest = (client.innerApiCalls.deletePolicyBasedRoute as SinonStub)
+            const actualRequest = (client.innerApiCalls.updateInternalRange as SinonStub)
                 .getCall(0).args[0];
             assert.deepStrictEqual(actualRequest, request);
-            const actualHeaderRequestParams = (client.innerApiCalls.deletePolicyBasedRoute as SinonStub)
+            const actualHeaderRequestParams = (client.innerApiCalls.updateInternalRange as SinonStub)
                 .getCall(0).args[1].otherArgs.headers['x-goog-request-params'];
             assert(actualHeaderRequestParams.includes(expectedHeaderRequestParams));
         });
 
-        it('invokes deletePolicyBasedRoute without error using callback', async () => {
-            const client = new policybasedroutingserviceModule.v1.PolicyBasedRoutingServiceClient({
+        it('invokes updateInternalRange without error using callback', async () => {
+            const client = new internalrangeserviceModule.v1.InternalRangeServiceClient({
               credentials: {client_email: 'bogus', private_key: 'bogus'},
               projectId: 'bogus',
             });
             await client.initialize();
             const request = generateSampleMessage(
-              new protos.google.cloud.networkconnectivity.v1.DeletePolicyBasedRouteRequest()
+              new protos.google.cloud.networkconnectivity.v1.UpdateInternalRangeRequest()
+            );
+            request.internalRange ??= {};
+            const defaultValue1 =
+              getTypeDefaultValue('.google.cloud.networkconnectivity.v1.UpdateInternalRangeRequest', ['internalRange', 'name']);
+            request.internalRange.name = defaultValue1;
+            const expectedHeaderRequestParams = `internal_range.name=${defaultValue1 ?? '' }`;
+            const expectedResponse = generateSampleMessage(
+              new protos.google.longrunning.Operation()
+            );
+            client.innerApiCalls.updateInternalRange = stubLongRunningCallWithCallback(expectedResponse);
+            const promise = new Promise((resolve, reject) => {
+                 client.updateInternalRange(
+                    request,
+                    (err?: Error|null,
+                     result?: LROperation<protos.google.cloud.networkconnectivity.v1.IInternalRange, protos.google.cloud.networkconnectivity.v1.IOperationMetadata>|null
+                    ) => {
+                        if (err) {
+                            reject(err);
+                        } else {
+                            resolve(result);
+                        }
+                    });
+            });
+            const operation = await promise as LROperation<protos.google.cloud.networkconnectivity.v1.IInternalRange, protos.google.cloud.networkconnectivity.v1.IOperationMetadata>;
+            const [response] = await operation.promise();
+            assert.deepStrictEqual(response, expectedResponse);
+            const actualRequest = (client.innerApiCalls.updateInternalRange as SinonStub)
+                .getCall(0).args[0];
+            assert.deepStrictEqual(actualRequest, request);
+            const actualHeaderRequestParams = (client.innerApiCalls.updateInternalRange as SinonStub)
+                .getCall(0).args[1].otherArgs.headers['x-goog-request-params'];
+            assert(actualHeaderRequestParams.includes(expectedHeaderRequestParams));
+        });
+
+        it('invokes updateInternalRange with call error', async () => {
+            const client = new internalrangeserviceModule.v1.InternalRangeServiceClient({
+              credentials: {client_email: 'bogus', private_key: 'bogus'},
+              projectId: 'bogus',
+            });
+            await client.initialize();
+            const request = generateSampleMessage(
+              new protos.google.cloud.networkconnectivity.v1.UpdateInternalRangeRequest()
+            );
+            request.internalRange ??= {};
+            const defaultValue1 =
+              getTypeDefaultValue('.google.cloud.networkconnectivity.v1.UpdateInternalRangeRequest', ['internalRange', 'name']);
+            request.internalRange.name = defaultValue1;
+            const expectedHeaderRequestParams = `internal_range.name=${defaultValue1 ?? '' }`;
+            const expectedError = new Error('expected');
+            client.innerApiCalls.updateInternalRange = stubLongRunningCall(undefined, expectedError);
+            await assert.rejects(client.updateInternalRange(request), expectedError);
+            const actualRequest = (client.innerApiCalls.updateInternalRange as SinonStub)
+                .getCall(0).args[0];
+            assert.deepStrictEqual(actualRequest, request);
+            const actualHeaderRequestParams = (client.innerApiCalls.updateInternalRange as SinonStub)
+                .getCall(0).args[1].otherArgs.headers['x-goog-request-params'];
+            assert(actualHeaderRequestParams.includes(expectedHeaderRequestParams));
+        });
+
+        it('invokes updateInternalRange with LRO error', async () => {
+            const client = new internalrangeserviceModule.v1.InternalRangeServiceClient({
+              credentials: {client_email: 'bogus', private_key: 'bogus'},
+              projectId: 'bogus',
+            });
+            await client.initialize();
+            const request = generateSampleMessage(
+              new protos.google.cloud.networkconnectivity.v1.UpdateInternalRangeRequest()
+            );
+            request.internalRange ??= {};
+            const defaultValue1 =
+              getTypeDefaultValue('.google.cloud.networkconnectivity.v1.UpdateInternalRangeRequest', ['internalRange', 'name']);
+            request.internalRange.name = defaultValue1;
+            const expectedHeaderRequestParams = `internal_range.name=${defaultValue1 ?? '' }`;
+            const expectedError = new Error('expected');
+            client.innerApiCalls.updateInternalRange = stubLongRunningCall(undefined, undefined, expectedError);
+            const [operation] = await client.updateInternalRange(request);
+            await assert.rejects(operation.promise(), expectedError);
+            const actualRequest = (client.innerApiCalls.updateInternalRange as SinonStub)
+                .getCall(0).args[0];
+            assert.deepStrictEqual(actualRequest, request);
+            const actualHeaderRequestParams = (client.innerApiCalls.updateInternalRange as SinonStub)
+                .getCall(0).args[1].otherArgs.headers['x-goog-request-params'];
+            assert(actualHeaderRequestParams.includes(expectedHeaderRequestParams));
+        });
+
+        it('invokes checkUpdateInternalRangeProgress without error', async () => {
+            const client = new internalrangeserviceModule.v1.InternalRangeServiceClient({
+              credentials: {client_email: 'bogus', private_key: 'bogus'},
+              projectId: 'bogus',
+            });
+            await client.initialize();
+            const expectedResponse = generateSampleMessage(
+              new operationsProtos.google.longrunning.Operation()
+            );
+            expectedResponse.name = 'test';
+            expectedResponse.response = {type_url: 'url', value: Buffer.from('')};
+            expectedResponse.metadata = {type_url: 'url', value: Buffer.from('')}
+
+            client.operationsClient.getOperation = stubSimpleCall(expectedResponse);
+            const decodedOperation = await client.checkUpdateInternalRangeProgress(expectedResponse.name);
+            assert.deepStrictEqual(decodedOperation.name, expectedResponse.name);
+            assert(decodedOperation.metadata);
+            assert((client.operationsClient.getOperation as SinonStub).getCall(0));
+        });
+
+        it('invokes checkUpdateInternalRangeProgress with error', async () => {
+            const client = new internalrangeserviceModule.v1.InternalRangeServiceClient({
+              credentials: {client_email: 'bogus', private_key: 'bogus'},
+              projectId: 'bogus',
+            });
+            await client.initialize();
+            const expectedError = new Error('expected');
+
+            client.operationsClient.getOperation = stubSimpleCall(undefined, expectedError);
+            await assert.rejects(client.checkUpdateInternalRangeProgress(''), expectedError);
+            assert((client.operationsClient.getOperation as SinonStub)
+                .getCall(0));
+        });
+    });
+
+    describe('deleteInternalRange', () => {
+        it('invokes deleteInternalRange without error', async () => {
+            const client = new internalrangeserviceModule.v1.InternalRangeServiceClient({
+              credentials: {client_email: 'bogus', private_key: 'bogus'},
+              projectId: 'bogus',
+            });
+            await client.initialize();
+            const request = generateSampleMessage(
+              new protos.google.cloud.networkconnectivity.v1.DeleteInternalRangeRequest()
             );
             const defaultValue1 =
-              getTypeDefaultValue('.google.cloud.networkconnectivity.v1.DeletePolicyBasedRouteRequest', ['name']);
+              getTypeDefaultValue('.google.cloud.networkconnectivity.v1.DeleteInternalRangeRequest', ['name']);
             request.name = defaultValue1;
             const expectedHeaderRequestParams = `name=${defaultValue1 ?? '' }`;
             const expectedResponse = generateSampleMessage(
               new protos.google.longrunning.Operation()
             );
-            client.innerApiCalls.deletePolicyBasedRoute = stubLongRunningCallWithCallback(expectedResponse);
+            client.innerApiCalls.deleteInternalRange = stubLongRunningCall(expectedResponse);
+            const [operation] = await client.deleteInternalRange(request);
+            const [response] = await operation.promise();
+            assert.deepStrictEqual(response, expectedResponse);
+            const actualRequest = (client.innerApiCalls.deleteInternalRange as SinonStub)
+                .getCall(0).args[0];
+            assert.deepStrictEqual(actualRequest, request);
+            const actualHeaderRequestParams = (client.innerApiCalls.deleteInternalRange as SinonStub)
+                .getCall(0).args[1].otherArgs.headers['x-goog-request-params'];
+            assert(actualHeaderRequestParams.includes(expectedHeaderRequestParams));
+        });
+
+        it('invokes deleteInternalRange without error using callback', async () => {
+            const client = new internalrangeserviceModule.v1.InternalRangeServiceClient({
+              credentials: {client_email: 'bogus', private_key: 'bogus'},
+              projectId: 'bogus',
+            });
+            await client.initialize();
+            const request = generateSampleMessage(
+              new protos.google.cloud.networkconnectivity.v1.DeleteInternalRangeRequest()
+            );
+            const defaultValue1 =
+              getTypeDefaultValue('.google.cloud.networkconnectivity.v1.DeleteInternalRangeRequest', ['name']);
+            request.name = defaultValue1;
+            const expectedHeaderRequestParams = `name=${defaultValue1 ?? '' }`;
+            const expectedResponse = generateSampleMessage(
+              new protos.google.longrunning.Operation()
+            );
+            client.innerApiCalls.deleteInternalRange = stubLongRunningCallWithCallback(expectedResponse);
             const promise = new Promise((resolve, reject) => {
-                 client.deletePolicyBasedRoute(
+                 client.deleteInternalRange(
                     request,
                     (err?: Error|null,
                      result?: LROperation<protos.google.protobuf.IEmpty, protos.google.cloud.networkconnectivity.v1.IOperationMetadata>|null
@@ -599,65 +757,65 @@ describe('v1.PolicyBasedRoutingServiceClient', () => {
             const operation = await promise as LROperation<protos.google.protobuf.IEmpty, protos.google.cloud.networkconnectivity.v1.IOperationMetadata>;
             const [response] = await operation.promise();
             assert.deepStrictEqual(response, expectedResponse);
-            const actualRequest = (client.innerApiCalls.deletePolicyBasedRoute as SinonStub)
+            const actualRequest = (client.innerApiCalls.deleteInternalRange as SinonStub)
                 .getCall(0).args[0];
             assert.deepStrictEqual(actualRequest, request);
-            const actualHeaderRequestParams = (client.innerApiCalls.deletePolicyBasedRoute as SinonStub)
+            const actualHeaderRequestParams = (client.innerApiCalls.deleteInternalRange as SinonStub)
                 .getCall(0).args[1].otherArgs.headers['x-goog-request-params'];
             assert(actualHeaderRequestParams.includes(expectedHeaderRequestParams));
         });
 
-        it('invokes deletePolicyBasedRoute with call error', async () => {
-            const client = new policybasedroutingserviceModule.v1.PolicyBasedRoutingServiceClient({
+        it('invokes deleteInternalRange with call error', async () => {
+            const client = new internalrangeserviceModule.v1.InternalRangeServiceClient({
               credentials: {client_email: 'bogus', private_key: 'bogus'},
               projectId: 'bogus',
             });
             await client.initialize();
             const request = generateSampleMessage(
-              new protos.google.cloud.networkconnectivity.v1.DeletePolicyBasedRouteRequest()
+              new protos.google.cloud.networkconnectivity.v1.DeleteInternalRangeRequest()
             );
             const defaultValue1 =
-              getTypeDefaultValue('.google.cloud.networkconnectivity.v1.DeletePolicyBasedRouteRequest', ['name']);
+              getTypeDefaultValue('.google.cloud.networkconnectivity.v1.DeleteInternalRangeRequest', ['name']);
             request.name = defaultValue1;
             const expectedHeaderRequestParams = `name=${defaultValue1 ?? '' }`;
             const expectedError = new Error('expected');
-            client.innerApiCalls.deletePolicyBasedRoute = stubLongRunningCall(undefined, expectedError);
-            await assert.rejects(client.deletePolicyBasedRoute(request), expectedError);
-            const actualRequest = (client.innerApiCalls.deletePolicyBasedRoute as SinonStub)
+            client.innerApiCalls.deleteInternalRange = stubLongRunningCall(undefined, expectedError);
+            await assert.rejects(client.deleteInternalRange(request), expectedError);
+            const actualRequest = (client.innerApiCalls.deleteInternalRange as SinonStub)
                 .getCall(0).args[0];
             assert.deepStrictEqual(actualRequest, request);
-            const actualHeaderRequestParams = (client.innerApiCalls.deletePolicyBasedRoute as SinonStub)
+            const actualHeaderRequestParams = (client.innerApiCalls.deleteInternalRange as SinonStub)
                 .getCall(0).args[1].otherArgs.headers['x-goog-request-params'];
             assert(actualHeaderRequestParams.includes(expectedHeaderRequestParams));
         });
 
-        it('invokes deletePolicyBasedRoute with LRO error', async () => {
-            const client = new policybasedroutingserviceModule.v1.PolicyBasedRoutingServiceClient({
+        it('invokes deleteInternalRange with LRO error', async () => {
+            const client = new internalrangeserviceModule.v1.InternalRangeServiceClient({
               credentials: {client_email: 'bogus', private_key: 'bogus'},
               projectId: 'bogus',
             });
             await client.initialize();
             const request = generateSampleMessage(
-              new protos.google.cloud.networkconnectivity.v1.DeletePolicyBasedRouteRequest()
+              new protos.google.cloud.networkconnectivity.v1.DeleteInternalRangeRequest()
             );
             const defaultValue1 =
-              getTypeDefaultValue('.google.cloud.networkconnectivity.v1.DeletePolicyBasedRouteRequest', ['name']);
+              getTypeDefaultValue('.google.cloud.networkconnectivity.v1.DeleteInternalRangeRequest', ['name']);
             request.name = defaultValue1;
             const expectedHeaderRequestParams = `name=${defaultValue1 ?? '' }`;
             const expectedError = new Error('expected');
-            client.innerApiCalls.deletePolicyBasedRoute = stubLongRunningCall(undefined, undefined, expectedError);
-            const [operation] = await client.deletePolicyBasedRoute(request);
+            client.innerApiCalls.deleteInternalRange = stubLongRunningCall(undefined, undefined, expectedError);
+            const [operation] = await client.deleteInternalRange(request);
             await assert.rejects(operation.promise(), expectedError);
-            const actualRequest = (client.innerApiCalls.deletePolicyBasedRoute as SinonStub)
+            const actualRequest = (client.innerApiCalls.deleteInternalRange as SinonStub)
                 .getCall(0).args[0];
             assert.deepStrictEqual(actualRequest, request);
-            const actualHeaderRequestParams = (client.innerApiCalls.deletePolicyBasedRoute as SinonStub)
+            const actualHeaderRequestParams = (client.innerApiCalls.deleteInternalRange as SinonStub)
                 .getCall(0).args[1].otherArgs.headers['x-goog-request-params'];
             assert(actualHeaderRequestParams.includes(expectedHeaderRequestParams));
         });
 
-        it('invokes checkDeletePolicyBasedRouteProgress without error', async () => {
-            const client = new policybasedroutingserviceModule.v1.PolicyBasedRoutingServiceClient({
+        it('invokes checkDeleteInternalRangeProgress without error', async () => {
+            const client = new internalrangeserviceModule.v1.InternalRangeServiceClient({
               credentials: {client_email: 'bogus', private_key: 'bogus'},
               projectId: 'bogus',
             });
@@ -670,14 +828,14 @@ describe('v1.PolicyBasedRoutingServiceClient', () => {
             expectedResponse.metadata = {type_url: 'url', value: Buffer.from('')}
 
             client.operationsClient.getOperation = stubSimpleCall(expectedResponse);
-            const decodedOperation = await client.checkDeletePolicyBasedRouteProgress(expectedResponse.name);
+            const decodedOperation = await client.checkDeleteInternalRangeProgress(expectedResponse.name);
             assert.deepStrictEqual(decodedOperation.name, expectedResponse.name);
             assert(decodedOperation.metadata);
             assert((client.operationsClient.getOperation as SinonStub).getCall(0));
         });
 
-        it('invokes checkDeletePolicyBasedRouteProgress with error', async () => {
-            const client = new policybasedroutingserviceModule.v1.PolicyBasedRoutingServiceClient({
+        it('invokes checkDeleteInternalRangeProgress with error', async () => {
+            const client = new internalrangeserviceModule.v1.InternalRangeServiceClient({
               credentials: {client_email: 'bogus', private_key: 'bogus'},
               projectId: 'bogus',
             });
@@ -685,63 +843,63 @@ describe('v1.PolicyBasedRoutingServiceClient', () => {
             const expectedError = new Error('expected');
 
             client.operationsClient.getOperation = stubSimpleCall(undefined, expectedError);
-            await assert.rejects(client.checkDeletePolicyBasedRouteProgress(''), expectedError);
+            await assert.rejects(client.checkDeleteInternalRangeProgress(''), expectedError);
             assert((client.operationsClient.getOperation as SinonStub)
                 .getCall(0));
         });
     });
 
-    describe('listPolicyBasedRoutes', () => {
-        it('invokes listPolicyBasedRoutes without error', async () => {
-            const client = new policybasedroutingserviceModule.v1.PolicyBasedRoutingServiceClient({
+    describe('listInternalRanges', () => {
+        it('invokes listInternalRanges without error', async () => {
+            const client = new internalrangeserviceModule.v1.InternalRangeServiceClient({
                 credentials: {client_email: 'bogus', private_key: 'bogus'},
                 projectId: 'bogus',
             });
             await client.initialize();
             const request = generateSampleMessage(
-              new protos.google.cloud.networkconnectivity.v1.ListPolicyBasedRoutesRequest()
+              new protos.google.cloud.networkconnectivity.v1.ListInternalRangesRequest()
             );
             const defaultValue1 =
-              getTypeDefaultValue('.google.cloud.networkconnectivity.v1.ListPolicyBasedRoutesRequest', ['parent']);
+              getTypeDefaultValue('.google.cloud.networkconnectivity.v1.ListInternalRangesRequest', ['parent']);
             request.parent = defaultValue1;
             const expectedHeaderRequestParams = `parent=${defaultValue1 ?? '' }`;const expectedResponse = [
-              generateSampleMessage(new protos.google.cloud.networkconnectivity.v1.PolicyBasedRoute()),
-              generateSampleMessage(new protos.google.cloud.networkconnectivity.v1.PolicyBasedRoute()),
-              generateSampleMessage(new protos.google.cloud.networkconnectivity.v1.PolicyBasedRoute()),
+              generateSampleMessage(new protos.google.cloud.networkconnectivity.v1.InternalRange()),
+              generateSampleMessage(new protos.google.cloud.networkconnectivity.v1.InternalRange()),
+              generateSampleMessage(new protos.google.cloud.networkconnectivity.v1.InternalRange()),
             ];
-            client.innerApiCalls.listPolicyBasedRoutes = stubSimpleCall(expectedResponse);
-            const [response] = await client.listPolicyBasedRoutes(request);
+            client.innerApiCalls.listInternalRanges = stubSimpleCall(expectedResponse);
+            const [response] = await client.listInternalRanges(request);
             assert.deepStrictEqual(response, expectedResponse);
-            const actualRequest = (client.innerApiCalls.listPolicyBasedRoutes as SinonStub)
+            const actualRequest = (client.innerApiCalls.listInternalRanges as SinonStub)
                 .getCall(0).args[0];
             assert.deepStrictEqual(actualRequest, request);
-            const actualHeaderRequestParams = (client.innerApiCalls.listPolicyBasedRoutes as SinonStub)
+            const actualHeaderRequestParams = (client.innerApiCalls.listInternalRanges as SinonStub)
                 .getCall(0).args[1].otherArgs.headers['x-goog-request-params'];
             assert(actualHeaderRequestParams.includes(expectedHeaderRequestParams));
         });
 
-        it('invokes listPolicyBasedRoutes without error using callback', async () => {
-            const client = new policybasedroutingserviceModule.v1.PolicyBasedRoutingServiceClient({
+        it('invokes listInternalRanges without error using callback', async () => {
+            const client = new internalrangeserviceModule.v1.InternalRangeServiceClient({
                 credentials: {client_email: 'bogus', private_key: 'bogus'},
                 projectId: 'bogus',
             });
             await client.initialize();
             const request = generateSampleMessage(
-              new protos.google.cloud.networkconnectivity.v1.ListPolicyBasedRoutesRequest()
+              new protos.google.cloud.networkconnectivity.v1.ListInternalRangesRequest()
             );
             const defaultValue1 =
-              getTypeDefaultValue('.google.cloud.networkconnectivity.v1.ListPolicyBasedRoutesRequest', ['parent']);
+              getTypeDefaultValue('.google.cloud.networkconnectivity.v1.ListInternalRangesRequest', ['parent']);
             request.parent = defaultValue1;
             const expectedHeaderRequestParams = `parent=${defaultValue1 ?? '' }`;const expectedResponse = [
-              generateSampleMessage(new protos.google.cloud.networkconnectivity.v1.PolicyBasedRoute()),
-              generateSampleMessage(new protos.google.cloud.networkconnectivity.v1.PolicyBasedRoute()),
-              generateSampleMessage(new protos.google.cloud.networkconnectivity.v1.PolicyBasedRoute()),
+              generateSampleMessage(new protos.google.cloud.networkconnectivity.v1.InternalRange()),
+              generateSampleMessage(new protos.google.cloud.networkconnectivity.v1.InternalRange()),
+              generateSampleMessage(new protos.google.cloud.networkconnectivity.v1.InternalRange()),
             ];
-            client.innerApiCalls.listPolicyBasedRoutes = stubSimpleCallWithCallback(expectedResponse);
+            client.innerApiCalls.listInternalRanges = stubSimpleCallWithCallback(expectedResponse);
             const promise = new Promise((resolve, reject) => {
-                 client.listPolicyBasedRoutes(
+                 client.listInternalRanges(
                     request,
-                    (err?: Error|null, result?: protos.google.cloud.networkconnectivity.v1.IPolicyBasedRoute[]|null) => {
+                    (err?: Error|null, result?: protos.google.cloud.networkconnectivity.v1.IInternalRange[]|null) => {
                         if (err) {
                             reject(err);
                         } else {
@@ -751,61 +909,61 @@ describe('v1.PolicyBasedRoutingServiceClient', () => {
             });
             const response = await promise;
             assert.deepStrictEqual(response, expectedResponse);
-            const actualRequest = (client.innerApiCalls.listPolicyBasedRoutes as SinonStub)
+            const actualRequest = (client.innerApiCalls.listInternalRanges as SinonStub)
                 .getCall(0).args[0];
             assert.deepStrictEqual(actualRequest, request);
-            const actualHeaderRequestParams = (client.innerApiCalls.listPolicyBasedRoutes as SinonStub)
+            const actualHeaderRequestParams = (client.innerApiCalls.listInternalRanges as SinonStub)
                 .getCall(0).args[1].otherArgs.headers['x-goog-request-params'];
             assert(actualHeaderRequestParams.includes(expectedHeaderRequestParams));
         });
 
-        it('invokes listPolicyBasedRoutes with error', async () => {
-            const client = new policybasedroutingserviceModule.v1.PolicyBasedRoutingServiceClient({
+        it('invokes listInternalRanges with error', async () => {
+            const client = new internalrangeserviceModule.v1.InternalRangeServiceClient({
                 credentials: {client_email: 'bogus', private_key: 'bogus'},
                 projectId: 'bogus',
             });
             await client.initialize();
             const request = generateSampleMessage(
-              new protos.google.cloud.networkconnectivity.v1.ListPolicyBasedRoutesRequest()
+              new protos.google.cloud.networkconnectivity.v1.ListInternalRangesRequest()
             );
             const defaultValue1 =
-              getTypeDefaultValue('.google.cloud.networkconnectivity.v1.ListPolicyBasedRoutesRequest', ['parent']);
+              getTypeDefaultValue('.google.cloud.networkconnectivity.v1.ListInternalRangesRequest', ['parent']);
             request.parent = defaultValue1;
             const expectedHeaderRequestParams = `parent=${defaultValue1 ?? '' }`;
             const expectedError = new Error('expected');
-            client.innerApiCalls.listPolicyBasedRoutes = stubSimpleCall(undefined, expectedError);
-            await assert.rejects(client.listPolicyBasedRoutes(request), expectedError);
-            const actualRequest = (client.innerApiCalls.listPolicyBasedRoutes as SinonStub)
+            client.innerApiCalls.listInternalRanges = stubSimpleCall(undefined, expectedError);
+            await assert.rejects(client.listInternalRanges(request), expectedError);
+            const actualRequest = (client.innerApiCalls.listInternalRanges as SinonStub)
                 .getCall(0).args[0];
             assert.deepStrictEqual(actualRequest, request);
-            const actualHeaderRequestParams = (client.innerApiCalls.listPolicyBasedRoutes as SinonStub)
+            const actualHeaderRequestParams = (client.innerApiCalls.listInternalRanges as SinonStub)
                 .getCall(0).args[1].otherArgs.headers['x-goog-request-params'];
             assert(actualHeaderRequestParams.includes(expectedHeaderRequestParams));
         });
 
-        it('invokes listPolicyBasedRoutesStream without error', async () => {
-            const client = new policybasedroutingserviceModule.v1.PolicyBasedRoutingServiceClient({
+        it('invokes listInternalRangesStream without error', async () => {
+            const client = new internalrangeserviceModule.v1.InternalRangeServiceClient({
                 credentials: {client_email: 'bogus', private_key: 'bogus'},
                 projectId: 'bogus',
             });
             await client.initialize();
             const request = generateSampleMessage(
-              new protos.google.cloud.networkconnectivity.v1.ListPolicyBasedRoutesRequest()
+              new protos.google.cloud.networkconnectivity.v1.ListInternalRangesRequest()
             );
             const defaultValue1 =
-              getTypeDefaultValue('.google.cloud.networkconnectivity.v1.ListPolicyBasedRoutesRequest', ['parent']);
+              getTypeDefaultValue('.google.cloud.networkconnectivity.v1.ListInternalRangesRequest', ['parent']);
             request.parent = defaultValue1;
             const expectedHeaderRequestParams = `parent=${defaultValue1 ?? '' }`;
             const expectedResponse = [
-              generateSampleMessage(new protos.google.cloud.networkconnectivity.v1.PolicyBasedRoute()),
-              generateSampleMessage(new protos.google.cloud.networkconnectivity.v1.PolicyBasedRoute()),
-              generateSampleMessage(new protos.google.cloud.networkconnectivity.v1.PolicyBasedRoute()),
+              generateSampleMessage(new protos.google.cloud.networkconnectivity.v1.InternalRange()),
+              generateSampleMessage(new protos.google.cloud.networkconnectivity.v1.InternalRange()),
+              generateSampleMessage(new protos.google.cloud.networkconnectivity.v1.InternalRange()),
             ];
-            client.descriptors.page.listPolicyBasedRoutes.createStream = stubPageStreamingCall(expectedResponse);
-            const stream = client.listPolicyBasedRoutesStream(request);
+            client.descriptors.page.listInternalRanges.createStream = stubPageStreamingCall(expectedResponse);
+            const stream = client.listInternalRangesStream(request);
             const promise = new Promise((resolve, reject) => {
-                const responses: protos.google.cloud.networkconnectivity.v1.PolicyBasedRoute[] = [];
-                stream.on('data', (response: protos.google.cloud.networkconnectivity.v1.PolicyBasedRoute) => {
+                const responses: protos.google.cloud.networkconnectivity.v1.InternalRange[] = [];
+                stream.on('data', (response: protos.google.cloud.networkconnectivity.v1.InternalRange) => {
                     responses.push(response);
                 });
                 stream.on('end', () => {
@@ -817,35 +975,35 @@ describe('v1.PolicyBasedRoutingServiceClient', () => {
             });
             const responses = await promise;
             assert.deepStrictEqual(responses, expectedResponse);
-            assert((client.descriptors.page.listPolicyBasedRoutes.createStream as SinonStub)
-                .getCall(0).calledWith(client.innerApiCalls.listPolicyBasedRoutes, request));
+            assert((client.descriptors.page.listInternalRanges.createStream as SinonStub)
+                .getCall(0).calledWith(client.innerApiCalls.listInternalRanges, request));
             assert(
-                (client.descriptors.page.listPolicyBasedRoutes.createStream as SinonStub)
+                (client.descriptors.page.listInternalRanges.createStream as SinonStub)
                     .getCall(0).args[2].otherArgs.headers['x-goog-request-params'].includes(
                         expectedHeaderRequestParams
                     )
             );
         });
 
-        it('invokes listPolicyBasedRoutesStream with error', async () => {
-            const client = new policybasedroutingserviceModule.v1.PolicyBasedRoutingServiceClient({
+        it('invokes listInternalRangesStream with error', async () => {
+            const client = new internalrangeserviceModule.v1.InternalRangeServiceClient({
                 credentials: {client_email: 'bogus', private_key: 'bogus'},
                 projectId: 'bogus',
             });
             await client.initialize();
             const request = generateSampleMessage(
-              new protos.google.cloud.networkconnectivity.v1.ListPolicyBasedRoutesRequest()
+              new protos.google.cloud.networkconnectivity.v1.ListInternalRangesRequest()
             );
             const defaultValue1 =
-              getTypeDefaultValue('.google.cloud.networkconnectivity.v1.ListPolicyBasedRoutesRequest', ['parent']);
+              getTypeDefaultValue('.google.cloud.networkconnectivity.v1.ListInternalRangesRequest', ['parent']);
             request.parent = defaultValue1;
             const expectedHeaderRequestParams = `parent=${defaultValue1 ?? '' }`;
             const expectedError = new Error('expected');
-            client.descriptors.page.listPolicyBasedRoutes.createStream = stubPageStreamingCall(undefined, expectedError);
-            const stream = client.listPolicyBasedRoutesStream(request);
+            client.descriptors.page.listInternalRanges.createStream = stubPageStreamingCall(undefined, expectedError);
+            const stream = client.listInternalRangesStream(request);
             const promise = new Promise((resolve, reject) => {
-                const responses: protos.google.cloud.networkconnectivity.v1.PolicyBasedRoute[] = [];
-                stream.on('data', (response: protos.google.cloud.networkconnectivity.v1.PolicyBasedRoute) => {
+                const responses: protos.google.cloud.networkconnectivity.v1.InternalRange[] = [];
+                stream.on('data', (response: protos.google.cloud.networkconnectivity.v1.InternalRange) => {
                     responses.push(response);
                 });
                 stream.on('end', () => {
@@ -856,79 +1014,79 @@ describe('v1.PolicyBasedRoutingServiceClient', () => {
                 });
             });
             await assert.rejects(promise, expectedError);
-            assert((client.descriptors.page.listPolicyBasedRoutes.createStream as SinonStub)
-                .getCall(0).calledWith(client.innerApiCalls.listPolicyBasedRoutes, request));
+            assert((client.descriptors.page.listInternalRanges.createStream as SinonStub)
+                .getCall(0).calledWith(client.innerApiCalls.listInternalRanges, request));
             assert(
-                (client.descriptors.page.listPolicyBasedRoutes.createStream as SinonStub)
+                (client.descriptors.page.listInternalRanges.createStream as SinonStub)
                     .getCall(0).args[2].otherArgs.headers['x-goog-request-params'].includes(
                          expectedHeaderRequestParams
                     ) 
             );
         });
 
-        it('uses async iteration with listPolicyBasedRoutes without error', async () => {
-            const client = new policybasedroutingserviceModule.v1.PolicyBasedRoutingServiceClient({
+        it('uses async iteration with listInternalRanges without error', async () => {
+            const client = new internalrangeserviceModule.v1.InternalRangeServiceClient({
               credentials: {client_email: 'bogus', private_key: 'bogus'},
               projectId: 'bogus',
             });
             await client.initialize();
             const request = generateSampleMessage(
-              new protos.google.cloud.networkconnectivity.v1.ListPolicyBasedRoutesRequest()
+              new protos.google.cloud.networkconnectivity.v1.ListInternalRangesRequest()
             );
             const defaultValue1 =
-              getTypeDefaultValue('.google.cloud.networkconnectivity.v1.ListPolicyBasedRoutesRequest', ['parent']);
+              getTypeDefaultValue('.google.cloud.networkconnectivity.v1.ListInternalRangesRequest', ['parent']);
             request.parent = defaultValue1;
             const expectedHeaderRequestParams = `parent=${defaultValue1 ?? '' }`;
             const expectedResponse = [
-              generateSampleMessage(new protos.google.cloud.networkconnectivity.v1.PolicyBasedRoute()),
-              generateSampleMessage(new protos.google.cloud.networkconnectivity.v1.PolicyBasedRoute()),
-              generateSampleMessage(new protos.google.cloud.networkconnectivity.v1.PolicyBasedRoute()),
+              generateSampleMessage(new protos.google.cloud.networkconnectivity.v1.InternalRange()),
+              generateSampleMessage(new protos.google.cloud.networkconnectivity.v1.InternalRange()),
+              generateSampleMessage(new protos.google.cloud.networkconnectivity.v1.InternalRange()),
             ];
-            client.descriptors.page.listPolicyBasedRoutes.asyncIterate = stubAsyncIterationCall(expectedResponse);
-            const responses: protos.google.cloud.networkconnectivity.v1.IPolicyBasedRoute[] = [];
-            const iterable = client.listPolicyBasedRoutesAsync(request);
+            client.descriptors.page.listInternalRanges.asyncIterate = stubAsyncIterationCall(expectedResponse);
+            const responses: protos.google.cloud.networkconnectivity.v1.IInternalRange[] = [];
+            const iterable = client.listInternalRangesAsync(request);
             for await (const resource of iterable) {
                 responses.push(resource!);
             }
             assert.deepStrictEqual(responses, expectedResponse);
             assert.deepStrictEqual(
-                (client.descriptors.page.listPolicyBasedRoutes.asyncIterate as SinonStub)
+                (client.descriptors.page.listInternalRanges.asyncIterate as SinonStub)
                     .getCall(0).args[1], request);
             assert(
-                (client.descriptors.page.listPolicyBasedRoutes.asyncIterate as SinonStub)
+                (client.descriptors.page.listInternalRanges.asyncIterate as SinonStub)
                     .getCall(0).args[2].otherArgs.headers['x-goog-request-params'].includes(
                         expectedHeaderRequestParams
                     )
             );
         });
 
-        it('uses async iteration with listPolicyBasedRoutes with error', async () => {
-            const client = new policybasedroutingserviceModule.v1.PolicyBasedRoutingServiceClient({
+        it('uses async iteration with listInternalRanges with error', async () => {
+            const client = new internalrangeserviceModule.v1.InternalRangeServiceClient({
                 credentials: {client_email: 'bogus', private_key: 'bogus'},
                 projectId: 'bogus',
             });
             await client.initialize();
             const request = generateSampleMessage(
-              new protos.google.cloud.networkconnectivity.v1.ListPolicyBasedRoutesRequest()
+              new protos.google.cloud.networkconnectivity.v1.ListInternalRangesRequest()
             );
             const defaultValue1 =
-              getTypeDefaultValue('.google.cloud.networkconnectivity.v1.ListPolicyBasedRoutesRequest', ['parent']);
+              getTypeDefaultValue('.google.cloud.networkconnectivity.v1.ListInternalRangesRequest', ['parent']);
             request.parent = defaultValue1;
             const expectedHeaderRequestParams = `parent=${defaultValue1 ?? '' }`;
             const expectedError = new Error('expected');
-            client.descriptors.page.listPolicyBasedRoutes.asyncIterate = stubAsyncIterationCall(undefined, expectedError);
-            const iterable = client.listPolicyBasedRoutesAsync(request);
+            client.descriptors.page.listInternalRanges.asyncIterate = stubAsyncIterationCall(undefined, expectedError);
+            const iterable = client.listInternalRangesAsync(request);
             await assert.rejects(async () => {
-                const responses: protos.google.cloud.networkconnectivity.v1.IPolicyBasedRoute[] = [];
+                const responses: protos.google.cloud.networkconnectivity.v1.IInternalRange[] = [];
                 for await (const resource of iterable) {
                     responses.push(resource!);
                 }
             });
             assert.deepStrictEqual(
-                (client.descriptors.page.listPolicyBasedRoutes.asyncIterate as SinonStub)
+                (client.descriptors.page.listInternalRanges.asyncIterate as SinonStub)
                     .getCall(0).args[1], request);
             assert(
-                (client.descriptors.page.listPolicyBasedRoutes.asyncIterate as SinonStub)
+                (client.descriptors.page.listInternalRanges.asyncIterate as SinonStub)
                     .getCall(0).args[2].otherArgs.headers['x-goog-request-params'].includes(
                         expectedHeaderRequestParams
                     )
@@ -937,7 +1095,7 @@ describe('v1.PolicyBasedRoutingServiceClient', () => {
     });
     describe('getIamPolicy', () => {
         it('invokes getIamPolicy without error', async () => {
-            const client = new policybasedroutingserviceModule.v1.PolicyBasedRoutingServiceClient({
+            const client = new internalrangeserviceModule.v1.InternalRangeServiceClient({
               credentials: {client_email: 'bogus', private_key: 'bogus'},
               projectId: 'bogus',
             });
@@ -964,7 +1122,7 @@ describe('v1.PolicyBasedRoutingServiceClient', () => {
                 .getCall(0).calledWith(request, expectedOptions, undefined));
         });
         it('invokes getIamPolicy without error using callback', async () => {
-            const client = new policybasedroutingserviceModule.v1.PolicyBasedRoutingServiceClient({
+            const client = new internalrangeserviceModule.v1.InternalRangeServiceClient({
               credentials: {client_email: 'bogus', private_key: 'bogus'},
               projectId: 'bogus',
             });
@@ -1003,7 +1161,7 @@ describe('v1.PolicyBasedRoutingServiceClient', () => {
                 .getCall(0));
         });
         it('invokes getIamPolicy with error', async () => {
-            const client = new policybasedroutingserviceModule.v1.PolicyBasedRoutingServiceClient({
+            const client = new internalrangeserviceModule.v1.InternalRangeServiceClient({
               credentials: {client_email: 'bogus', private_key: 'bogus'},
               projectId: 'bogus',
             });
@@ -1029,7 +1187,7 @@ describe('v1.PolicyBasedRoutingServiceClient', () => {
     });
     describe('setIamPolicy', () => {
         it('invokes setIamPolicy without error', async () => {
-            const client = new policybasedroutingserviceModule.v1.PolicyBasedRoutingServiceClient({
+            const client = new internalrangeserviceModule.v1.InternalRangeServiceClient({
               credentials: {client_email: 'bogus', private_key: 'bogus'},
               projectId: 'bogus',
             });
@@ -1056,7 +1214,7 @@ describe('v1.PolicyBasedRoutingServiceClient', () => {
                 .getCall(0).calledWith(request, expectedOptions, undefined));
         });
         it('invokes setIamPolicy without error using callback', async () => {
-            const client = new policybasedroutingserviceModule.v1.PolicyBasedRoutingServiceClient({
+            const client = new internalrangeserviceModule.v1.InternalRangeServiceClient({
               credentials: {client_email: 'bogus', private_key: 'bogus'},
               projectId: 'bogus',
             });
@@ -1095,7 +1253,7 @@ describe('v1.PolicyBasedRoutingServiceClient', () => {
                 .getCall(0));
         });
         it('invokes setIamPolicy with error', async () => {
-            const client = new policybasedroutingserviceModule.v1.PolicyBasedRoutingServiceClient({
+            const client = new internalrangeserviceModule.v1.InternalRangeServiceClient({
               credentials: {client_email: 'bogus', private_key: 'bogus'},
               projectId: 'bogus',
             });
@@ -1121,7 +1279,7 @@ describe('v1.PolicyBasedRoutingServiceClient', () => {
     });
     describe('testIamPermissions', () => {
         it('invokes testIamPermissions without error', async () => {
-            const client = new policybasedroutingserviceModule.v1.PolicyBasedRoutingServiceClient({
+            const client = new internalrangeserviceModule.v1.InternalRangeServiceClient({
               credentials: {client_email: 'bogus', private_key: 'bogus'},
               projectId: 'bogus',
             });
@@ -1148,7 +1306,7 @@ describe('v1.PolicyBasedRoutingServiceClient', () => {
                 .getCall(0).calledWith(request, expectedOptions, undefined));
         });
         it('invokes testIamPermissions without error using callback', async () => {
-            const client = new policybasedroutingserviceModule.v1.PolicyBasedRoutingServiceClient({
+            const client = new internalrangeserviceModule.v1.InternalRangeServiceClient({
               credentials: {client_email: 'bogus', private_key: 'bogus'},
               projectId: 'bogus',
             });
@@ -1187,7 +1345,7 @@ describe('v1.PolicyBasedRoutingServiceClient', () => {
                 .getCall(0));
         });
         it('invokes testIamPermissions with error', async () => {
-            const client = new policybasedroutingserviceModule.v1.PolicyBasedRoutingServiceClient({
+            const client = new internalrangeserviceModule.v1.InternalRangeServiceClient({
               credentials: {client_email: 'bogus', private_key: 'bogus'},
               projectId: 'bogus',
             });
@@ -1213,7 +1371,7 @@ describe('v1.PolicyBasedRoutingServiceClient', () => {
     });
     describe('getLocation', () => {
         it('invokes getLocation without error', async () => {
-            const client = new policybasedroutingserviceModule.v1.PolicyBasedRoutingServiceClient({
+            const client = new internalrangeserviceModule.v1.InternalRangeServiceClient({
               credentials: {client_email: 'bogus', private_key: 'bogus'},
               projectId: 'bogus',
             });
@@ -1240,7 +1398,7 @@ describe('v1.PolicyBasedRoutingServiceClient', () => {
                 .getCall(0).calledWith(request, expectedOptions, undefined));
         });
         it('invokes getLocation without error using callback', async () => {
-            const client = new policybasedroutingserviceModule.v1.PolicyBasedRoutingServiceClient({
+            const client = new internalrangeserviceModule.v1.InternalRangeServiceClient({
               credentials: {client_email: 'bogus', private_key: 'bogus'},
               projectId: 'bogus',
             });
@@ -1282,7 +1440,7 @@ describe('v1.PolicyBasedRoutingServiceClient', () => {
                 .getCall(0));
         });
         it('invokes getLocation with error', async () => {
-            const client = new policybasedroutingserviceModule.v1.PolicyBasedRoutingServiceClient({
+            const client = new internalrangeserviceModule.v1.InternalRangeServiceClient({
               credentials: {client_email: 'bogus', private_key: 'bogus'},
               projectId: 'bogus',
             });
@@ -1308,7 +1466,7 @@ describe('v1.PolicyBasedRoutingServiceClient', () => {
     });
     describe('listLocationsAsync', () => {
         it('uses async iteration with listLocations without error', async () => {
-            const client = new policybasedroutingserviceModule.v1.PolicyBasedRoutingServiceClient({
+            const client = new internalrangeserviceModule.v1.InternalRangeServiceClient({
               credentials: {client_email: 'bogus', private_key: 'bogus'},
               projectId: 'bogus',
             });
@@ -1347,7 +1505,7 @@ describe('v1.PolicyBasedRoutingServiceClient', () => {
             );
         });
         it('uses async iteration with listLocations with error', async () => {
-            const client = new policybasedroutingserviceModule.v1.PolicyBasedRoutingServiceClient({
+            const client = new internalrangeserviceModule.v1.InternalRangeServiceClient({
                 credentials: {client_email: 'bogus', private_key: 'bogus'},
                 projectId: 'bogus',
             });
@@ -1379,7 +1537,7 @@ describe('v1.PolicyBasedRoutingServiceClient', () => {
     });
     describe('getOperation', () => {
         it('invokes getOperation without error', async () => {
-            const client = new policybasedroutingserviceModule.v1.PolicyBasedRoutingServiceClient({
+            const client = new internalrangeserviceModule.v1.InternalRangeServiceClient({
               credentials: {client_email: 'bogus', private_key: 'bogus'},
               projectId: 'bogus',
             });
@@ -1398,7 +1556,7 @@ describe('v1.PolicyBasedRoutingServiceClient', () => {
             );
         });
         it('invokes getOperation without error using callback', async () => {
-            const client = new policybasedroutingserviceModule.v1.PolicyBasedRoutingServiceClient({
+            const client = new internalrangeserviceModule.v1.InternalRangeServiceClient({
               credentials: {client_email: 'bogus', private_key: 'bogus'},
               projectId: 'bogus',
             });
@@ -1430,7 +1588,7 @@ describe('v1.PolicyBasedRoutingServiceClient', () => {
                 .getCall(0));
         });
         it('invokes getOperation with error', async () => {
-            const client = new policybasedroutingserviceModule.v1.PolicyBasedRoutingServiceClient({
+            const client = new internalrangeserviceModule.v1.InternalRangeServiceClient({
               credentials: {client_email: 'bogus', private_key: 'bogus'},
               projectId: 'bogus',
             });
@@ -1446,7 +1604,7 @@ describe('v1.PolicyBasedRoutingServiceClient', () => {
     });
     describe('cancelOperation', () => {
         it('invokes cancelOperation without error', async () => {
-            const client = new policybasedroutingserviceModule.v1.PolicyBasedRoutingServiceClient({
+            const client = new internalrangeserviceModule.v1.InternalRangeServiceClient({
               credentials: {client_email: 'bogus', private_key: 'bogus'},
               projectId: 'bogus',
             });
@@ -1465,7 +1623,7 @@ describe('v1.PolicyBasedRoutingServiceClient', () => {
             );
         });
         it('invokes cancelOperation without error using callback', async () => {
-            const client = new policybasedroutingserviceModule.v1.PolicyBasedRoutingServiceClient({
+            const client = new internalrangeserviceModule.v1.InternalRangeServiceClient({
               credentials: {client_email: 'bogus', private_key: 'bogus'},
               projectId: 'bogus',
             });
@@ -1497,7 +1655,7 @@ describe('v1.PolicyBasedRoutingServiceClient', () => {
                 .getCall(0));
         });
         it('invokes cancelOperation with error', async () => {
-            const client = new policybasedroutingserviceModule.v1.PolicyBasedRoutingServiceClient({
+            const client = new internalrangeserviceModule.v1.InternalRangeServiceClient({
               credentials: {client_email: 'bogus', private_key: 'bogus'},
               projectId: 'bogus',
             });
@@ -1513,7 +1671,7 @@ describe('v1.PolicyBasedRoutingServiceClient', () => {
     });
     describe('deleteOperation', () => {
         it('invokes deleteOperation without error', async () => {
-            const client = new policybasedroutingserviceModule.v1.PolicyBasedRoutingServiceClient({
+            const client = new internalrangeserviceModule.v1.InternalRangeServiceClient({
               credentials: {client_email: 'bogus', private_key: 'bogus'},
               projectId: 'bogus',
             });
@@ -1532,7 +1690,7 @@ describe('v1.PolicyBasedRoutingServiceClient', () => {
             );
         });
         it('invokes deleteOperation without error using callback', async () => {
-            const client = new policybasedroutingserviceModule.v1.PolicyBasedRoutingServiceClient({
+            const client = new internalrangeserviceModule.v1.InternalRangeServiceClient({
               credentials: {client_email: 'bogus', private_key: 'bogus'},
               projectId: 'bogus',
             });
@@ -1564,7 +1722,7 @@ describe('v1.PolicyBasedRoutingServiceClient', () => {
                 .getCall(0));
         });
         it('invokes deleteOperation with error', async () => {
-            const client = new policybasedroutingserviceModule.v1.PolicyBasedRoutingServiceClient({
+            const client = new internalrangeserviceModule.v1.InternalRangeServiceClient({
               credentials: {client_email: 'bogus', private_key: 'bogus'},
               projectId: 'bogus',
             });
@@ -1580,7 +1738,7 @@ describe('v1.PolicyBasedRoutingServiceClient', () => {
     });
     describe('listOperationsAsync', () => {
         it('uses async iteration with listOperations without error', async () => {
-            const client = new policybasedroutingserviceModule.v1.PolicyBasedRoutingServiceClient({
+            const client = new internalrangeserviceModule.v1.InternalRangeServiceClient({
               credentials: {client_email: 'bogus', private_key: 'bogus'},
               projectId: 'bogus',
             });
@@ -1610,7 +1768,7 @@ describe('v1.PolicyBasedRoutingServiceClient', () => {
                     .getCall(0).args[1], request);
         });
         it('uses async iteration with listOperations with error', async () => {
-            const client = new policybasedroutingserviceModule.v1.PolicyBasedRoutingServiceClient({
+            const client = new internalrangeserviceModule.v1.InternalRangeServiceClient({
                 credentials: {client_email: 'bogus', private_key: 'bogus'},
                 projectId: 'bogus',
             });
@@ -1642,7 +1800,7 @@ describe('v1.PolicyBasedRoutingServiceClient', () => {
                 hub: "hubValue",
                 group: "groupValue",
             };
-            const client = new policybasedroutingserviceModule.v1.PolicyBasedRoutingServiceClient({
+            const client = new internalrangeserviceModule.v1.InternalRangeServiceClient({
                 credentials: {client_email: 'bogus', private_key: 'bogus'},
                 projectId: 'bogus',
             });
@@ -1687,7 +1845,7 @@ describe('v1.PolicyBasedRoutingServiceClient', () => {
                 project: "projectValue",
                 hub: "hubValue",
             };
-            const client = new policybasedroutingserviceModule.v1.PolicyBasedRoutingServiceClient({
+            const client = new internalrangeserviceModule.v1.InternalRangeServiceClient({
                 credentials: {client_email: 'bogus', private_key: 'bogus'},
                 projectId: 'bogus',
             });
@@ -1727,7 +1885,7 @@ describe('v1.PolicyBasedRoutingServiceClient', () => {
                 route_table: "routeTableValue",
                 route: "routeValue",
             };
-            const client = new policybasedroutingserviceModule.v1.PolicyBasedRoutingServiceClient({
+            const client = new internalrangeserviceModule.v1.InternalRangeServiceClient({
                 credentials: {client_email: 'bogus', private_key: 'bogus'},
                 projectId: 'bogus',
             });
@@ -1780,7 +1938,7 @@ describe('v1.PolicyBasedRoutingServiceClient', () => {
                 location: "locationValue",
                 internal_range: "internalRangeValue",
             };
-            const client = new policybasedroutingserviceModule.v1.PolicyBasedRoutingServiceClient({
+            const client = new internalrangeserviceModule.v1.InternalRangeServiceClient({
                 credentials: {client_email: 'bogus', private_key: 'bogus'},
                 projectId: 'bogus',
             });
@@ -1825,7 +1983,7 @@ describe('v1.PolicyBasedRoutingServiceClient', () => {
                 project: "projectValue",
                 location: "locationValue",
             };
-            const client = new policybasedroutingserviceModule.v1.PolicyBasedRoutingServiceClient({
+            const client = new internalrangeserviceModule.v1.InternalRangeServiceClient({
                 credentials: {client_email: 'bogus', private_key: 'bogus'},
                 projectId: 'bogus',
             });
@@ -1857,51 +2015,13 @@ describe('v1.PolicyBasedRoutingServiceClient', () => {
             });
         });
 
-        describe('network', async () => {
-            const fakePath = "/rendered/path/network";
-            const expectedParameters = {
-                project: "projectValue",
-                resource_id: "resourceIdValue",
-            };
-            const client = new policybasedroutingserviceModule.v1.PolicyBasedRoutingServiceClient({
-                credentials: {client_email: 'bogus', private_key: 'bogus'},
-                projectId: 'bogus',
-            });
-            await client.initialize();
-            client.pathTemplates.networkPathTemplate.render =
-                sinon.stub().returns(fakePath);
-            client.pathTemplates.networkPathTemplate.match =
-                sinon.stub().returns(expectedParameters);
-
-            it('networkPath', () => {
-                const result = client.networkPath("projectValue", "resourceIdValue");
-                assert.strictEqual(result, fakePath);
-                assert((client.pathTemplates.networkPathTemplate.render as SinonStub)
-                    .getCall(-1).calledWith(expectedParameters));
-            });
-
-            it('matchProjectFromNetworkName', () => {
-                const result = client.matchProjectFromNetworkName(fakePath);
-                assert.strictEqual(result, "projectValue");
-                assert((client.pathTemplates.networkPathTemplate.match as SinonStub)
-                    .getCall(-1).calledWith(fakePath));
-            });
-
-            it('matchResourceIdFromNetworkName', () => {
-                const result = client.matchResourceIdFromNetworkName(fakePath);
-                assert.strictEqual(result, "resourceIdValue");
-                assert((client.pathTemplates.networkPathTemplate.match as SinonStub)
-                    .getCall(-1).calledWith(fakePath));
-            });
-        });
-
         describe('policyBasedRoute', async () => {
             const fakePath = "/rendered/path/policyBasedRoute";
             const expectedParameters = {
                 project: "projectValue",
                 policy_based_route: "policyBasedRouteValue",
             };
-            const client = new policybasedroutingserviceModule.v1.PolicyBasedRoutingServiceClient({
+            const client = new internalrangeserviceModule.v1.InternalRangeServiceClient({
                 credentials: {client_email: 'bogus', private_key: 'bogus'},
                 projectId: 'bogus',
             });
@@ -1933,6 +2053,36 @@ describe('v1.PolicyBasedRoutingServiceClient', () => {
             });
         });
 
+        describe('project', async () => {
+            const fakePath = "/rendered/path/project";
+            const expectedParameters = {
+                project: "projectValue",
+            };
+            const client = new internalrangeserviceModule.v1.InternalRangeServiceClient({
+                credentials: {client_email: 'bogus', private_key: 'bogus'},
+                projectId: 'bogus',
+            });
+            await client.initialize();
+            client.pathTemplates.projectPathTemplate.render =
+                sinon.stub().returns(fakePath);
+            client.pathTemplates.projectPathTemplate.match =
+                sinon.stub().returns(expectedParameters);
+
+            it('projectPath', () => {
+                const result = client.projectPath("projectValue");
+                assert.strictEqual(result, fakePath);
+                assert((client.pathTemplates.projectPathTemplate.render as SinonStub)
+                    .getCall(-1).calledWith(expectedParameters));
+            });
+
+            it('matchProjectFromProjectName', () => {
+                const result = client.matchProjectFromProjectName(fakePath);
+                assert.strictEqual(result, "projectValue");
+                assert((client.pathTemplates.projectPathTemplate.match as SinonStub)
+                    .getCall(-1).calledWith(fakePath));
+            });
+        });
+
         describe('routeTable', async () => {
             const fakePath = "/rendered/path/routeTable";
             const expectedParameters = {
@@ -1940,7 +2090,7 @@ describe('v1.PolicyBasedRoutingServiceClient', () => {
                 hub: "hubValue",
                 route_table: "routeTableValue",
             };
-            const client = new policybasedroutingserviceModule.v1.PolicyBasedRoutingServiceClient({
+            const client = new internalrangeserviceModule.v1.InternalRangeServiceClient({
                 credentials: {client_email: 'bogus', private_key: 'bogus'},
                 projectId: 'bogus',
             });
@@ -1986,7 +2136,7 @@ describe('v1.PolicyBasedRoutingServiceClient', () => {
                 location: "locationValue",
                 service_class: "serviceClassValue",
             };
-            const client = new policybasedroutingserviceModule.v1.PolicyBasedRoutingServiceClient({
+            const client = new internalrangeserviceModule.v1.InternalRangeServiceClient({
                 credentials: {client_email: 'bogus', private_key: 'bogus'},
                 projectId: 'bogus',
             });
@@ -2032,7 +2182,7 @@ describe('v1.PolicyBasedRoutingServiceClient', () => {
                 location: "locationValue",
                 service_connection_map: "serviceConnectionMapValue",
             };
-            const client = new policybasedroutingserviceModule.v1.PolicyBasedRoutingServiceClient({
+            const client = new internalrangeserviceModule.v1.InternalRangeServiceClient({
                 credentials: {client_email: 'bogus', private_key: 'bogus'},
                 projectId: 'bogus',
             });
@@ -2078,7 +2228,7 @@ describe('v1.PolicyBasedRoutingServiceClient', () => {
                 location: "locationValue",
                 service_connection_policy: "serviceConnectionPolicyValue",
             };
-            const client = new policybasedroutingserviceModule.v1.PolicyBasedRoutingServiceClient({
+            const client = new internalrangeserviceModule.v1.InternalRangeServiceClient({
                 credentials: {client_email: 'bogus', private_key: 'bogus'},
                 projectId: 'bogus',
             });
@@ -2124,7 +2274,7 @@ describe('v1.PolicyBasedRoutingServiceClient', () => {
                 location: "locationValue",
                 service_connection_token: "serviceConnectionTokenValue",
             };
-            const client = new policybasedroutingserviceModule.v1.PolicyBasedRoutingServiceClient({
+            const client = new internalrangeserviceModule.v1.InternalRangeServiceClient({
                 credentials: {client_email: 'bogus', private_key: 'bogus'},
                 projectId: 'bogus',
             });
@@ -2170,7 +2320,7 @@ describe('v1.PolicyBasedRoutingServiceClient', () => {
                 location: "locationValue",
                 spoke: "spokeValue",
             };
-            const client = new policybasedroutingserviceModule.v1.PolicyBasedRoutingServiceClient({
+            const client = new internalrangeserviceModule.v1.InternalRangeServiceClient({
                 credentials: {client_email: 'bogus', private_key: 'bogus'},
                 projectId: 'bogus',
             });

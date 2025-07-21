@@ -26,19 +26,19 @@ import {loggingUtils as logging, decodeAnyProtosInArray} from 'google-gax';
 
 /**
  * Client JSON configuration object, loaded from
- * `src/v1/policy_based_routing_service_client_config.json`.
+ * `src/v1/internal_range_service_client_config.json`.
  * This file defines retry strategy and timeouts for all API methods in this library.
  */
-import * as gapicConfig from './policy_based_routing_service_client_config.json';
+import * as gapicConfig from './internal_range_service_client_config.json';
 const version = require('../../../package.json').version;
 
 /**
- *  Policy-Based Routing allows GCP customers to specify flexibile routing
- *  policies for Layer 4 traffic traversing through the connected service.
+ *  The CLH-based service for internal range resources used to perform IPAM
+ *  operations within a VPC network.
  * @class
  * @memberof v1
  */
-export class PolicyBasedRoutingServiceClient {
+export class InternalRangeServiceClient {
   private _terminated = false;
   private _opts: ClientOptions;
   private _providedCustomServicePath: boolean;
@@ -63,10 +63,10 @@ export class PolicyBasedRoutingServiceClient {
   locationsClient: LocationsClient;
   pathTemplates: {[name: string]: gax.PathTemplate};
   operationsClient: gax.OperationsClient;
-  policyBasedRoutingServiceStub?: Promise<{[name: string]: Function}>;
+  internalRangeServiceStub?: Promise<{[name: string]: Function}>;
 
   /**
-   * Construct an instance of PolicyBasedRoutingServiceClient.
+   * Construct an instance of InternalRangeServiceClient.
    *
    * @param {object} [options] - The configuration object.
    * The options accepted by the constructor are described in detail
@@ -101,12 +101,12 @@ export class PolicyBasedRoutingServiceClient {
    *     HTTP implementation. Load only fallback version and pass it to the constructor:
    *     ```
    *     const gax = require('google-gax/build/src/fallback'); // avoids loading google-gax with gRPC
-   *     const client = new PolicyBasedRoutingServiceClient({fallback: true}, gax);
+   *     const client = new InternalRangeServiceClient({fallback: true}, gax);
    *     ```
    */
   constructor(opts?: ClientOptions, gaxInstance?: typeof gax | typeof gax.fallback) {
     // Ensure that options include all the required fields.
-    const staticMembers = this.constructor as typeof PolicyBasedRoutingServiceClient;
+    const staticMembers = this.constructor as typeof InternalRangeServiceClient;
     if (opts?.universe_domain && opts?.universeDomain && opts?.universe_domain !== opts?.universeDomain) {
       throw new Error('Please set either universe_domain or universeDomain, but not both.');
     }
@@ -203,11 +203,11 @@ export class PolicyBasedRoutingServiceClient {
       locationPathTemplate: new this._gaxModule.PathTemplate(
         'projects/{project}/locations/{location}'
       ),
-      networkPathTemplate: new this._gaxModule.PathTemplate(
-        'projects/{project}/global/networks/{resource_id}'
-      ),
       policyBasedRoutePathTemplate: new this._gaxModule.PathTemplate(
         'projects/{project}/locations/global/PolicyBasedRoutes/{policy_based_route}'
+      ),
+      projectPathTemplate: new this._gaxModule.PathTemplate(
+        'projects/{project}'
       ),
       routeTablePathTemplate: new this._gaxModule.PathTemplate(
         'projects/{project}/locations/global/hubs/{hub}/routeTables/{route_table}'
@@ -233,8 +233,8 @@ export class PolicyBasedRoutingServiceClient {
     // (e.g. 50 results at a time, with tokens to get subsequent
     // pages). Denote the keys used for pagination and results.
     this.descriptors.page = {
-      listPolicyBasedRoutes:
-          new this._gaxModule.PageDescriptor('pageToken', 'nextPageToken', 'policyBasedRoutes')
+      listInternalRanges:
+          new this._gaxModule.PageDescriptor('pageToken', 'nextPageToken', 'internalRanges')
     };
 
     const protoFilesRoot = this._gaxModule.protobufFromJSON(jsonProtos);
@@ -253,29 +253,37 @@ export class PolicyBasedRoutingServiceClient {
       },{selector: 'google.longrunning.Operations.CancelOperation',post: '/v1/{name=projects/*/locations/*/operations/*}:cancel',body: '*',},{selector: 'google.longrunning.Operations.DeleteOperation',delete: '/v1/{name=projects/*/locations/*/operations/*}',},{selector: 'google.longrunning.Operations.GetOperation',get: '/v1/{name=projects/*/locations/*/operations/*}',},{selector: 'google.longrunning.Operations.ListOperations',get: '/v1/{name=projects/*/locations/*}/operations',}];
     }
     this.operationsClient = this._gaxModule.lro(lroOptions).operationsClient(opts);
-    const createPolicyBasedRouteResponse = protoFilesRoot.lookup(
-      '.google.cloud.networkconnectivity.v1.PolicyBasedRoute') as gax.protobuf.Type;
-    const createPolicyBasedRouteMetadata = protoFilesRoot.lookup(
+    const createInternalRangeResponse = protoFilesRoot.lookup(
+      '.google.cloud.networkconnectivity.v1.InternalRange') as gax.protobuf.Type;
+    const createInternalRangeMetadata = protoFilesRoot.lookup(
       '.google.cloud.networkconnectivity.v1.OperationMetadata') as gax.protobuf.Type;
-    const deletePolicyBasedRouteResponse = protoFilesRoot.lookup(
+    const updateInternalRangeResponse = protoFilesRoot.lookup(
+      '.google.cloud.networkconnectivity.v1.InternalRange') as gax.protobuf.Type;
+    const updateInternalRangeMetadata = protoFilesRoot.lookup(
+      '.google.cloud.networkconnectivity.v1.OperationMetadata') as gax.protobuf.Type;
+    const deleteInternalRangeResponse = protoFilesRoot.lookup(
       '.google.protobuf.Empty') as gax.protobuf.Type;
-    const deletePolicyBasedRouteMetadata = protoFilesRoot.lookup(
+    const deleteInternalRangeMetadata = protoFilesRoot.lookup(
       '.google.cloud.networkconnectivity.v1.OperationMetadata') as gax.protobuf.Type;
 
     this.descriptors.longrunning = {
-      createPolicyBasedRoute: new this._gaxModule.LongrunningDescriptor(
+      createInternalRange: new this._gaxModule.LongrunningDescriptor(
         this.operationsClient,
-        createPolicyBasedRouteResponse.decode.bind(createPolicyBasedRouteResponse),
-        createPolicyBasedRouteMetadata.decode.bind(createPolicyBasedRouteMetadata)),
-      deletePolicyBasedRoute: new this._gaxModule.LongrunningDescriptor(
+        createInternalRangeResponse.decode.bind(createInternalRangeResponse),
+        createInternalRangeMetadata.decode.bind(createInternalRangeMetadata)),
+      updateInternalRange: new this._gaxModule.LongrunningDescriptor(
         this.operationsClient,
-        deletePolicyBasedRouteResponse.decode.bind(deletePolicyBasedRouteResponse),
-        deletePolicyBasedRouteMetadata.decode.bind(deletePolicyBasedRouteMetadata))
+        updateInternalRangeResponse.decode.bind(updateInternalRangeResponse),
+        updateInternalRangeMetadata.decode.bind(updateInternalRangeMetadata)),
+      deleteInternalRange: new this._gaxModule.LongrunningDescriptor(
+        this.operationsClient,
+        deleteInternalRangeResponse.decode.bind(deleteInternalRangeResponse),
+        deleteInternalRangeMetadata.decode.bind(deleteInternalRangeMetadata))
     };
 
     // Put together the default options sent with requests.
     this._defaults = this._gaxGrpc.constructSettings(
-        'google.cloud.networkconnectivity.v1.PolicyBasedRoutingService', gapicConfig as gax.ClientConfig,
+        'google.cloud.networkconnectivity.v1.InternalRangeService', gapicConfig as gax.ClientConfig,
         opts.clientConfig || {}, {'x-goog-api-client': clientHeader.join(' ')});
 
     // Set up a dictionary of "inner API calls"; the core implementation
@@ -300,25 +308,25 @@ export class PolicyBasedRoutingServiceClient {
    */
   initialize() {
     // If the client stub promise is already initialized, return immediately.
-    if (this.policyBasedRoutingServiceStub) {
-      return this.policyBasedRoutingServiceStub;
+    if (this.internalRangeServiceStub) {
+      return this.internalRangeServiceStub;
     }
 
     // Put together the "service stub" for
-    // google.cloud.networkconnectivity.v1.PolicyBasedRoutingService.
-    this.policyBasedRoutingServiceStub = this._gaxGrpc.createStub(
+    // google.cloud.networkconnectivity.v1.InternalRangeService.
+    this.internalRangeServiceStub = this._gaxGrpc.createStub(
         this._opts.fallback ?
-          (this._protos as protobuf.Root).lookupService('google.cloud.networkconnectivity.v1.PolicyBasedRoutingService') :
+          (this._protos as protobuf.Root).lookupService('google.cloud.networkconnectivity.v1.InternalRangeService') :
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          (this._protos as any).google.cloud.networkconnectivity.v1.PolicyBasedRoutingService,
+          (this._protos as any).google.cloud.networkconnectivity.v1.InternalRangeService,
         this._opts, this._providedCustomServicePath) as Promise<{[method: string]: Function}>;
 
     // Iterate over each of the methods that the service provides
     // and create an API call method for each.
-    const policyBasedRoutingServiceStubMethods =
-        ['listPolicyBasedRoutes', 'getPolicyBasedRoute', 'createPolicyBasedRoute', 'deletePolicyBasedRoute'];
-    for (const methodName of policyBasedRoutingServiceStubMethods) {
-      const callPromise = this.policyBasedRoutingServiceStub.then(
+    const internalRangeServiceStubMethods =
+        ['listInternalRanges', 'getInternalRange', 'createInternalRange', 'updateInternalRange', 'deleteInternalRange'];
+    for (const methodName of internalRangeServiceStubMethods) {
+      const callPromise = this.internalRangeServiceStub.then(
         stub => (...args: Array<{}>) => {
           if (this._terminated) {
             return Promise.reject('The client has already been closed.');
@@ -344,7 +352,7 @@ export class PolicyBasedRoutingServiceClient {
       this.innerApiCalls[methodName] = apiCall;
     }
 
-    return this.policyBasedRoutingServiceStub;
+    return this.internalRangeServiceStub;
   }
 
   /**
@@ -421,54 +429,54 @@ export class PolicyBasedRoutingServiceClient {
   // -- Service calls --
   // -------------------
 /**
- * Gets details of a single policy-based route.
+ * Gets details of a single internal range.
  *
  * @param {Object} request
  *   The request object that will be sent.
  * @param {string} request.name
- *   Required. Name of the PolicyBasedRoute resource to get.
+ *   Required. Name of the InternalRange to get.
  * @param {object} [options]
  *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
  * @returns {Promise} - The promise which resolves to an array.
- *   The first element of the array is an object representing {@link protos.google.cloud.networkconnectivity.v1.PolicyBasedRoute|PolicyBasedRoute}.
+ *   The first element of the array is an object representing {@link protos.google.cloud.networkconnectivity.v1.InternalRange|InternalRange}.
  *   Please see the {@link https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#regular-methods | documentation }
  *   for more details and examples.
- * @example <caption>include:samples/generated/v1/policy_based_routing_service.get_policy_based_route.js</caption>
- * region_tag:networkconnectivity_v1_generated_PolicyBasedRoutingService_GetPolicyBasedRoute_async
+ * @example <caption>include:samples/generated/v1/internal_range_service.get_internal_range.js</caption>
+ * region_tag:networkconnectivity_v1_generated_InternalRangeService_GetInternalRange_async
  */
-  getPolicyBasedRoute(
-      request?: protos.google.cloud.networkconnectivity.v1.IGetPolicyBasedRouteRequest,
+  getInternalRange(
+      request?: protos.google.cloud.networkconnectivity.v1.IGetInternalRangeRequest,
       options?: CallOptions):
       Promise<[
-        protos.google.cloud.networkconnectivity.v1.IPolicyBasedRoute,
-        protos.google.cloud.networkconnectivity.v1.IGetPolicyBasedRouteRequest|undefined, {}|undefined
+        protos.google.cloud.networkconnectivity.v1.IInternalRange,
+        protos.google.cloud.networkconnectivity.v1.IGetInternalRangeRequest|undefined, {}|undefined
       ]>;
-  getPolicyBasedRoute(
-      request: protos.google.cloud.networkconnectivity.v1.IGetPolicyBasedRouteRequest,
+  getInternalRange(
+      request: protos.google.cloud.networkconnectivity.v1.IGetInternalRangeRequest,
       options: CallOptions,
       callback: Callback<
-          protos.google.cloud.networkconnectivity.v1.IPolicyBasedRoute,
-          protos.google.cloud.networkconnectivity.v1.IGetPolicyBasedRouteRequest|null|undefined,
+          protos.google.cloud.networkconnectivity.v1.IInternalRange,
+          protos.google.cloud.networkconnectivity.v1.IGetInternalRangeRequest|null|undefined,
           {}|null|undefined>): void;
-  getPolicyBasedRoute(
-      request: protos.google.cloud.networkconnectivity.v1.IGetPolicyBasedRouteRequest,
+  getInternalRange(
+      request: protos.google.cloud.networkconnectivity.v1.IGetInternalRangeRequest,
       callback: Callback<
-          protos.google.cloud.networkconnectivity.v1.IPolicyBasedRoute,
-          protos.google.cloud.networkconnectivity.v1.IGetPolicyBasedRouteRequest|null|undefined,
+          protos.google.cloud.networkconnectivity.v1.IInternalRange,
+          protos.google.cloud.networkconnectivity.v1.IGetInternalRangeRequest|null|undefined,
           {}|null|undefined>): void;
-  getPolicyBasedRoute(
-      request?: protos.google.cloud.networkconnectivity.v1.IGetPolicyBasedRouteRequest,
+  getInternalRange(
+      request?: protos.google.cloud.networkconnectivity.v1.IGetInternalRangeRequest,
       optionsOrCallback?: CallOptions|Callback<
-          protos.google.cloud.networkconnectivity.v1.IPolicyBasedRoute,
-          protos.google.cloud.networkconnectivity.v1.IGetPolicyBasedRouteRequest|null|undefined,
+          protos.google.cloud.networkconnectivity.v1.IInternalRange,
+          protos.google.cloud.networkconnectivity.v1.IGetInternalRangeRequest|null|undefined,
           {}|null|undefined>,
       callback?: Callback<
-          protos.google.cloud.networkconnectivity.v1.IPolicyBasedRoute,
-          protos.google.cloud.networkconnectivity.v1.IGetPolicyBasedRouteRequest|null|undefined,
+          protos.google.cloud.networkconnectivity.v1.IInternalRange,
+          protos.google.cloud.networkconnectivity.v1.IGetInternalRangeRequest|null|undefined,
           {}|null|undefined>):
       Promise<[
-        protos.google.cloud.networkconnectivity.v1.IPolicyBasedRoute,
-        protos.google.cloud.networkconnectivity.v1.IGetPolicyBasedRouteRequest|undefined, {}|undefined
+        protos.google.cloud.networkconnectivity.v1.IInternalRange,
+        protos.google.cloud.networkconnectivity.v1.IGetInternalRangeRequest|undefined, {}|undefined
       ]>|void {
     request = request || {};
     let options: CallOptions;
@@ -488,23 +496,23 @@ export class PolicyBasedRoutingServiceClient {
       'name': request.name ?? '',
     });
     this.initialize().catch(err => {throw err});
-    this._log.info('getPolicyBasedRoute request %j', request);
+    this._log.info('getInternalRange request %j', request);
     const wrappedCallback: Callback<
-        protos.google.cloud.networkconnectivity.v1.IPolicyBasedRoute,
-        protos.google.cloud.networkconnectivity.v1.IGetPolicyBasedRouteRequest|null|undefined,
+        protos.google.cloud.networkconnectivity.v1.IInternalRange,
+        protos.google.cloud.networkconnectivity.v1.IGetInternalRangeRequest|null|undefined,
         {}|null|undefined>|undefined = callback
       ? (error, response, options, rawResponse) => {
-          this._log.info('getPolicyBasedRoute response %j', response);
+          this._log.info('getInternalRange response %j', response);
           callback!(error, response, options, rawResponse); // We verified callback above.
         }
       : undefined;
-    return this.innerApiCalls.getPolicyBasedRoute(request, options, wrappedCallback)
+    return this.innerApiCalls.getInternalRange(request, options, wrappedCallback)
       ?.then(([response, options, rawResponse]: [
-        protos.google.cloud.networkconnectivity.v1.IPolicyBasedRoute,
-        protos.google.cloud.networkconnectivity.v1.IGetPolicyBasedRouteRequest|undefined,
+        protos.google.cloud.networkconnectivity.v1.IInternalRange,
+        protos.google.cloud.networkconnectivity.v1.IGetInternalRangeRequest|undefined,
         {}|undefined
       ]) => {
-        this._log.info('getPolicyBasedRoute response %j', response);
+        this._log.info('getInternalRange response %j', response);
         return [response, options, rawResponse];
       }).catch((error: any) => {
         if (error && 'statusDetails' in error && error.statusDetails instanceof Array) {
@@ -516,34 +524,30 @@ export class PolicyBasedRoutingServiceClient {
   }
 
 /**
- * Creates a new policy-based route in a given project and location.
+ * Creates a new internal range in a given project and location.
  *
  * @param {Object} request
  *   The request object that will be sent.
  * @param {string} request.parent
- *   Required. The parent resource's name of the PolicyBasedRoute.
- * @param {string} request.policyBasedRouteId
- *   Required. Unique id for the policy-based route to create. Provided by the
- *   client when the resource is created. The name must comply with
- *   https://google.aip.dev/122#resource-id-segments. Specifically, the name
- *   must be 1-63 characters long and match the regular expression
- *   [a-z]([a-z0-9-]*[a-z0-9])?. The first character must be a lowercase letter,
- *   and all following characters (except for the last character) must be a
- *   dash, lowercase letter, or digit. The last character must be a lowercase
- *   letter or digit.
- * @param {google.cloud.networkconnectivity.v1.PolicyBasedRoute} request.policyBasedRoute
- *   Required. Initial values for a new policy-based route.
+ *   Required. The parent resource's name of the internal range.
+ * @param {string} [request.internalRangeId]
+ *   Optional. Resource ID
+ *   (i.e. 'foo' in '[...]/projects/p/locations/l/internalRanges/foo')
+ *   See https://google.aip.dev/122#resource-id-segments
+ *   Unique per location.
+ * @param {google.cloud.networkconnectivity.v1.InternalRange} request.internalRange
+ *   Required. Initial values for a new internal range
  * @param {string} [request.requestId]
  *   Optional. An optional request ID to identify requests. Specify a unique
- *   request ID so that if you must retry your request, the server knows to
- *   ignore the request if it has already been completed. The server guarantees
- *   that for at least 60 minutes since the first request.
+ *   request ID so that if you must retry your request, the server will know to
+ *   ignore the request if it has already been completed. The server will
+ *   guarantee that for at least 60 minutes since the first request.
  *
  *   For example, consider a situation where you make an initial request and
  *   the request times out. If you make the request again with the same request
  *   ID, the server can check if original operation with the same request ID
- *   was received, and if so, ignores the second request. This prevents clients
- *   from accidentally creating duplicate commitments.
+ *   was received, and if so, will ignore the second request. This prevents
+ *   clients from accidentally creating duplicate commitments.
  *
  *   The request ID must be a valid UUID with the exception that zero UUID is
  *   not supported (00000000-0000-0000-0000-000000000000).
@@ -555,41 +559,41 @@ export class PolicyBasedRoutingServiceClient {
  *   you can `await` for.
  *   Please see the {@link https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#long-running-operations | documentation }
  *   for more details and examples.
- * @example <caption>include:samples/generated/v1/policy_based_routing_service.create_policy_based_route.js</caption>
- * region_tag:networkconnectivity_v1_generated_PolicyBasedRoutingService_CreatePolicyBasedRoute_async
+ * @example <caption>include:samples/generated/v1/internal_range_service.create_internal_range.js</caption>
+ * region_tag:networkconnectivity_v1_generated_InternalRangeService_CreateInternalRange_async
  */
-  createPolicyBasedRoute(
-      request?: protos.google.cloud.networkconnectivity.v1.ICreatePolicyBasedRouteRequest,
+  createInternalRange(
+      request?: protos.google.cloud.networkconnectivity.v1.ICreateInternalRangeRequest,
       options?: CallOptions):
       Promise<[
-        LROperation<protos.google.cloud.networkconnectivity.v1.IPolicyBasedRoute, protos.google.cloud.networkconnectivity.v1.IOperationMetadata>,
+        LROperation<protos.google.cloud.networkconnectivity.v1.IInternalRange, protos.google.cloud.networkconnectivity.v1.IOperationMetadata>,
         protos.google.longrunning.IOperation|undefined, {}|undefined
       ]>;
-  createPolicyBasedRoute(
-      request: protos.google.cloud.networkconnectivity.v1.ICreatePolicyBasedRouteRequest,
+  createInternalRange(
+      request: protos.google.cloud.networkconnectivity.v1.ICreateInternalRangeRequest,
       options: CallOptions,
       callback: Callback<
-          LROperation<protos.google.cloud.networkconnectivity.v1.IPolicyBasedRoute, protos.google.cloud.networkconnectivity.v1.IOperationMetadata>,
+          LROperation<protos.google.cloud.networkconnectivity.v1.IInternalRange, protos.google.cloud.networkconnectivity.v1.IOperationMetadata>,
           protos.google.longrunning.IOperation|null|undefined,
           {}|null|undefined>): void;
-  createPolicyBasedRoute(
-      request: protos.google.cloud.networkconnectivity.v1.ICreatePolicyBasedRouteRequest,
+  createInternalRange(
+      request: protos.google.cloud.networkconnectivity.v1.ICreateInternalRangeRequest,
       callback: Callback<
-          LROperation<protos.google.cloud.networkconnectivity.v1.IPolicyBasedRoute, protos.google.cloud.networkconnectivity.v1.IOperationMetadata>,
+          LROperation<protos.google.cloud.networkconnectivity.v1.IInternalRange, protos.google.cloud.networkconnectivity.v1.IOperationMetadata>,
           protos.google.longrunning.IOperation|null|undefined,
           {}|null|undefined>): void;
-  createPolicyBasedRoute(
-      request?: protos.google.cloud.networkconnectivity.v1.ICreatePolicyBasedRouteRequest,
+  createInternalRange(
+      request?: protos.google.cloud.networkconnectivity.v1.ICreateInternalRangeRequest,
       optionsOrCallback?: CallOptions|Callback<
-          LROperation<protos.google.cloud.networkconnectivity.v1.IPolicyBasedRoute, protos.google.cloud.networkconnectivity.v1.IOperationMetadata>,
+          LROperation<protos.google.cloud.networkconnectivity.v1.IInternalRange, protos.google.cloud.networkconnectivity.v1.IOperationMetadata>,
           protos.google.longrunning.IOperation|null|undefined,
           {}|null|undefined>,
       callback?: Callback<
-          LROperation<protos.google.cloud.networkconnectivity.v1.IPolicyBasedRoute, protos.google.cloud.networkconnectivity.v1.IOperationMetadata>,
+          LROperation<protos.google.cloud.networkconnectivity.v1.IInternalRange, protos.google.cloud.networkconnectivity.v1.IOperationMetadata>,
           protos.google.longrunning.IOperation|null|undefined,
           {}|null|undefined>):
       Promise<[
-        LROperation<protos.google.cloud.networkconnectivity.v1.IPolicyBasedRoute, protos.google.cloud.networkconnectivity.v1.IOperationMetadata>,
+        LROperation<protos.google.cloud.networkconnectivity.v1.IInternalRange, protos.google.cloud.networkconnectivity.v1.IOperationMetadata>,
         protos.google.longrunning.IOperation|undefined, {}|undefined
       ]>|void {
     request = request || {};
@@ -611,60 +615,66 @@ export class PolicyBasedRoutingServiceClient {
     });
     this.initialize().catch(err => {throw err});
     const wrappedCallback: Callback<
-          LROperation<protos.google.cloud.networkconnectivity.v1.IPolicyBasedRoute, protos.google.cloud.networkconnectivity.v1.IOperationMetadata>,
+          LROperation<protos.google.cloud.networkconnectivity.v1.IInternalRange, protos.google.cloud.networkconnectivity.v1.IOperationMetadata>,
           protos.google.longrunning.IOperation|null|undefined,
           {}|null|undefined>|undefined = callback
       ? (error, response, rawResponse, _) => {
-          this._log.info('createPolicyBasedRoute response %j', rawResponse);
+          this._log.info('createInternalRange response %j', rawResponse);
           callback!(error, response, rawResponse, _); // We verified callback above.
         }
       : undefined;
-    this._log.info('createPolicyBasedRoute request %j', request);
-    return this.innerApiCalls.createPolicyBasedRoute(request, options, wrappedCallback)
+    this._log.info('createInternalRange request %j', request);
+    return this.innerApiCalls.createInternalRange(request, options, wrappedCallback)
     ?.then(([response, rawResponse, _]: [
-      LROperation<protos.google.cloud.networkconnectivity.v1.IPolicyBasedRoute, protos.google.cloud.networkconnectivity.v1.IOperationMetadata>,
+      LROperation<protos.google.cloud.networkconnectivity.v1.IInternalRange, protos.google.cloud.networkconnectivity.v1.IOperationMetadata>,
       protos.google.longrunning.IOperation|undefined, {}|undefined
     ]) => {
-      this._log.info('createPolicyBasedRoute response %j', rawResponse);
+      this._log.info('createInternalRange response %j', rawResponse);
       return [response, rawResponse, _];
     });
   }
 /**
- * Check the status of the long running operation returned by `createPolicyBasedRoute()`.
+ * Check the status of the long running operation returned by `createInternalRange()`.
  * @param {String} name
  *   The operation name that will be passed.
  * @returns {Promise} - The promise which resolves to an object.
  *   The decoded operation object has result and metadata field to get information from.
  *   Please see the {@link https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#long-running-operations | documentation }
  *   for more details and examples.
- * @example <caption>include:samples/generated/v1/policy_based_routing_service.create_policy_based_route.js</caption>
- * region_tag:networkconnectivity_v1_generated_PolicyBasedRoutingService_CreatePolicyBasedRoute_async
+ * @example <caption>include:samples/generated/v1/internal_range_service.create_internal_range.js</caption>
+ * region_tag:networkconnectivity_v1_generated_InternalRangeService_CreateInternalRange_async
  */
-  async checkCreatePolicyBasedRouteProgress(name: string): Promise<LROperation<protos.google.cloud.networkconnectivity.v1.PolicyBasedRoute, protos.google.cloud.networkconnectivity.v1.OperationMetadata>>{
-    this._log.info('createPolicyBasedRoute long-running');
+  async checkCreateInternalRangeProgress(name: string): Promise<LROperation<protos.google.cloud.networkconnectivity.v1.InternalRange, protos.google.cloud.networkconnectivity.v1.OperationMetadata>>{
+    this._log.info('createInternalRange long-running');
     const request = new this._gaxModule.operationsProtos.google.longrunning.GetOperationRequest({name});
     const [operation] = await this.operationsClient.getOperation(request);
-    const decodeOperation = new this._gaxModule.Operation(operation, this.descriptors.longrunning.createPolicyBasedRoute, this._gaxModule.createDefaultBackoffSettings());
-    return decodeOperation as LROperation<protos.google.cloud.networkconnectivity.v1.PolicyBasedRoute, protos.google.cloud.networkconnectivity.v1.OperationMetadata>;
+    const decodeOperation = new this._gaxModule.Operation(operation, this.descriptors.longrunning.createInternalRange, this._gaxModule.createDefaultBackoffSettings());
+    return decodeOperation as LROperation<protos.google.cloud.networkconnectivity.v1.InternalRange, protos.google.cloud.networkconnectivity.v1.OperationMetadata>;
   }
 /**
- * Deletes a single policy-based route.
+ * Updates the parameters of a single internal range.
  *
  * @param {Object} request
  *   The request object that will be sent.
- * @param {string} request.name
- *   Required. Name of the policy-based route resource to delete.
+ * @param {google.protobuf.FieldMask} [request.updateMask]
+ *   Optional. Field mask is used to specify the fields to be overwritten in the
+ *   InternalRange resource by the update.
+ *   The fields specified in the update_mask are relative to the resource, not
+ *   the full request. A field will be overwritten if it is in the mask. If the
+ *   user does not provide a mask then all fields will be overwritten.
+ * @param {google.cloud.networkconnectivity.v1.InternalRange} request.internalRange
+ *   Required. New values to be patched into the resource.
  * @param {string} [request.requestId]
  *   Optional. An optional request ID to identify requests. Specify a unique
- *   request ID so that if you must retry your request, the server knows to
- *   ignore the request if it has already been completed. The server guarantees
- *   that for at least 60 minutes after the first request.
+ *   request ID so that if you must retry your request, the server will know to
+ *   ignore the request if it has already been completed. The server will
+ *   guarantee that for at least 60 minutes since the first request.
  *
  *   For example, consider a situation where you make an initial request and
  *   the request times out. If you make the request again with the same request
  *   ID, the server can check if original operation with the same request ID
- *   was received, and if so, ignores the second request. This prevents clients
- *   from accidentally creating duplicate commitments.
+ *   was received, and if so, will ignore the second request. This prevents
+ *   clients from accidentally creating duplicate commitments.
  *
  *   The request ID must be a valid UUID with the exception that zero UUID is
  *   not supported (00000000-0000-0000-0000-000000000000).
@@ -676,31 +686,152 @@ export class PolicyBasedRoutingServiceClient {
  *   you can `await` for.
  *   Please see the {@link https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#long-running-operations | documentation }
  *   for more details and examples.
- * @example <caption>include:samples/generated/v1/policy_based_routing_service.delete_policy_based_route.js</caption>
- * region_tag:networkconnectivity_v1_generated_PolicyBasedRoutingService_DeletePolicyBasedRoute_async
+ * @example <caption>include:samples/generated/v1/internal_range_service.update_internal_range.js</caption>
+ * region_tag:networkconnectivity_v1_generated_InternalRangeService_UpdateInternalRange_async
  */
-  deletePolicyBasedRoute(
-      request?: protos.google.cloud.networkconnectivity.v1.IDeletePolicyBasedRouteRequest,
+  updateInternalRange(
+      request?: protos.google.cloud.networkconnectivity.v1.IUpdateInternalRangeRequest,
+      options?: CallOptions):
+      Promise<[
+        LROperation<protos.google.cloud.networkconnectivity.v1.IInternalRange, protos.google.cloud.networkconnectivity.v1.IOperationMetadata>,
+        protos.google.longrunning.IOperation|undefined, {}|undefined
+      ]>;
+  updateInternalRange(
+      request: protos.google.cloud.networkconnectivity.v1.IUpdateInternalRangeRequest,
+      options: CallOptions,
+      callback: Callback<
+          LROperation<protos.google.cloud.networkconnectivity.v1.IInternalRange, protos.google.cloud.networkconnectivity.v1.IOperationMetadata>,
+          protos.google.longrunning.IOperation|null|undefined,
+          {}|null|undefined>): void;
+  updateInternalRange(
+      request: protos.google.cloud.networkconnectivity.v1.IUpdateInternalRangeRequest,
+      callback: Callback<
+          LROperation<protos.google.cloud.networkconnectivity.v1.IInternalRange, protos.google.cloud.networkconnectivity.v1.IOperationMetadata>,
+          protos.google.longrunning.IOperation|null|undefined,
+          {}|null|undefined>): void;
+  updateInternalRange(
+      request?: protos.google.cloud.networkconnectivity.v1.IUpdateInternalRangeRequest,
+      optionsOrCallback?: CallOptions|Callback<
+          LROperation<protos.google.cloud.networkconnectivity.v1.IInternalRange, protos.google.cloud.networkconnectivity.v1.IOperationMetadata>,
+          protos.google.longrunning.IOperation|null|undefined,
+          {}|null|undefined>,
+      callback?: Callback<
+          LROperation<protos.google.cloud.networkconnectivity.v1.IInternalRange, protos.google.cloud.networkconnectivity.v1.IOperationMetadata>,
+          protos.google.longrunning.IOperation|null|undefined,
+          {}|null|undefined>):
+      Promise<[
+        LROperation<protos.google.cloud.networkconnectivity.v1.IInternalRange, protos.google.cloud.networkconnectivity.v1.IOperationMetadata>,
+        protos.google.longrunning.IOperation|undefined, {}|undefined
+      ]>|void {
+    request = request || {};
+    let options: CallOptions;
+    if (typeof optionsOrCallback === 'function' && callback === undefined) {
+      callback = optionsOrCallback;
+      options = {};
+    }
+    else {
+      options = optionsOrCallback as CallOptions;
+    }
+    options = options || {};
+    options.otherArgs = options.otherArgs || {};
+    options.otherArgs.headers = options.otherArgs.headers || {};
+    options.otherArgs.headers[
+      'x-goog-request-params'
+    ] = this._gaxModule.routingHeader.fromParams({
+      'internal_range.name': request.internalRange!.name ?? '',
+    });
+    this.initialize().catch(err => {throw err});
+    const wrappedCallback: Callback<
+          LROperation<protos.google.cloud.networkconnectivity.v1.IInternalRange, protos.google.cloud.networkconnectivity.v1.IOperationMetadata>,
+          protos.google.longrunning.IOperation|null|undefined,
+          {}|null|undefined>|undefined = callback
+      ? (error, response, rawResponse, _) => {
+          this._log.info('updateInternalRange response %j', rawResponse);
+          callback!(error, response, rawResponse, _); // We verified callback above.
+        }
+      : undefined;
+    this._log.info('updateInternalRange request %j', request);
+    return this.innerApiCalls.updateInternalRange(request, options, wrappedCallback)
+    ?.then(([response, rawResponse, _]: [
+      LROperation<protos.google.cloud.networkconnectivity.v1.IInternalRange, protos.google.cloud.networkconnectivity.v1.IOperationMetadata>,
+      protos.google.longrunning.IOperation|undefined, {}|undefined
+    ]) => {
+      this._log.info('updateInternalRange response %j', rawResponse);
+      return [response, rawResponse, _];
+    });
+  }
+/**
+ * Check the status of the long running operation returned by `updateInternalRange()`.
+ * @param {String} name
+ *   The operation name that will be passed.
+ * @returns {Promise} - The promise which resolves to an object.
+ *   The decoded operation object has result and metadata field to get information from.
+ *   Please see the {@link https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#long-running-operations | documentation }
+ *   for more details and examples.
+ * @example <caption>include:samples/generated/v1/internal_range_service.update_internal_range.js</caption>
+ * region_tag:networkconnectivity_v1_generated_InternalRangeService_UpdateInternalRange_async
+ */
+  async checkUpdateInternalRangeProgress(name: string): Promise<LROperation<protos.google.cloud.networkconnectivity.v1.InternalRange, protos.google.cloud.networkconnectivity.v1.OperationMetadata>>{
+    this._log.info('updateInternalRange long-running');
+    const request = new this._gaxModule.operationsProtos.google.longrunning.GetOperationRequest({name});
+    const [operation] = await this.operationsClient.getOperation(request);
+    const decodeOperation = new this._gaxModule.Operation(operation, this.descriptors.longrunning.updateInternalRange, this._gaxModule.createDefaultBackoffSettings());
+    return decodeOperation as LROperation<protos.google.cloud.networkconnectivity.v1.InternalRange, protos.google.cloud.networkconnectivity.v1.OperationMetadata>;
+  }
+/**
+ * Deletes a single internal range.
+ *
+ * @param {Object} request
+ *   The request object that will be sent.
+ * @param {string} request.name
+ *   Required. The name of the internal range to delete.
+ * @param {string} [request.requestId]
+ *   Optional. An optional request ID to identify requests. Specify a unique
+ *   request ID so that if you must retry your request, the server will know to
+ *   ignore the request if it has already been completed. The server will
+ *   guarantee that for at least 60 minutes after the first request.
+ *
+ *   For example, consider a situation where you make an initial request and
+ *   the request times out. If you make the request again with the same request
+ *   ID, the server can check if original operation with the same request ID
+ *   was received, and if so, will ignore the second request. This prevents
+ *   clients from accidentally creating duplicate commitments.
+ *
+ *   The request ID must be a valid UUID with the exception that zero UUID is
+ *   not supported (00000000-0000-0000-0000-000000000000).
+ * @param {object} [options]
+ *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
+ * @returns {Promise} - The promise which resolves to an array.
+ *   The first element of the array is an object representing
+ *   a long running operation. Its `promise()` method returns a promise
+ *   you can `await` for.
+ *   Please see the {@link https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#long-running-operations | documentation }
+ *   for more details and examples.
+ * @example <caption>include:samples/generated/v1/internal_range_service.delete_internal_range.js</caption>
+ * region_tag:networkconnectivity_v1_generated_InternalRangeService_DeleteInternalRange_async
+ */
+  deleteInternalRange(
+      request?: protos.google.cloud.networkconnectivity.v1.IDeleteInternalRangeRequest,
       options?: CallOptions):
       Promise<[
         LROperation<protos.google.protobuf.IEmpty, protos.google.cloud.networkconnectivity.v1.IOperationMetadata>,
         protos.google.longrunning.IOperation|undefined, {}|undefined
       ]>;
-  deletePolicyBasedRoute(
-      request: protos.google.cloud.networkconnectivity.v1.IDeletePolicyBasedRouteRequest,
+  deleteInternalRange(
+      request: protos.google.cloud.networkconnectivity.v1.IDeleteInternalRangeRequest,
       options: CallOptions,
       callback: Callback<
           LROperation<protos.google.protobuf.IEmpty, protos.google.cloud.networkconnectivity.v1.IOperationMetadata>,
           protos.google.longrunning.IOperation|null|undefined,
           {}|null|undefined>): void;
-  deletePolicyBasedRoute(
-      request: protos.google.cloud.networkconnectivity.v1.IDeletePolicyBasedRouteRequest,
+  deleteInternalRange(
+      request: protos.google.cloud.networkconnectivity.v1.IDeleteInternalRangeRequest,
       callback: Callback<
           LROperation<protos.google.protobuf.IEmpty, protos.google.cloud.networkconnectivity.v1.IOperationMetadata>,
           protos.google.longrunning.IOperation|null|undefined,
           {}|null|undefined>): void;
-  deletePolicyBasedRoute(
-      request?: protos.google.cloud.networkconnectivity.v1.IDeletePolicyBasedRouteRequest,
+  deleteInternalRange(
+      request?: protos.google.cloud.networkconnectivity.v1.IDeleteInternalRangeRequest,
       optionsOrCallback?: CallOptions|Callback<
           LROperation<protos.google.protobuf.IEmpty, protos.google.cloud.networkconnectivity.v1.IOperationMetadata>,
           protos.google.longrunning.IOperation|null|undefined,
@@ -736,40 +867,40 @@ export class PolicyBasedRoutingServiceClient {
           protos.google.longrunning.IOperation|null|undefined,
           {}|null|undefined>|undefined = callback
       ? (error, response, rawResponse, _) => {
-          this._log.info('deletePolicyBasedRoute response %j', rawResponse);
+          this._log.info('deleteInternalRange response %j', rawResponse);
           callback!(error, response, rawResponse, _); // We verified callback above.
         }
       : undefined;
-    this._log.info('deletePolicyBasedRoute request %j', request);
-    return this.innerApiCalls.deletePolicyBasedRoute(request, options, wrappedCallback)
+    this._log.info('deleteInternalRange request %j', request);
+    return this.innerApiCalls.deleteInternalRange(request, options, wrappedCallback)
     ?.then(([response, rawResponse, _]: [
       LROperation<protos.google.protobuf.IEmpty, protos.google.cloud.networkconnectivity.v1.IOperationMetadata>,
       protos.google.longrunning.IOperation|undefined, {}|undefined
     ]) => {
-      this._log.info('deletePolicyBasedRoute response %j', rawResponse);
+      this._log.info('deleteInternalRange response %j', rawResponse);
       return [response, rawResponse, _];
     });
   }
 /**
- * Check the status of the long running operation returned by `deletePolicyBasedRoute()`.
+ * Check the status of the long running operation returned by `deleteInternalRange()`.
  * @param {String} name
  *   The operation name that will be passed.
  * @returns {Promise} - The promise which resolves to an object.
  *   The decoded operation object has result and metadata field to get information from.
  *   Please see the {@link https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#long-running-operations | documentation }
  *   for more details and examples.
- * @example <caption>include:samples/generated/v1/policy_based_routing_service.delete_policy_based_route.js</caption>
- * region_tag:networkconnectivity_v1_generated_PolicyBasedRoutingService_DeletePolicyBasedRoute_async
+ * @example <caption>include:samples/generated/v1/internal_range_service.delete_internal_range.js</caption>
+ * region_tag:networkconnectivity_v1_generated_InternalRangeService_DeleteInternalRange_async
  */
-  async checkDeletePolicyBasedRouteProgress(name: string): Promise<LROperation<protos.google.protobuf.Empty, protos.google.cloud.networkconnectivity.v1.OperationMetadata>>{
-    this._log.info('deletePolicyBasedRoute long-running');
+  async checkDeleteInternalRangeProgress(name: string): Promise<LROperation<protos.google.protobuf.Empty, protos.google.cloud.networkconnectivity.v1.OperationMetadata>>{
+    this._log.info('deleteInternalRange long-running');
     const request = new this._gaxModule.operationsProtos.google.longrunning.GetOperationRequest({name});
     const [operation] = await this.operationsClient.getOperation(request);
-    const decodeOperation = new this._gaxModule.Operation(operation, this.descriptors.longrunning.deletePolicyBasedRoute, this._gaxModule.createDefaultBackoffSettings());
+    const decodeOperation = new this._gaxModule.Operation(operation, this.descriptors.longrunning.deleteInternalRange, this._gaxModule.createDefaultBackoffSettings());
     return decodeOperation as LROperation<protos.google.protobuf.Empty, protos.google.cloud.networkconnectivity.v1.OperationMetadata>;
   }
  /**
- * Lists policy-based routes in a given project and location.
+ * Lists internal ranges in a given project and location.
  *
  * @param {Object} request
  *   The request object that will be sent.
@@ -786,50 +917,50 @@ export class PolicyBasedRoutingServiceClient {
  * @param {object} [options]
  *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
  * @returns {Promise} - The promise which resolves to an array.
- *   The first element of the array is Array of {@link protos.google.cloud.networkconnectivity.v1.PolicyBasedRoute|PolicyBasedRoute}.
+ *   The first element of the array is Array of {@link protos.google.cloud.networkconnectivity.v1.InternalRange|InternalRange}.
  *   The client library will perform auto-pagination by default: it will call the API as many
  *   times as needed and will merge results from all the pages into this array.
  *   Note that it can affect your quota.
- *   We recommend using `listPolicyBasedRoutesAsync()`
+ *   We recommend using `listInternalRangesAsync()`
  *   method described below for async iteration which you can stop as needed.
  *   Please see the {@link https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#auto-pagination | documentation }
  *   for more details and examples.
  */
-  listPolicyBasedRoutes(
-      request?: protos.google.cloud.networkconnectivity.v1.IListPolicyBasedRoutesRequest,
+  listInternalRanges(
+      request?: protos.google.cloud.networkconnectivity.v1.IListInternalRangesRequest,
       options?: CallOptions):
       Promise<[
-        protos.google.cloud.networkconnectivity.v1.IPolicyBasedRoute[],
-        protos.google.cloud.networkconnectivity.v1.IListPolicyBasedRoutesRequest|null,
-        protos.google.cloud.networkconnectivity.v1.IListPolicyBasedRoutesResponse
+        protos.google.cloud.networkconnectivity.v1.IInternalRange[],
+        protos.google.cloud.networkconnectivity.v1.IListInternalRangesRequest|null,
+        protos.google.cloud.networkconnectivity.v1.IListInternalRangesResponse
       ]>;
-  listPolicyBasedRoutes(
-      request: protos.google.cloud.networkconnectivity.v1.IListPolicyBasedRoutesRequest,
+  listInternalRanges(
+      request: protos.google.cloud.networkconnectivity.v1.IListInternalRangesRequest,
       options: CallOptions,
       callback: PaginationCallback<
-          protos.google.cloud.networkconnectivity.v1.IListPolicyBasedRoutesRequest,
-          protos.google.cloud.networkconnectivity.v1.IListPolicyBasedRoutesResponse|null|undefined,
-          protos.google.cloud.networkconnectivity.v1.IPolicyBasedRoute>): void;
-  listPolicyBasedRoutes(
-      request: protos.google.cloud.networkconnectivity.v1.IListPolicyBasedRoutesRequest,
+          protos.google.cloud.networkconnectivity.v1.IListInternalRangesRequest,
+          protos.google.cloud.networkconnectivity.v1.IListInternalRangesResponse|null|undefined,
+          protos.google.cloud.networkconnectivity.v1.IInternalRange>): void;
+  listInternalRanges(
+      request: protos.google.cloud.networkconnectivity.v1.IListInternalRangesRequest,
       callback: PaginationCallback<
-          protos.google.cloud.networkconnectivity.v1.IListPolicyBasedRoutesRequest,
-          protos.google.cloud.networkconnectivity.v1.IListPolicyBasedRoutesResponse|null|undefined,
-          protos.google.cloud.networkconnectivity.v1.IPolicyBasedRoute>): void;
-  listPolicyBasedRoutes(
-      request?: protos.google.cloud.networkconnectivity.v1.IListPolicyBasedRoutesRequest,
+          protos.google.cloud.networkconnectivity.v1.IListInternalRangesRequest,
+          protos.google.cloud.networkconnectivity.v1.IListInternalRangesResponse|null|undefined,
+          protos.google.cloud.networkconnectivity.v1.IInternalRange>): void;
+  listInternalRanges(
+      request?: protos.google.cloud.networkconnectivity.v1.IListInternalRangesRequest,
       optionsOrCallback?: CallOptions|PaginationCallback<
-          protos.google.cloud.networkconnectivity.v1.IListPolicyBasedRoutesRequest,
-          protos.google.cloud.networkconnectivity.v1.IListPolicyBasedRoutesResponse|null|undefined,
-          protos.google.cloud.networkconnectivity.v1.IPolicyBasedRoute>,
+          protos.google.cloud.networkconnectivity.v1.IListInternalRangesRequest,
+          protos.google.cloud.networkconnectivity.v1.IListInternalRangesResponse|null|undefined,
+          protos.google.cloud.networkconnectivity.v1.IInternalRange>,
       callback?: PaginationCallback<
-          protos.google.cloud.networkconnectivity.v1.IListPolicyBasedRoutesRequest,
-          protos.google.cloud.networkconnectivity.v1.IListPolicyBasedRoutesResponse|null|undefined,
-          protos.google.cloud.networkconnectivity.v1.IPolicyBasedRoute>):
+          protos.google.cloud.networkconnectivity.v1.IListInternalRangesRequest,
+          protos.google.cloud.networkconnectivity.v1.IListInternalRangesResponse|null|undefined,
+          protos.google.cloud.networkconnectivity.v1.IInternalRange>):
       Promise<[
-        protos.google.cloud.networkconnectivity.v1.IPolicyBasedRoute[],
-        protos.google.cloud.networkconnectivity.v1.IListPolicyBasedRoutesRequest|null,
-        protos.google.cloud.networkconnectivity.v1.IListPolicyBasedRoutesResponse
+        protos.google.cloud.networkconnectivity.v1.IInternalRange[],
+        protos.google.cloud.networkconnectivity.v1.IListInternalRangesRequest|null,
+        protos.google.cloud.networkconnectivity.v1.IListInternalRangesResponse
       ]>|void {
     request = request || {};
     let options: CallOptions;
@@ -850,29 +981,29 @@ export class PolicyBasedRoutingServiceClient {
     });
     this.initialize().catch(err => {throw err});
     const wrappedCallback: PaginationCallback<
-      protos.google.cloud.networkconnectivity.v1.IListPolicyBasedRoutesRequest,
-      protos.google.cloud.networkconnectivity.v1.IListPolicyBasedRoutesResponse|null|undefined,
-      protos.google.cloud.networkconnectivity.v1.IPolicyBasedRoute>|undefined = callback
+      protos.google.cloud.networkconnectivity.v1.IListInternalRangesRequest,
+      protos.google.cloud.networkconnectivity.v1.IListInternalRangesResponse|null|undefined,
+      protos.google.cloud.networkconnectivity.v1.IInternalRange>|undefined = callback
       ? (error, values, nextPageRequest, rawResponse) => {
-          this._log.info('listPolicyBasedRoutes values %j', values);
+          this._log.info('listInternalRanges values %j', values);
           callback!(error, values, nextPageRequest, rawResponse); // We verified callback above.
         }
       : undefined;
-    this._log.info('listPolicyBasedRoutes request %j', request);
+    this._log.info('listInternalRanges request %j', request);
     return this.innerApiCalls
-      .listPolicyBasedRoutes(request, options, wrappedCallback)
+      .listInternalRanges(request, options, wrappedCallback)
       ?.then(([response, input, output]: [
-        protos.google.cloud.networkconnectivity.v1.IPolicyBasedRoute[],
-        protos.google.cloud.networkconnectivity.v1.IListPolicyBasedRoutesRequest|null,
-        protos.google.cloud.networkconnectivity.v1.IListPolicyBasedRoutesResponse
+        protos.google.cloud.networkconnectivity.v1.IInternalRange[],
+        protos.google.cloud.networkconnectivity.v1.IListInternalRangesRequest|null,
+        protos.google.cloud.networkconnectivity.v1.IListInternalRangesResponse
       ]) => {
-        this._log.info('listPolicyBasedRoutes values %j', response);
+        this._log.info('listInternalRanges values %j', response);
         return [response, input, output];
       });
   }
 
 /**
- * Equivalent to `listPolicyBasedRoutes`, but returns a NodeJS Stream object.
+ * Equivalent to `listInternalRanges`, but returns a NodeJS Stream object.
  * @param {Object} request
  *   The request object that will be sent.
  * @param {string} request.parent
@@ -888,16 +1019,16 @@ export class PolicyBasedRoutingServiceClient {
  * @param {object} [options]
  *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
  * @returns {Stream}
- *   An object stream which emits an object representing {@link protos.google.cloud.networkconnectivity.v1.PolicyBasedRoute|PolicyBasedRoute} on 'data' event.
+ *   An object stream which emits an object representing {@link protos.google.cloud.networkconnectivity.v1.InternalRange|InternalRange} on 'data' event.
  *   The client library will perform auto-pagination by default: it will call the API as many
  *   times as needed. Note that it can affect your quota.
- *   We recommend using `listPolicyBasedRoutesAsync()`
+ *   We recommend using `listInternalRangesAsync()`
  *   method described below for async iteration which you can stop as needed.
  *   Please see the {@link https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#auto-pagination | documentation }
  *   for more details and examples.
  */
-  listPolicyBasedRoutesStream(
-      request?: protos.google.cloud.networkconnectivity.v1.IListPolicyBasedRoutesRequest,
+  listInternalRangesStream(
+      request?: protos.google.cloud.networkconnectivity.v1.IListInternalRangesRequest,
       options?: CallOptions):
     Transform{
     request = request || {};
@@ -909,19 +1040,19 @@ export class PolicyBasedRoutingServiceClient {
     ] = this._gaxModule.routingHeader.fromParams({
       'parent': request.parent ?? '',
     });
-    const defaultCallSettings = this._defaults['listPolicyBasedRoutes'];
+    const defaultCallSettings = this._defaults['listInternalRanges'];
     const callSettings = defaultCallSettings.merge(options);
     this.initialize().catch(err => {throw err});
-    this._log.info('listPolicyBasedRoutes stream %j', request);
-    return this.descriptors.page.listPolicyBasedRoutes.createStream(
-      this.innerApiCalls.listPolicyBasedRoutes as GaxCall,
+    this._log.info('listInternalRanges stream %j', request);
+    return this.descriptors.page.listInternalRanges.createStream(
+      this.innerApiCalls.listInternalRanges as GaxCall,
       request,
       callSettings
     );
   }
 
 /**
- * Equivalent to `listPolicyBasedRoutes`, but returns an iterable object.
+ * Equivalent to `listInternalRanges`, but returns an iterable object.
  *
  * `for`-`await`-`of` syntax is used with the iterable to get response elements on-demand.
  * @param {Object} request
@@ -941,17 +1072,17 @@ export class PolicyBasedRoutingServiceClient {
  * @returns {Object}
  *   An iterable Object that allows {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols | async iteration }.
  *   When you iterate the returned iterable, each element will be an object representing
- *   {@link protos.google.cloud.networkconnectivity.v1.PolicyBasedRoute|PolicyBasedRoute}. The API will be called under the hood as needed, once per the page,
+ *   {@link protos.google.cloud.networkconnectivity.v1.InternalRange|InternalRange}. The API will be called under the hood as needed, once per the page,
  *   so you can stop the iteration when you don't need more results.
  *   Please see the {@link https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#auto-pagination | documentation }
  *   for more details and examples.
- * @example <caption>include:samples/generated/v1/policy_based_routing_service.list_policy_based_routes.js</caption>
- * region_tag:networkconnectivity_v1_generated_PolicyBasedRoutingService_ListPolicyBasedRoutes_async
+ * @example <caption>include:samples/generated/v1/internal_range_service.list_internal_ranges.js</caption>
+ * region_tag:networkconnectivity_v1_generated_InternalRangeService_ListInternalRanges_async
  */
-  listPolicyBasedRoutesAsync(
-      request?: protos.google.cloud.networkconnectivity.v1.IListPolicyBasedRoutesRequest,
+  listInternalRangesAsync(
+      request?: protos.google.cloud.networkconnectivity.v1.IListInternalRangesRequest,
       options?: CallOptions):
-    AsyncIterable<protos.google.cloud.networkconnectivity.v1.IPolicyBasedRoute>{
+    AsyncIterable<protos.google.cloud.networkconnectivity.v1.IInternalRange>{
     request = request || {};
     options = options || {};
     options.otherArgs = options.otherArgs || {};
@@ -961,15 +1092,15 @@ export class PolicyBasedRoutingServiceClient {
     ] = this._gaxModule.routingHeader.fromParams({
       'parent': request.parent ?? '',
     });
-    const defaultCallSettings = this._defaults['listPolicyBasedRoutes'];
+    const defaultCallSettings = this._defaults['listInternalRanges'];
     const callSettings = defaultCallSettings.merge(options);
     this.initialize().catch(err => {throw err});
-    this._log.info('listPolicyBasedRoutes iterate %j', request);
-    return this.descriptors.page.listPolicyBasedRoutes.asyncIterate(
-      this.innerApiCalls['listPolicyBasedRoutes'] as GaxCall,
+    this._log.info('listInternalRanges iterate %j', request);
+    return this.descriptors.page.listInternalRanges.asyncIterate(
+      this.innerApiCalls['listInternalRanges'] as GaxCall,
       request as {},
       callSettings
-    ) as AsyncIterable<protos.google.cloud.networkconnectivity.v1.IPolicyBasedRoute>;
+    ) as AsyncIterable<protos.google.cloud.networkconnectivity.v1.IInternalRange>;
   }
 /**
  * Gets the access control policy for a resource. Returns an empty policy
@@ -1648,42 +1779,6 @@ export class PolicyBasedRoutingServiceClient {
   }
 
   /**
-   * Return a fully-qualified network resource name string.
-   *
-   * @param {string} project
-   * @param {string} resource_id
-   * @returns {string} Resource name string.
-   */
-  networkPath(project:string,resourceId:string) {
-    return this.pathTemplates.networkPathTemplate.render({
-      project: project,
-      resource_id: resourceId,
-    });
-  }
-
-  /**
-   * Parse the project from Network resource.
-   *
-   * @param {string} networkName
-   *   A fully-qualified path representing Network resource.
-   * @returns {string} A string representing the project.
-   */
-  matchProjectFromNetworkName(networkName: string) {
-    return this.pathTemplates.networkPathTemplate.match(networkName).project;
-  }
-
-  /**
-   * Parse the resource_id from Network resource.
-   *
-   * @param {string} networkName
-   *   A fully-qualified path representing Network resource.
-   * @returns {string} A string representing the resource_id.
-   */
-  matchResourceIdFromNetworkName(networkName: string) {
-    return this.pathTemplates.networkPathTemplate.match(networkName).resource_id;
-  }
-
-  /**
    * Return a fully-qualified policyBasedRoute resource name string.
    *
    * @param {string} project
@@ -1717,6 +1812,29 @@ export class PolicyBasedRoutingServiceClient {
    */
   matchPolicyBasedRouteFromPolicyBasedRouteName(policyBasedRouteName: string) {
     return this.pathTemplates.policyBasedRoutePathTemplate.match(policyBasedRouteName).policy_based_route;
+  }
+
+  /**
+   * Return a fully-qualified project resource name string.
+   *
+   * @param {string} project
+   * @returns {string} Resource name string.
+   */
+  projectPath(project:string) {
+    return this.pathTemplates.projectPathTemplate.render({
+      project: project,
+    });
+  }
+
+  /**
+   * Parse the project from Project resource.
+   *
+   * @param {string} projectName
+   *   A fully-qualified path representing Project resource.
+   * @returns {string} A string representing the project.
+   */
+  matchProjectFromProjectName(projectName: string) {
+    return this.pathTemplates.projectPathTemplate.match(projectName).project;
   }
 
   /**
@@ -2020,8 +2138,8 @@ export class PolicyBasedRoutingServiceClient {
    * @returns {Promise} A promise that resolves when the client is closed.
    */
   close(): Promise<void> {
-    if (this.policyBasedRoutingServiceStub && !this._terminated) {
-      return this.policyBasedRoutingServiceStub.then(stub => {
+    if (this.internalRangeServiceStub && !this._terminated) {
+      return this.internalRangeServiceStub.then(stub => {
         this._log.info('ending gRPC channel');
         this._terminated = true;
         stub.close();
