@@ -20,8 +20,8 @@
 
 'use strict';
 
-function main(name) {
-  // [START backupdr_v1_generated_BackupDR_RestoreBackup_async]
+function main(backupPlanAssociation, updateMask) {
+  // [START backupdr_v1_generated_BackupDR_UpdateBackupPlanAssociation_async]
   /**
    * This snippet has been automatically generated and should be regarded as a code template only.
    * It will require modifications to work.
@@ -29,17 +29,26 @@ function main(name) {
    * TODO(developer): Uncomment these variables before running the sample.
    */
   /**
-   *  Required. The resource name of the Backup instance, in the format
-   *  'projects/* /locations/* /backupVaults/* /dataSources/* /backups/'.
+   *  Required. The resource being updated
    */
-  // const name = 'abc123'
+  // const backupPlanAssociation = {}
+  /**
+   *  Required. The list of fields to update.
+   *  Field mask is used to specify the fields to be overwritten in the
+   *  BackupPlanAssociation resource by the update.
+   *  The fields specified in the update_mask are relative to the resource, not
+   *  the full request. A field will be overwritten if it is in the mask. If the
+   *  user does not provide a mask then the request will fail.
+   *  Currently backup_plan_association.backup_plan is the only supported field.
+   */
+  // const updateMask = {}
   /**
    *  Optional. An optional request ID to identify requests. Specify a unique
    *  request ID so that if you must retry your request, the server will know to
    *  ignore the request if it has already been completed. The server will
-   *  guarantee that for at least 60 minutes after the first request.
-   *  For example, consider a situation where you make an initial request and
-   *  the request times out. If you make the request again with the same request
+   *  guarantee that for at least 60 minutes since the first request.
+   *  For example, consider a situation where you make an initial request and t
+   *  he request times out. If you make the request again with the same request
    *  ID, the server can check if original operation with the same request ID
    *  was received, and if so, will ignore the second request. This prevents
    *  clients from accidentally creating duplicate commitments.
@@ -47,26 +56,6 @@ function main(name) {
    *  not supported (00000000-0000-0000-0000-000000000000).
    */
   // const requestId = 'abc123'
-  /**
-   *  Compute Engine target environment to be used during restore.
-   */
-  // const computeInstanceTargetEnvironment = {}
-  /**
-   *  Disk target environment to be used during restore.
-   */
-  // const diskTargetEnvironment = {}
-  /**
-   *  Region disk target environment to be used during restore.
-   */
-  // const regionDiskTargetEnvironment = {}
-  /**
-   *  Compute Engine instance properties to be overridden during restore.
-   */
-  // const computeInstanceRestoreProperties = {}
-  /**
-   *  Disk properties to be overridden during restore.
-   */
-  // const diskRestoreProperties = {}
 
   // Imports the Backupdr library
   const {BackupDRClient} = require('@google-cloud/backupdr').v1;
@@ -74,20 +63,21 @@ function main(name) {
   // Instantiates a client
   const backupdrClient = new BackupDRClient();
 
-  async function callRestoreBackup() {
+  async function callUpdateBackupPlanAssociation() {
     // Construct request
     const request = {
-      name,
+      backupPlanAssociation,
+      updateMask,
     };
 
     // Run request
-    const [operation] = await backupdrClient.restoreBackup(request);
+    const [operation] = await backupdrClient.updateBackupPlanAssociation(request);
     const [response] = await operation.promise();
     console.log(response);
   }
 
-  callRestoreBackup();
-  // [END backupdr_v1_generated_BackupDR_RestoreBackup_async]
+  callUpdateBackupPlanAssociation();
+  // [END backupdr_v1_generated_BackupDR_UpdateBackupPlanAssociation_async]
 }
 
 process.on('unhandledRejection', err => {
