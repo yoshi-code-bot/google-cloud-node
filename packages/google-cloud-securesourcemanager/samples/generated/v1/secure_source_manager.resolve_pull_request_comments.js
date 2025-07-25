@@ -20,8 +20,8 @@
 
 'use strict';
 
-function main(name) {
-  // [START securesourcemanager_v1_generated_SecureSourceManager_DeleteRepository_async]
+function main(parent, names) {
+  // [START securesourcemanager_v1_generated_SecureSourceManager_ResolvePullRequestComments_async]
   /**
    * This snippet has been automatically generated and should be regarded as a code template only.
    * It will require modifications to work.
@@ -29,16 +29,23 @@ function main(name) {
    * TODO(developer): Uncomment these variables before running the sample.
    */
   /**
-   *  Required. Name of the repository to delete.
-   *  The format is
-   *  `projects/{project_number}/locations/{location_id}/repositories/{repository_id}`.
+   *  Required. The pull request in which to resolve the pull request comments.
+   *  Format:
+   *  `projects/{project_number}/locations/{location_id}/repositories/{repository_id}/pullRequests/{pull_request_id}`
    */
-  // const name = 'abc123'
+  // const parent = 'abc123'
   /**
-   *  Optional. If set to true, and the repository is not found, the request will
-   *  succeed but no action will be taken on the server.
+   *  Required. The names of the pull request comments to resolve. Format:
+   *  `projects/{project_number}/locations/{location_id}/repositories/{repository_id}/pullRequests/{pull_request_id}/pullRequestComments/{comment_id}`
+   *  Only comments from the same threads are allowed in the same request.
    */
-  // const allowMissing = true
+  // const names = ['abc','def']
+  /**
+   *  Optional. If set, at least one comment in a thread is required, rest of the
+   *  comments in the same thread will be automatically updated to resolved. If
+   *  unset, all comments in the same thread need be present.
+   */
+  // const autoFill = true
 
   // Imports the Securesourcemanager library
   const {SecureSourceManagerClient} = require('@google-cloud/securesourcemanager').v1;
@@ -46,20 +53,21 @@ function main(name) {
   // Instantiates a client
   const securesourcemanagerClient = new SecureSourceManagerClient();
 
-  async function callDeleteRepository() {
+  async function callResolvePullRequestComments() {
     // Construct request
     const request = {
-      name,
+      parent,
+      names,
     };
 
     // Run request
-    const [operation] = await securesourcemanagerClient.deleteRepository(request);
+    const [operation] = await securesourcemanagerClient.resolvePullRequestComments(request);
     const [response] = await operation.promise();
     console.log(response);
   }
 
-  callDeleteRepository();
-  // [END securesourcemanager_v1_generated_SecureSourceManager_DeleteRepository_async]
+  callResolvePullRequestComments();
+  // [END securesourcemanager_v1_generated_SecureSourceManager_ResolvePullRequestComments_async]
 }
 
 process.on('unhandledRejection', err => {

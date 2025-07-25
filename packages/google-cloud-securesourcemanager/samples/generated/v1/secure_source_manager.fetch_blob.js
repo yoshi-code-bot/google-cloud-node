@@ -20,8 +20,8 @@
 
 'use strict';
 
-function main(name) {
-  // [START securesourcemanager_v1_generated_SecureSourceManager_DeleteRepository_async]
+function main(repository, sha) {
+  // [START securesourcemanager_v1_generated_SecureSourceManager_FetchBlob_async]
   /**
    * This snippet has been automatically generated and should be regarded as a code template only.
    * It will require modifications to work.
@@ -29,16 +29,15 @@ function main(name) {
    * TODO(developer): Uncomment these variables before running the sample.
    */
   /**
-   *  Required. Name of the repository to delete.
-   *  The format is
+   *  Required. The format is
    *  `projects/{project_number}/locations/{location_id}/repositories/{repository_id}`.
+   *  Specifies the repository containing the blob.
    */
-  // const name = 'abc123'
+  // const repository = 'abc123'
   /**
-   *  Optional. If set to true, and the repository is not found, the request will
-   *  succeed but no action will be taken on the server.
+   *  Required. The SHA-1 hash of the blob to retrieve.
    */
-  // const allowMissing = true
+  // const sha = 'abc123'
 
   // Imports the Securesourcemanager library
   const {SecureSourceManagerClient} = require('@google-cloud/securesourcemanager').v1;
@@ -46,20 +45,20 @@ function main(name) {
   // Instantiates a client
   const securesourcemanagerClient = new SecureSourceManagerClient();
 
-  async function callDeleteRepository() {
+  async function callFetchBlob() {
     // Construct request
     const request = {
-      name,
+      repository,
+      sha,
     };
 
     // Run request
-    const [operation] = await securesourcemanagerClient.deleteRepository(request);
-    const [response] = await operation.promise();
+    const response = await securesourcemanagerClient.fetchBlob(request);
     console.log(response);
   }
 
-  callDeleteRepository();
-  // [END securesourcemanager_v1_generated_SecureSourceManager_DeleteRepository_async]
+  callFetchBlob();
+  // [END securesourcemanager_v1_generated_SecureSourceManager_FetchBlob_async]
 }
 
 process.on('unhandledRejection', err => {

@@ -20,8 +20,8 @@
 
 'use strict';
 
-function main(name) {
-  // [START securesourcemanager_v1_generated_SecureSourceManager_DeleteRepository_async]
+function main(repository) {
+  // [START securesourcemanager_v1_generated_SecureSourceManager_UpdateRepository_async]
   /**
    * This snippet has been automatically generated and should be regarded as a code template only.
    * It will require modifications to work.
@@ -29,16 +29,22 @@ function main(name) {
    * TODO(developer): Uncomment these variables before running the sample.
    */
   /**
-   *  Required. Name of the repository to delete.
-   *  The format is
-   *  `projects/{project_number}/locations/{location_id}/repositories/{repository_id}`.
+   *  Optional. Field mask is used to specify the fields to be overwritten in the
+   *  repository resource by the update.
+   *  The fields specified in the update_mask are relative to the resource, not
+   *  the full request. A field will be overwritten if it is in the mask. If the
+   *  user does not provide a mask then all fields will be overwritten.
    */
-  // const name = 'abc123'
+  // const updateMask = {}
   /**
-   *  Optional. If set to true, and the repository is not found, the request will
-   *  succeed but no action will be taken on the server.
+   *  Required. The repository being updated.
    */
-  // const allowMissing = true
+  // const repository = {}
+  /**
+   *  Optional. False by default. If set to true, the request is validated and
+   *  the user is provided with an expected result, but no actual change is made.
+   */
+  // const validateOnly = true
 
   // Imports the Securesourcemanager library
   const {SecureSourceManagerClient} = require('@google-cloud/securesourcemanager').v1;
@@ -46,20 +52,20 @@ function main(name) {
   // Instantiates a client
   const securesourcemanagerClient = new SecureSourceManagerClient();
 
-  async function callDeleteRepository() {
+  async function callUpdateRepository() {
     // Construct request
     const request = {
-      name,
+      repository,
     };
 
     // Run request
-    const [operation] = await securesourcemanagerClient.deleteRepository(request);
+    const [operation] = await securesourcemanagerClient.updateRepository(request);
     const [response] = await operation.promise();
     console.log(response);
   }
 
-  callDeleteRepository();
-  // [END securesourcemanager_v1_generated_SecureSourceManager_DeleteRepository_async]
+  callUpdateRepository();
+  // [END securesourcemanager_v1_generated_SecureSourceManager_UpdateRepository_async]
 }
 
 process.on('unhandledRejection', err => {

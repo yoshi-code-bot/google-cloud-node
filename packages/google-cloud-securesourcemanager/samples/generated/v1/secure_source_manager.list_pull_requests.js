@@ -20,8 +20,8 @@
 
 'use strict';
 
-function main(name) {
-  // [START securesourcemanager_v1_generated_SecureSourceManager_DeleteRepository_async]
+function main(parent) {
+  // [START securesourcemanager_v1_generated_SecureSourceManager_ListPullRequests_async]
   /**
    * This snippet has been automatically generated and should be regarded as a code template only.
    * It will require modifications to work.
@@ -29,16 +29,19 @@ function main(name) {
    * TODO(developer): Uncomment these variables before running the sample.
    */
   /**
-   *  Required. Name of the repository to delete.
-   *  The format is
-   *  `projects/{project_number}/locations/{location_id}/repositories/{repository_id}`.
+   *  Required. The repository in which to list pull requests. Format:
+   *  `projects/{project_number}/locations/{location_id}/repositories/{repository_id}`
    */
-  // const name = 'abc123'
+  // const parent = 'abc123'
   /**
-   *  Optional. If set to true, and the repository is not found, the request will
-   *  succeed but no action will be taken on the server.
+   *  Optional. Requested page size. Server may return fewer items than
+   *  requested. If unspecified, server will pick an appropriate default.
    */
-  // const allowMissing = true
+  // const pageSize = 1234
+  /**
+   *  Optional. A token identifying a page of results the server should return.
+   */
+  // const pageToken = 'abc123'
 
   // Imports the Securesourcemanager library
   const {SecureSourceManagerClient} = require('@google-cloud/securesourcemanager').v1;
@@ -46,20 +49,21 @@ function main(name) {
   // Instantiates a client
   const securesourcemanagerClient = new SecureSourceManagerClient();
 
-  async function callDeleteRepository() {
+  async function callListPullRequests() {
     // Construct request
     const request = {
-      name,
+      parent,
     };
 
     // Run request
-    const [operation] = await securesourcemanagerClient.deleteRepository(request);
-    const [response] = await operation.promise();
-    console.log(response);
+    const iterable = securesourcemanagerClient.listPullRequestsAsync(request);
+    for await (const response of iterable) {
+        console.log(response);
+    }
   }
 
-  callDeleteRepository();
-  // [END securesourcemanager_v1_generated_SecureSourceManager_DeleteRepository_async]
+  callListPullRequests();
+  // [END securesourcemanager_v1_generated_SecureSourceManager_ListPullRequests_async]
 }
 
 process.on('unhandledRejection', err => {

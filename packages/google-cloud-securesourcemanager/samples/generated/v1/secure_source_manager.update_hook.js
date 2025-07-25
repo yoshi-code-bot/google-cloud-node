@@ -20,8 +20,8 @@
 
 'use strict';
 
-function main(name) {
-  // [START securesourcemanager_v1_generated_SecureSourceManager_DeleteRepository_async]
+function main(updateMask, hook) {
+  // [START securesourcemanager_v1_generated_SecureSourceManager_UpdateHook_async]
   /**
    * This snippet has been automatically generated and should be regarded as a code template only.
    * It will require modifications to work.
@@ -29,16 +29,17 @@ function main(name) {
    * TODO(developer): Uncomment these variables before running the sample.
    */
   /**
-   *  Required. Name of the repository to delete.
-   *  The format is
-   *  `projects/{project_number}/locations/{location_id}/repositories/{repository_id}`.
+   *  Required. Field mask is used to specify the fields to be overwritten in the
+   *  hook resource by the update.
+   *  The fields specified in the update_mask are relative to the resource, not
+   *  the full request. A field will be overwritten if it is in the mask.
+   *  The special value "*" means full replacement.
    */
-  // const name = 'abc123'
+  // const updateMask = {}
   /**
-   *  Optional. If set to true, and the repository is not found, the request will
-   *  succeed but no action will be taken on the server.
+   *  Required. The hook being updated.
    */
-  // const allowMissing = true
+  // const hook = {}
 
   // Imports the Securesourcemanager library
   const {SecureSourceManagerClient} = require('@google-cloud/securesourcemanager').v1;
@@ -46,20 +47,21 @@ function main(name) {
   // Instantiates a client
   const securesourcemanagerClient = new SecureSourceManagerClient();
 
-  async function callDeleteRepository() {
+  async function callUpdateHook() {
     // Construct request
     const request = {
-      name,
+      updateMask,
+      hook,
     };
 
     // Run request
-    const [operation] = await securesourcemanagerClient.deleteRepository(request);
+    const [operation] = await securesourcemanagerClient.updateHook(request);
     const [response] = await operation.promise();
     console.log(response);
   }
 
-  callDeleteRepository();
-  // [END securesourcemanager_v1_generated_SecureSourceManager_DeleteRepository_async]
+  callUpdateHook();
+  // [END securesourcemanager_v1_generated_SecureSourceManager_UpdateHook_async]
 }
 
 process.on('unhandledRejection', err => {

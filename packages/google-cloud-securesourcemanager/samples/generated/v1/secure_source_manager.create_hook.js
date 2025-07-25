@@ -20,8 +20,8 @@
 
 'use strict';
 
-function main(name) {
-  // [START securesourcemanager_v1_generated_SecureSourceManager_DeleteRepository_async]
+function main(parent, hook, hookId) {
+  // [START securesourcemanager_v1_generated_SecureSourceManager_CreateHook_async]
   /**
    * This snippet has been automatically generated and should be regarded as a code template only.
    * It will require modifications to work.
@@ -29,16 +29,22 @@ function main(name) {
    * TODO(developer): Uncomment these variables before running the sample.
    */
   /**
-   *  Required. Name of the repository to delete.
-   *  The format is
-   *  `projects/{project_number}/locations/{location_id}/repositories/{repository_id}`.
+   *  Required. The repository in which to create the hook. Values are of the
+   *  form
+   *  `projects/{project_number}/locations/{location_id}/repositories/{repository_id}`
    */
-  // const name = 'abc123'
+  // const parent = 'abc123'
   /**
-   *  Optional. If set to true, and the repository is not found, the request will
-   *  succeed but no action will be taken on the server.
+   *  Required. The resource being created.
    */
-  // const allowMissing = true
+  // const hook = {}
+  /**
+   *  Required. The ID to use for the hook, which will become the final component
+   *  of the hook's resource name. This value restricts to lower-case letters,
+   *  numbers, and hyphen, with the first character a letter, the last a letter
+   *  or a number, and a 63 character maximum.
+   */
+  // const hookId = 'abc123'
 
   // Imports the Securesourcemanager library
   const {SecureSourceManagerClient} = require('@google-cloud/securesourcemanager').v1;
@@ -46,20 +52,22 @@ function main(name) {
   // Instantiates a client
   const securesourcemanagerClient = new SecureSourceManagerClient();
 
-  async function callDeleteRepository() {
+  async function callCreateHook() {
     // Construct request
     const request = {
-      name,
+      parent,
+      hook,
+      hookId,
     };
 
     // Run request
-    const [operation] = await securesourcemanagerClient.deleteRepository(request);
+    const [operation] = await securesourcemanagerClient.createHook(request);
     const [response] = await operation.promise();
     console.log(response);
   }
 
-  callDeleteRepository();
-  // [END securesourcemanager_v1_generated_SecureSourceManager_DeleteRepository_async]
+  callCreateHook();
+  // [END securesourcemanager_v1_generated_SecureSourceManager_CreateHook_async]
 }
 
 process.on('unhandledRejection', err => {
