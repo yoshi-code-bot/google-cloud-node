@@ -3529,7 +3529,8 @@
                             "BLOCKLIST": 6,
                             "PROHIBITED_CONTENT": 7,
                             "SPII": 8,
-                            "MALFORMED_FUNCTION_CALL": 9
+                            "MALFORMED_FUNCTION_CALL": 9,
+                            "MODEL_ARMOR": 10
                           }
                         }
                       }
@@ -3875,6 +3876,26 @@
                           "id": 2,
                           "options": {
                             "(google.api.field_behavior)": "OPTIONAL"
+                          }
+                        }
+                      }
+                    },
+                    "ModelArmorConfig": {
+                      "fields": {
+                        "promptTemplateName": {
+                          "type": "string",
+                          "id": 1,
+                          "options": {
+                            "(google.api.field_behavior)": "OPTIONAL",
+                            "(google.api.resource_reference).type": "modelarmor.googleapis.com/Template"
+                          }
+                        },
+                        "responseTemplateName": {
+                          "type": "string",
+                          "id": 2,
+                          "options": {
+                            "(google.api.field_behavior)": "OPTIONAL",
+                            "(google.api.resource_reference).type": "modelarmor.googleapis.com/Template"
                           }
                         }
                       }
@@ -8528,6 +8549,19 @@
                         }
                       }
                     },
+                    "DeploymentStage": {
+                      "values": {
+                        "DEPLOYMENT_STAGE_UNSPECIFIED": 0,
+                        "STARTING_DEPLOYMENT": 5,
+                        "PREPARING_MODEL": 6,
+                        "CREATING_SERVING_CLUSTER": 7,
+                        "ADDING_NODES_TO_CLUSTER": 8,
+                        "GETTING_CONTAINER_IMAGE": 9,
+                        "STARTING_MODEL_SERVER": 3,
+                        "FINISHING_UP": 4,
+                        "DEPLOYMENT_TERMINATED": 10
+                      }
+                    },
                     "EndpointService": {
                       "options": {
                         "(google.api.default_host)": "aiplatform.googleapis.com",
@@ -8792,6 +8826,13 @@
                         "genericMetadata": {
                           "type": "GenericOperationMetadata",
                           "id": 1
+                        },
+                        "deploymentStage": {
+                          "type": "DeploymentStage",
+                          "id": 2,
+                          "options": {
+                            "(google.api.field_behavior)": "OUTPUT_ONLY"
+                          }
                         }
                       }
                     },
@@ -8950,6 +8991,13 @@
                         "genericMetadata": {
                           "type": "GenericOperationMetadata",
                           "id": 1
+                        },
+                        "deploymentStage": {
+                          "type": "DeploymentStage",
+                          "id": 2,
+                          "options": {
+                            "(google.api.field_behavior)": "OUTPUT_ONLY"
+                          }
                         }
                       }
                     },
@@ -19113,6 +19161,13 @@
                             "(google.api.field_behavior)": "OPTIONAL"
                           }
                         },
+                        "enableDatapointUpsertLogging": {
+                          "type": "bool",
+                          "id": 20,
+                          "options": {
+                            "(google.api.field_behavior)": "OPTIONAL"
+                          }
+                        },
                         "deployedIndexAuthConfig": {
                           "type": "DeployedIndexAuthConfig",
                           "id": 9,
@@ -23321,6 +23376,13 @@
                             "(google.api.field_behavior)": "OPTIONAL"
                           }
                         },
+                        "modelArmorConfig": {
+                          "type": "ModelArmorConfig",
+                          "id": 11,
+                          "options": {
+                            "(google.api.field_behavior)": "OPTIONAL"
+                          }
+                        },
                         "generationConfig": {
                           "type": "GenerationConfig",
                           "id": 4,
@@ -23406,7 +23468,8 @@
                                 "SAFETY": 1,
                                 "OTHER": 2,
                                 "BLOCKLIST": 3,
-                                "PROHIBITED_CONTENT": 4
+                                "PROHIBITED_CONTENT": 4,
+                                "MODEL_ARMOR": 5
                               }
                             }
                           }
@@ -47417,6 +47480,19 @@
                         }
                       }
                     },
+                    "DeploymentStage": {
+                      "values": {
+                        "DEPLOYMENT_STAGE_UNSPECIFIED": 0,
+                        "STARTING_DEPLOYMENT": 5,
+                        "PREPARING_MODEL": 6,
+                        "CREATING_SERVING_CLUSTER": 7,
+                        "ADDING_NODES_TO_CLUSTER": 8,
+                        "GETTING_CONTAINER_IMAGE": 9,
+                        "STARTING_MODEL_SERVER": 3,
+                        "FINISHING_UP": 4,
+                        "DEPLOYMENT_TERMINATED": 10
+                      }
+                    },
                     "EndpointService": {
                       "options": {
                         "(google.api.default_host)": "aiplatform.googleapis.com",
@@ -47727,6 +47803,13 @@
                         "genericMetadata": {
                           "type": "GenericOperationMetadata",
                           "id": 1
+                        },
+                        "deploymentStage": {
+                          "type": "DeploymentStage",
+                          "id": 2,
+                          "options": {
+                            "(google.api.field_behavior)": "OUTPUT_ONLY"
+                          }
                         }
                       }
                     },
@@ -47881,6 +47964,13 @@
                         "genericMetadata": {
                           "type": "GenericOperationMetadata",
                           "id": 1
+                        },
+                        "deploymentStage": {
+                          "type": "DeploymentStage",
+                          "id": 2,
+                          "options": {
+                            "(google.api.field_behavior)": "OUTPUT_ONLY"
+                          }
                         }
                       }
                     },
@@ -77275,6 +77365,10 @@
                           "options": {
                             "(google.api.field_behavior)": "OPTIONAL"
                           }
+                        },
+                        "encryptionSpec": {
+                          "type": "EncryptionSpec",
+                          "id": 11
                         }
                       }
                     },
