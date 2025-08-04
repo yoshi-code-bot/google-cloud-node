@@ -39,6 +39,7 @@
                         "NVIDIA_H100_MEGA_80GB": 14,
                         "NVIDIA_H200_141GB": 15,
                         "NVIDIA_B200": 16,
+                        "NVIDIA_GB200": 17,
                         "TPU_V2": 6,
                         "TPU_V3": 7,
                         "TPU_V4_POD": 10,
@@ -4170,7 +4171,16 @@
                       },
                       "nested": {
                         "GoogleSearch": {
-                          "fields": {}
+                          "fields": {
+                            "excludeDomains": {
+                              "rule": "repeated",
+                              "type": "string",
+                              "id": 3,
+                              "options": {
+                                "(google.api.field_behavior)": "OPTIONAL"
+                              }
+                            }
+                          }
                         },
                         "CodeExecution": {
                           "fields": {}
@@ -4497,7 +4507,16 @@
                       }
                     },
                     "EnterpriseWebSearch": {
-                      "fields": {}
+                      "fields": {
+                        "excludeDomains": {
+                          "rule": "repeated",
+                          "type": "string",
+                          "id": 1,
+                          "options": {
+                            "(google.api.field_behavior)": "OPTIONAL"
+                          }
+                        }
+                      }
                     },
                     "DynamicRetrievalConfig": {
                       "oneofs": {
@@ -18859,6 +18878,13 @@
                         "crowdingTag": {
                           "type": "CrowdingTag",
                           "id": 5,
+                          "options": {
+                            "(google.api.field_behavior)": "OPTIONAL"
+                          }
+                        },
+                        "embeddingMetadata": {
+                          "type": "google.protobuf.Struct",
+                          "id": 8,
                           "options": {
                             "(google.api.field_behavior)": "OPTIONAL"
                           }
@@ -62110,6 +62136,13 @@
                         "crowdingTag": {
                           "type": "CrowdingTag",
                           "id": 5,
+                          "options": {
+                            "(google.api.field_behavior)": "OPTIONAL"
+                          }
+                        },
+                        "embeddingMetadata": {
+                          "type": "google.protobuf.Struct",
+                          "id": 8,
                           "options": {
                             "(google.api.field_behavior)": "OPTIONAL"
                           }
