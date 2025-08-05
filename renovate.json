@@ -5,9 +5,9 @@
   ],
   "constraintsFiltering": "strict",
   "pinVersions": false,
-  "rebaseStalePrs": true,
+  "rebaseStalePrs": false,
   "schedule": [
-    "every Monday"
+    "0 9 * * 1"
   ],
   "prCreation": "not-recreate",
   "gitAuthor": null,
@@ -15,14 +15,9 @@
     {
       "extends": "packages:linters",
       "groupName": "linters"
-    },
-    {
-      "matchUpdateTypes": [
-        "minor"
-      ],
-      "enabled": false
     }
   ],
+  "allowedUpdateTypes": ["major", "patch"],
   "ignoreDeps": [
     "typescript"
   ]
