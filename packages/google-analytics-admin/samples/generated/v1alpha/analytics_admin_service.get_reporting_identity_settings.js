@@ -20,8 +20,8 @@
 
 'use strict';
 
-function main(subpropertySyncConfig) {
-  // [START analyticsadmin_v1alpha_generated_AnalyticsAdminService_UpdateSubpropertySyncConfig_async]
+function main(name) {
+  // [START analyticsadmin_v1alpha_generated_AnalyticsAdminService_GetReportingIdentitySettings_async]
   /**
    * This snippet has been automatically generated and should be regarded as a code template only.
    * It will require modifications to work.
@@ -29,16 +29,12 @@ function main(subpropertySyncConfig) {
    * TODO(developer): Uncomment these variables before running the sample.
    */
   /**
-   *  Required. The `SubpropertySyncConfig` to update.
+   *  Required. The name of the settings to lookup.
+   *  Format:
+   *  properties/{property}/reportingIdentitySettings
+   *  Example: "properties/1000/reportingIdentitySettings"
    */
-  // const subpropertySyncConfig = {}
-  /**
-   *  Optional. The list of fields to update. Field names must be in snake case
-   *  (for example, "field_to_update"). Omitted fields will not be updated. To
-   *  replace the entire entity, use one path with the string "*" to match all
-   *  fields.
-   */
-  // const updateMask = {}
+  // const name = 'abc123'
 
   // Imports the Admin library
   const {AnalyticsAdminServiceClient} = require('@google-analytics/admin').v1alpha;
@@ -46,19 +42,19 @@ function main(subpropertySyncConfig) {
   // Instantiates a client
   const adminClient = new AnalyticsAdminServiceClient();
 
-  async function callUpdateSubpropertySyncConfig() {
+  async function callGetReportingIdentitySettings() {
     // Construct request
     const request = {
-      subpropertySyncConfig,
+      name,
     };
 
     // Run request
-    const response = await adminClient.updateSubpropertySyncConfig(request);
+    const response = await adminClient.getReportingIdentitySettings(request);
     console.log(response);
   }
 
-  callUpdateSubpropertySyncConfig();
-  // [END analyticsadmin_v1alpha_generated_AnalyticsAdminService_UpdateSubpropertySyncConfig_async]
+  callGetReportingIdentitySettings();
+  // [END analyticsadmin_v1alpha_generated_AnalyticsAdminService_GetReportingIdentitySettings_async]
 }
 
 process.on('unhandledRejection', err => {
