@@ -6987,6 +6987,9 @@ export namespace google {
 
                     /** Replication hybridReplicationType */
                     hybridReplicationType?: (google.cloud.netapp.v1.Replication.HybridReplicationType|keyof typeof google.cloud.netapp.v1.Replication.HybridReplicationType|null);
+
+                    /** Replication hybridReplicationUserCommands */
+                    hybridReplicationUserCommands?: (google.cloud.netapp.v1.IUserCommands|null);
                 }
 
                 /** Represents a Replication. */
@@ -7048,6 +7051,9 @@ export namespace google {
 
                     /** Replication hybridReplicationType. */
                     public hybridReplicationType: (google.cloud.netapp.v1.Replication.HybridReplicationType|keyof typeof google.cloud.netapp.v1.Replication.HybridReplicationType);
+
+                    /** Replication hybridReplicationUserCommands. */
+                    public hybridReplicationUserCommands?: (google.cloud.netapp.v1.IUserCommands|null);
 
                     /**
                      * Creates a new Replication instance using the specified properties.
@@ -7138,7 +7144,9 @@ export namespace google {
                         DELETING = 5,
                         ERROR = 6,
                         PENDING_CLUSTER_PEERING = 8,
-                        PENDING_SVM_PEERING = 9
+                        PENDING_SVM_PEERING = 9,
+                        PENDING_REMOTE_RESYNC = 10,
+                        EXTERNALLY_MANAGED_REPLICATION = 11
                     }
 
                     /** ReplicationRole enum. */
@@ -7164,14 +7172,18 @@ export namespace google {
                         STOPPED = 3,
                         TRANSFERRING = 4,
                         BASELINE_TRANSFERRING = 5,
-                        ABORTED = 6
+                        ABORTED = 6,
+                        EXTERNALLY_MANAGED = 7,
+                        PENDING_PEERING = 8
                     }
 
                     /** HybridReplicationType enum. */
                     enum HybridReplicationType {
                         HYBRID_REPLICATION_TYPE_UNSPECIFIED = 0,
                         MIGRATION = 1,
-                        CONTINUOUS_REPLICATION = 2
+                        CONTINUOUS_REPLICATION = 2,
+                        ONPREM_REPLICATION = 3,
+                        REVERSE_ONPREM_REPLICATION = 4
                     }
                 }
 
@@ -8580,6 +8592,256 @@ export namespace google {
                     public static getTypeUrl(typeUrlPrefix?: string): string;
                 }
 
+                /** ServiceLevel enum. */
+                enum ServiceLevel {
+                    SERVICE_LEVEL_UNSPECIFIED = 0,
+                    PREMIUM = 1,
+                    EXTREME = 2,
+                    STANDARD = 3,
+                    FLEX = 4
+                }
+
+                /** FlexPerformance enum. */
+                enum FlexPerformance {
+                    FLEX_PERFORMANCE_UNSPECIFIED = 0,
+                    FLEX_PERFORMANCE_DEFAULT = 1,
+                    FLEX_PERFORMANCE_CUSTOM = 2
+                }
+
+                /** EncryptionType enum. */
+                enum EncryptionType {
+                    ENCRYPTION_TYPE_UNSPECIFIED = 0,
+                    SERVICE_MANAGED = 1,
+                    CLOUD_KMS = 2
+                }
+
+                /** DirectoryServiceType enum. */
+                enum DirectoryServiceType {
+                    DIRECTORY_SERVICE_TYPE_UNSPECIFIED = 0,
+                    ACTIVE_DIRECTORY = 1
+                }
+
+                /** HybridReplicationSchedule enum. */
+                enum HybridReplicationSchedule {
+                    HYBRID_REPLICATION_SCHEDULE_UNSPECIFIED = 0,
+                    EVERY_10_MINUTES = 1,
+                    HOURLY = 2,
+                    DAILY = 3
+                }
+
+                /** QosType enum. */
+                enum QosType {
+                    QOS_TYPE_UNSPECIFIED = 0,
+                    AUTO = 1,
+                    MANUAL = 2
+                }
+
+                /** Properties of a LocationMetadata. */
+                interface ILocationMetadata {
+
+                    /** LocationMetadata supportedServiceLevels */
+                    supportedServiceLevels?: (google.cloud.netapp.v1.ServiceLevel[]|null);
+
+                    /** LocationMetadata supportedFlexPerformance */
+                    supportedFlexPerformance?: (google.cloud.netapp.v1.FlexPerformance[]|null);
+
+                    /** LocationMetadata hasVcp */
+                    hasVcp?: (boolean|null);
+                }
+
+                /** Represents a LocationMetadata. */
+                class LocationMetadata implements ILocationMetadata {
+
+                    /**
+                     * Constructs a new LocationMetadata.
+                     * @param [properties] Properties to set
+                     */
+                    constructor(properties?: google.cloud.netapp.v1.ILocationMetadata);
+
+                    /** LocationMetadata supportedServiceLevels. */
+                    public supportedServiceLevels: google.cloud.netapp.v1.ServiceLevel[];
+
+                    /** LocationMetadata supportedFlexPerformance. */
+                    public supportedFlexPerformance: google.cloud.netapp.v1.FlexPerformance[];
+
+                    /** LocationMetadata hasVcp. */
+                    public hasVcp: boolean;
+
+                    /**
+                     * Creates a new LocationMetadata instance using the specified properties.
+                     * @param [properties] Properties to set
+                     * @returns LocationMetadata instance
+                     */
+                    public static create(properties?: google.cloud.netapp.v1.ILocationMetadata): google.cloud.netapp.v1.LocationMetadata;
+
+                    /**
+                     * Encodes the specified LocationMetadata message. Does not implicitly {@link google.cloud.netapp.v1.LocationMetadata.verify|verify} messages.
+                     * @param message LocationMetadata message or plain object to encode
+                     * @param [writer] Writer to encode to
+                     * @returns Writer
+                     */
+                    public static encode(message: google.cloud.netapp.v1.ILocationMetadata, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                    /**
+                     * Encodes the specified LocationMetadata message, length delimited. Does not implicitly {@link google.cloud.netapp.v1.LocationMetadata.verify|verify} messages.
+                     * @param message LocationMetadata message or plain object to encode
+                     * @param [writer] Writer to encode to
+                     * @returns Writer
+                     */
+                    public static encodeDelimited(message: google.cloud.netapp.v1.ILocationMetadata, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                    /**
+                     * Decodes a LocationMetadata message from the specified reader or buffer.
+                     * @param reader Reader or buffer to decode from
+                     * @param [length] Message length if known beforehand
+                     * @returns LocationMetadata
+                     * @throws {Error} If the payload is not a reader or valid buffer
+                     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                     */
+                    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): google.cloud.netapp.v1.LocationMetadata;
+
+                    /**
+                     * Decodes a LocationMetadata message from the specified reader or buffer, length delimited.
+                     * @param reader Reader or buffer to decode from
+                     * @returns LocationMetadata
+                     * @throws {Error} If the payload is not a reader or valid buffer
+                     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                     */
+                    public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): google.cloud.netapp.v1.LocationMetadata;
+
+                    /**
+                     * Verifies a LocationMetadata message.
+                     * @param message Plain object to verify
+                     * @returns `null` if valid, otherwise the reason why it is not
+                     */
+                    public static verify(message: { [k: string]: any }): (string|null);
+
+                    /**
+                     * Creates a LocationMetadata message from a plain object. Also converts values to their respective internal types.
+                     * @param object Plain object
+                     * @returns LocationMetadata
+                     */
+                    public static fromObject(object: { [k: string]: any }): google.cloud.netapp.v1.LocationMetadata;
+
+                    /**
+                     * Creates a plain object from a LocationMetadata message. Also converts values to other types if specified.
+                     * @param message LocationMetadata
+                     * @param [options] Conversion options
+                     * @returns Plain object
+                     */
+                    public static toObject(message: google.cloud.netapp.v1.LocationMetadata, options?: $protobuf.IConversionOptions): { [k: string]: any };
+
+                    /**
+                     * Converts this LocationMetadata to JSON.
+                     * @returns JSON object
+                     */
+                    public toJSON(): { [k: string]: any };
+
+                    /**
+                     * Gets the default type url for LocationMetadata
+                     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                     * @returns The default type url
+                     */
+                    public static getTypeUrl(typeUrlPrefix?: string): string;
+                }
+
+                /** Properties of a UserCommands. */
+                interface IUserCommands {
+
+                    /** UserCommands commands */
+                    commands?: (string[]|null);
+                }
+
+                /** Represents a UserCommands. */
+                class UserCommands implements IUserCommands {
+
+                    /**
+                     * Constructs a new UserCommands.
+                     * @param [properties] Properties to set
+                     */
+                    constructor(properties?: google.cloud.netapp.v1.IUserCommands);
+
+                    /** UserCommands commands. */
+                    public commands: string[];
+
+                    /**
+                     * Creates a new UserCommands instance using the specified properties.
+                     * @param [properties] Properties to set
+                     * @returns UserCommands instance
+                     */
+                    public static create(properties?: google.cloud.netapp.v1.IUserCommands): google.cloud.netapp.v1.UserCommands;
+
+                    /**
+                     * Encodes the specified UserCommands message. Does not implicitly {@link google.cloud.netapp.v1.UserCommands.verify|verify} messages.
+                     * @param message UserCommands message or plain object to encode
+                     * @param [writer] Writer to encode to
+                     * @returns Writer
+                     */
+                    public static encode(message: google.cloud.netapp.v1.IUserCommands, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                    /**
+                     * Encodes the specified UserCommands message, length delimited. Does not implicitly {@link google.cloud.netapp.v1.UserCommands.verify|verify} messages.
+                     * @param message UserCommands message or plain object to encode
+                     * @param [writer] Writer to encode to
+                     * @returns Writer
+                     */
+                    public static encodeDelimited(message: google.cloud.netapp.v1.IUserCommands, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                    /**
+                     * Decodes a UserCommands message from the specified reader or buffer.
+                     * @param reader Reader or buffer to decode from
+                     * @param [length] Message length if known beforehand
+                     * @returns UserCommands
+                     * @throws {Error} If the payload is not a reader or valid buffer
+                     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                     */
+                    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): google.cloud.netapp.v1.UserCommands;
+
+                    /**
+                     * Decodes a UserCommands message from the specified reader or buffer, length delimited.
+                     * @param reader Reader or buffer to decode from
+                     * @returns UserCommands
+                     * @throws {Error} If the payload is not a reader or valid buffer
+                     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                     */
+                    public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): google.cloud.netapp.v1.UserCommands;
+
+                    /**
+                     * Verifies a UserCommands message.
+                     * @param message Plain object to verify
+                     * @returns `null` if valid, otherwise the reason why it is not
+                     */
+                    public static verify(message: { [k: string]: any }): (string|null);
+
+                    /**
+                     * Creates a UserCommands message from a plain object. Also converts values to their respective internal types.
+                     * @param object Plain object
+                     * @returns UserCommands
+                     */
+                    public static fromObject(object: { [k: string]: any }): google.cloud.netapp.v1.UserCommands;
+
+                    /**
+                     * Creates a plain object from a UserCommands message. Also converts values to other types if specified.
+                     * @param message UserCommands
+                     * @param [options] Conversion options
+                     * @returns Plain object
+                     */
+                    public static toObject(message: google.cloud.netapp.v1.UserCommands, options?: $protobuf.IConversionOptions): { [k: string]: any };
+
+                    /**
+                     * Converts this UserCommands to JSON.
+                     * @returns JSON object
+                     */
+                    public toJSON(): { [k: string]: any };
+
+                    /**
+                     * Gets the default type url for UserCommands
+                     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                     * @returns The default type url
+                     */
+                    public static getTypeUrl(typeUrlPrefix?: string): string;
+                }
+
                 /** Protocols enum. */
                 enum Protocols {
                     PROTOCOLS_UNSPECIFIED = 0,
@@ -9484,6 +9746,12 @@ export namespace google {
 
                     /** Volume hybridReplicationParameters */
                     hybridReplicationParameters?: (google.cloud.netapp.v1.IHybridReplicationParameters|null);
+
+                    /** Volume throughputMibps */
+                    throughputMibps?: (number|null);
+
+                    /** Volume hotTierSizeUsedGib */
+                    hotTierSizeUsedGib?: (number|Long|string|null);
                 }
 
                 /** Represents a Volume. */
@@ -9608,6 +9876,12 @@ export namespace google {
 
                     /** Volume hybridReplicationParameters. */
                     public hybridReplicationParameters?: (google.cloud.netapp.v1.IHybridReplicationParameters|null);
+
+                    /** Volume throughputMibps. */
+                    public throughputMibps: number;
+
+                    /** Volume hotTierSizeUsedGib. */
+                    public hotTierSizeUsedGib: (number|Long|string);
 
                     /**
                      * Creates a new Volume instance using the specified properties.
@@ -10871,6 +11145,9 @@ export namespace google {
 
                     /** TieringPolicy coolingThresholdDays */
                     coolingThresholdDays?: (number|null);
+
+                    /** TieringPolicy hotTierBypassModeEnabled */
+                    hotTierBypassModeEnabled?: (boolean|null);
                 }
 
                 /** Represents a TieringPolicy. */
@@ -10887,6 +11164,9 @@ export namespace google {
 
                     /** TieringPolicy coolingThresholdDays. */
                     public coolingThresholdDays?: (number|null);
+
+                    /** TieringPolicy hotTierBypassModeEnabled. */
+                    public hotTierBypassModeEnabled?: (boolean|null);
 
                     /**
                      * Creates a new TieringPolicy instance using the specified properties.
@@ -11002,6 +11282,15 @@ export namespace google {
 
                     /** HybridReplicationParameters labels */
                     labels?: ({ [k: string]: string }|null);
+
+                    /** HybridReplicationParameters replicationSchedule */
+                    replicationSchedule?: (google.cloud.netapp.v1.HybridReplicationSchedule|keyof typeof google.cloud.netapp.v1.HybridReplicationSchedule|null);
+
+                    /** HybridReplicationParameters hybridReplicationType */
+                    hybridReplicationType?: (google.cloud.netapp.v1.HybridReplicationParameters.VolumeHybridReplicationType|keyof typeof google.cloud.netapp.v1.HybridReplicationParameters.VolumeHybridReplicationType|null);
+
+                    /** HybridReplicationParameters largeVolumeConstituentCount */
+                    largeVolumeConstituentCount?: (number|null);
                 }
 
                 /** Represents a HybridReplicationParameters. */
@@ -11036,6 +11325,15 @@ export namespace google {
 
                     /** HybridReplicationParameters labels. */
                     public labels: { [k: string]: string };
+
+                    /** HybridReplicationParameters replicationSchedule. */
+                    public replicationSchedule: (google.cloud.netapp.v1.HybridReplicationSchedule|keyof typeof google.cloud.netapp.v1.HybridReplicationSchedule);
+
+                    /** HybridReplicationParameters hybridReplicationType. */
+                    public hybridReplicationType: (google.cloud.netapp.v1.HybridReplicationParameters.VolumeHybridReplicationType|keyof typeof google.cloud.netapp.v1.HybridReplicationParameters.VolumeHybridReplicationType);
+
+                    /** HybridReplicationParameters largeVolumeConstituentCount. */
+                    public largeVolumeConstituentCount: number;
 
                     /**
                      * Creates a new HybridReplicationParameters instance using the specified properties.
@@ -11115,136 +11413,16 @@ export namespace google {
                     public static getTypeUrl(typeUrlPrefix?: string): string;
                 }
 
-                /** ServiceLevel enum. */
-                enum ServiceLevel {
-                    SERVICE_LEVEL_UNSPECIFIED = 0,
-                    PREMIUM = 1,
-                    EXTREME = 2,
-                    STANDARD = 3,
-                    FLEX = 4
-                }
+                namespace HybridReplicationParameters {
 
-                /** FlexPerformance enum. */
-                enum FlexPerformance {
-                    FLEX_PERFORMANCE_UNSPECIFIED = 0,
-                    FLEX_PERFORMANCE_DEFAULT = 1,
-                    FLEX_PERFORMANCE_CUSTOM = 2
-                }
-
-                /** EncryptionType enum. */
-                enum EncryptionType {
-                    ENCRYPTION_TYPE_UNSPECIFIED = 0,
-                    SERVICE_MANAGED = 1,
-                    CLOUD_KMS = 2
-                }
-
-                /** DirectoryServiceType enum. */
-                enum DirectoryServiceType {
-                    DIRECTORY_SERVICE_TYPE_UNSPECIFIED = 0,
-                    ACTIVE_DIRECTORY = 1
-                }
-
-                /** Properties of a LocationMetadata. */
-                interface ILocationMetadata {
-
-                    /** LocationMetadata supportedServiceLevels */
-                    supportedServiceLevels?: (google.cloud.netapp.v1.ServiceLevel[]|null);
-
-                    /** LocationMetadata supportedFlexPerformance */
-                    supportedFlexPerformance?: (google.cloud.netapp.v1.FlexPerformance[]|null);
-                }
-
-                /** Represents a LocationMetadata. */
-                class LocationMetadata implements ILocationMetadata {
-
-                    /**
-                     * Constructs a new LocationMetadata.
-                     * @param [properties] Properties to set
-                     */
-                    constructor(properties?: google.cloud.netapp.v1.ILocationMetadata);
-
-                    /** LocationMetadata supportedServiceLevels. */
-                    public supportedServiceLevels: google.cloud.netapp.v1.ServiceLevel[];
-
-                    /** LocationMetadata supportedFlexPerformance. */
-                    public supportedFlexPerformance: google.cloud.netapp.v1.FlexPerformance[];
-
-                    /**
-                     * Creates a new LocationMetadata instance using the specified properties.
-                     * @param [properties] Properties to set
-                     * @returns LocationMetadata instance
-                     */
-                    public static create(properties?: google.cloud.netapp.v1.ILocationMetadata): google.cloud.netapp.v1.LocationMetadata;
-
-                    /**
-                     * Encodes the specified LocationMetadata message. Does not implicitly {@link google.cloud.netapp.v1.LocationMetadata.verify|verify} messages.
-                     * @param message LocationMetadata message or plain object to encode
-                     * @param [writer] Writer to encode to
-                     * @returns Writer
-                     */
-                    public static encode(message: google.cloud.netapp.v1.ILocationMetadata, writer?: $protobuf.Writer): $protobuf.Writer;
-
-                    /**
-                     * Encodes the specified LocationMetadata message, length delimited. Does not implicitly {@link google.cloud.netapp.v1.LocationMetadata.verify|verify} messages.
-                     * @param message LocationMetadata message or plain object to encode
-                     * @param [writer] Writer to encode to
-                     * @returns Writer
-                     */
-                    public static encodeDelimited(message: google.cloud.netapp.v1.ILocationMetadata, writer?: $protobuf.Writer): $protobuf.Writer;
-
-                    /**
-                     * Decodes a LocationMetadata message from the specified reader or buffer.
-                     * @param reader Reader or buffer to decode from
-                     * @param [length] Message length if known beforehand
-                     * @returns LocationMetadata
-                     * @throws {Error} If the payload is not a reader or valid buffer
-                     * @throws {$protobuf.util.ProtocolError} If required fields are missing
-                     */
-                    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): google.cloud.netapp.v1.LocationMetadata;
-
-                    /**
-                     * Decodes a LocationMetadata message from the specified reader or buffer, length delimited.
-                     * @param reader Reader or buffer to decode from
-                     * @returns LocationMetadata
-                     * @throws {Error} If the payload is not a reader or valid buffer
-                     * @throws {$protobuf.util.ProtocolError} If required fields are missing
-                     */
-                    public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): google.cloud.netapp.v1.LocationMetadata;
-
-                    /**
-                     * Verifies a LocationMetadata message.
-                     * @param message Plain object to verify
-                     * @returns `null` if valid, otherwise the reason why it is not
-                     */
-                    public static verify(message: { [k: string]: any }): (string|null);
-
-                    /**
-                     * Creates a LocationMetadata message from a plain object. Also converts values to their respective internal types.
-                     * @param object Plain object
-                     * @returns LocationMetadata
-                     */
-                    public static fromObject(object: { [k: string]: any }): google.cloud.netapp.v1.LocationMetadata;
-
-                    /**
-                     * Creates a plain object from a LocationMetadata message. Also converts values to other types if specified.
-                     * @param message LocationMetadata
-                     * @param [options] Conversion options
-                     * @returns Plain object
-                     */
-                    public static toObject(message: google.cloud.netapp.v1.LocationMetadata, options?: $protobuf.IConversionOptions): { [k: string]: any };
-
-                    /**
-                     * Converts this LocationMetadata to JSON.
-                     * @returns JSON object
-                     */
-                    public toJSON(): { [k: string]: any };
-
-                    /**
-                     * Gets the default type url for LocationMetadata
-                     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
-                     * @returns The default type url
-                     */
-                    public static getTypeUrl(typeUrlPrefix?: string): string;
+                    /** VolumeHybridReplicationType enum. */
+                    enum VolumeHybridReplicationType {
+                        VOLUME_HYBRID_REPLICATION_TYPE_UNSPECIFIED = 0,
+                        MIGRATION = 1,
+                        CONTINUOUS_REPLICATION = 2,
+                        ONPREM_REPLICATION = 3,
+                        REVERSE_ONPREM_REPLICATION = 4
+                    }
                 }
 
                 /** Properties of a ListSnapshotsRequest. */
@@ -12840,6 +13018,24 @@ export namespace google {
 
                     /** StoragePool totalIops */
                     totalIops?: (number|Long|string|null);
+
+                    /** StoragePool hotTierSizeGib */
+                    hotTierSizeGib?: (number|Long|string|null);
+
+                    /** StoragePool enableHotTierAutoResize */
+                    enableHotTierAutoResize?: (boolean|null);
+
+                    /** StoragePool qosType */
+                    qosType?: (google.cloud.netapp.v1.QosType|keyof typeof google.cloud.netapp.v1.QosType|null);
+
+                    /** StoragePool availableThroughputMibps */
+                    availableThroughputMibps?: (number|null);
+
+                    /** StoragePool coldTierSizeUsedGib */
+                    coldTierSizeUsedGib?: (number|Long|string|null);
+
+                    /** StoragePool hotTierSizeUsedGib */
+                    hotTierSizeUsedGib?: (number|Long|string|null);
                 }
 
                 /** Represents a StoragePool. */
@@ -12925,6 +13121,24 @@ export namespace google {
 
                     /** StoragePool totalIops. */
                     public totalIops: (number|Long|string);
+
+                    /** StoragePool hotTierSizeGib. */
+                    public hotTierSizeGib: (number|Long|string);
+
+                    /** StoragePool enableHotTierAutoResize. */
+                    public enableHotTierAutoResize?: (boolean|null);
+
+                    /** StoragePool qosType. */
+                    public qosType: (google.cloud.netapp.v1.QosType|keyof typeof google.cloud.netapp.v1.QosType);
+
+                    /** StoragePool availableThroughputMibps. */
+                    public availableThroughputMibps: number;
+
+                    /** StoragePool coldTierSizeUsedGib. */
+                    public coldTierSizeUsedGib: (number|Long|string);
+
+                    /** StoragePool hotTierSizeUsedGib. */
+                    public hotTierSizeUsedGib: (number|Long|string);
 
                     /**
                      * Creates a new StoragePool instance using the specified properties.

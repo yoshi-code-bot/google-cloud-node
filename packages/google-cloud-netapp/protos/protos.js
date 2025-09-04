@@ -16702,6 +16702,7 @@
                          * @property {google.cloud.netapp.v1.IHybridPeeringDetails|null} [hybridPeeringDetails] Replication hybridPeeringDetails
                          * @property {string|null} [clusterLocation] Replication clusterLocation
                          * @property {google.cloud.netapp.v1.Replication.HybridReplicationType|null} [hybridReplicationType] Replication hybridReplicationType
+                         * @property {google.cloud.netapp.v1.IUserCommands|null} [hybridReplicationUserCommands] Replication hybridReplicationUserCommands
                          */
     
                         /**
@@ -16856,6 +16857,14 @@
                          */
                         Replication.prototype.hybridReplicationType = 0;
     
+                        /**
+                         * Replication hybridReplicationUserCommands.
+                         * @member {google.cloud.netapp.v1.IUserCommands|null|undefined} hybridReplicationUserCommands
+                         * @memberof google.cloud.netapp.v1.Replication
+                         * @instance
+                         */
+                        Replication.prototype.hybridReplicationUserCommands = null;
+    
                         // OneOf field names bound to virtual getters and setters
                         var $oneOfFields;
     
@@ -16930,6 +16939,8 @@
                                 writer.uint32(/* id 18, wireType 2 =*/146).string(message.clusterLocation);
                             if (message.hybridReplicationType != null && Object.hasOwnProperty.call(message, "hybridReplicationType"))
                                 writer.uint32(/* id 19, wireType 0 =*/152).int32(message.hybridReplicationType);
+                            if (message.hybridReplicationUserCommands != null && Object.hasOwnProperty.call(message, "hybridReplicationUserCommands"))
+                                $root.google.cloud.netapp.v1.UserCommands.encode(message.hybridReplicationUserCommands, writer.uint32(/* id 20, wireType 2 =*/162).fork()).ldelim();
                             return writer;
                         };
     
@@ -17053,6 +17064,10 @@
                                         message.hybridReplicationType = reader.int32();
                                         break;
                                     }
+                                case 20: {
+                                        message.hybridReplicationUserCommands = $root.google.cloud.netapp.v1.UserCommands.decode(reader, reader.uint32());
+                                        break;
+                                    }
                                 default:
                                     reader.skipType(tag & 7);
                                     break;
@@ -17104,6 +17119,8 @@
                                 case 6:
                                 case 8:
                                 case 9:
+                                case 10:
+                                case 11:
                                     break;
                                 }
                             if (message.stateDetails != null && message.hasOwnProperty("stateDetails"))
@@ -17139,6 +17156,8 @@
                                 case 4:
                                 case 5:
                                 case 6:
+                                case 7:
+                                case 8:
                                     break;
                                 }
                             if (message.healthy != null && message.hasOwnProperty("healthy")) {
@@ -17195,8 +17214,15 @@
                                 case 0:
                                 case 1:
                                 case 2:
+                                case 3:
+                                case 4:
                                     break;
                                 }
+                            if (message.hybridReplicationUserCommands != null && message.hasOwnProperty("hybridReplicationUserCommands")) {
+                                var error = $root.google.cloud.netapp.v1.UserCommands.verify(message.hybridReplicationUserCommands);
+                                if (error)
+                                    return "hybridReplicationUserCommands." + error;
+                            }
                             return null;
                         };
     
@@ -17252,6 +17278,14 @@
                             case "PENDING_SVM_PEERING":
                             case 9:
                                 message.state = 9;
+                                break;
+                            case "PENDING_REMOTE_RESYNC":
+                            case 10:
+                                message.state = 10;
+                                break;
+                            case "EXTERNALLY_MANAGED_REPLICATION":
+                            case 11:
+                                message.state = 11;
                                 break;
                             }
                             if (object.stateDetails != null)
@@ -17335,6 +17369,14 @@
                             case 6:
                                 message.mirrorState = 6;
                                 break;
+                            case "EXTERNALLY_MANAGED":
+                            case 7:
+                                message.mirrorState = 7;
+                                break;
+                            case "PENDING_PEERING":
+                            case 8:
+                                message.mirrorState = 8;
+                                break;
                             }
                             if (object.healthy != null)
                                 message.healthy = Boolean(object.healthy);
@@ -17392,6 +17434,19 @@
                             case 2:
                                 message.hybridReplicationType = 2;
                                 break;
+                            case "ONPREM_REPLICATION":
+                            case 3:
+                                message.hybridReplicationType = 3;
+                                break;
+                            case "REVERSE_ONPREM_REPLICATION":
+                            case 4:
+                                message.hybridReplicationType = 4;
+                                break;
+                            }
+                            if (object.hybridReplicationUserCommands != null) {
+                                if (typeof object.hybridReplicationUserCommands !== "object")
+                                    throw TypeError(".google.cloud.netapp.v1.Replication.hybridReplicationUserCommands: object expected");
+                                message.hybridReplicationUserCommands = $root.google.cloud.netapp.v1.UserCommands.fromObject(object.hybridReplicationUserCommands);
                             }
                             return message;
                         };
@@ -17426,6 +17481,7 @@
                                 object.hybridPeeringDetails = null;
                                 object.clusterLocation = "";
                                 object.hybridReplicationType = options.enums === String ? "HYBRID_REPLICATION_TYPE_UNSPECIFIED" : 0;
+                                object.hybridReplicationUserCommands = null;
                             }
                             if (message.name != null && message.hasOwnProperty("name"))
                                 object.name = message.name;
@@ -17471,6 +17527,8 @@
                                 object.clusterLocation = message.clusterLocation;
                             if (message.hybridReplicationType != null && message.hasOwnProperty("hybridReplicationType"))
                                 object.hybridReplicationType = options.enums === String ? $root.google.cloud.netapp.v1.Replication.HybridReplicationType[message.hybridReplicationType] === undefined ? message.hybridReplicationType : $root.google.cloud.netapp.v1.Replication.HybridReplicationType[message.hybridReplicationType] : message.hybridReplicationType;
+                            if (message.hybridReplicationUserCommands != null && message.hasOwnProperty("hybridReplicationUserCommands"))
+                                object.hybridReplicationUserCommands = $root.google.cloud.netapp.v1.UserCommands.toObject(message.hybridReplicationUserCommands, options);
                             return object;
                         };
     
@@ -17512,6 +17570,8 @@
                          * @property {number} ERROR=6 ERROR value
                          * @property {number} PENDING_CLUSTER_PEERING=8 PENDING_CLUSTER_PEERING value
                          * @property {number} PENDING_SVM_PEERING=9 PENDING_SVM_PEERING value
+                         * @property {number} PENDING_REMOTE_RESYNC=10 PENDING_REMOTE_RESYNC value
+                         * @property {number} EXTERNALLY_MANAGED_REPLICATION=11 EXTERNALLY_MANAGED_REPLICATION value
                          */
                         Replication.State = (function() {
                             var valuesById = {}, values = Object.create(valuesById);
@@ -17523,6 +17583,8 @@
                             values[valuesById[6] = "ERROR"] = 6;
                             values[valuesById[8] = "PENDING_CLUSTER_PEERING"] = 8;
                             values[valuesById[9] = "PENDING_SVM_PEERING"] = 9;
+                            values[valuesById[10] = "PENDING_REMOTE_RESYNC"] = 10;
+                            values[valuesById[11] = "EXTERNALLY_MANAGED_REPLICATION"] = 11;
                             return values;
                         })();
     
@@ -17571,6 +17633,8 @@
                          * @property {number} TRANSFERRING=4 TRANSFERRING value
                          * @property {number} BASELINE_TRANSFERRING=5 BASELINE_TRANSFERRING value
                          * @property {number} ABORTED=6 ABORTED value
+                         * @property {number} EXTERNALLY_MANAGED=7 EXTERNALLY_MANAGED value
+                         * @property {number} PENDING_PEERING=8 PENDING_PEERING value
                          */
                         Replication.MirrorState = (function() {
                             var valuesById = {}, values = Object.create(valuesById);
@@ -17581,6 +17645,8 @@
                             values[valuesById[4] = "TRANSFERRING"] = 4;
                             values[valuesById[5] = "BASELINE_TRANSFERRING"] = 5;
                             values[valuesById[6] = "ABORTED"] = 6;
+                            values[valuesById[7] = "EXTERNALLY_MANAGED"] = 7;
+                            values[valuesById[8] = "PENDING_PEERING"] = 8;
                             return values;
                         })();
     
@@ -17591,12 +17657,16 @@
                          * @property {number} HYBRID_REPLICATION_TYPE_UNSPECIFIED=0 HYBRID_REPLICATION_TYPE_UNSPECIFIED value
                          * @property {number} MIGRATION=1 MIGRATION value
                          * @property {number} CONTINUOUS_REPLICATION=2 CONTINUOUS_REPLICATION value
+                         * @property {number} ONPREM_REPLICATION=3 ONPREM_REPLICATION value
+                         * @property {number} REVERSE_ONPREM_REPLICATION=4 REVERSE_ONPREM_REPLICATION value
                          */
                         Replication.HybridReplicationType = (function() {
                             var valuesById = {}, values = Object.create(valuesById);
                             values[valuesById[0] = "HYBRID_REPLICATION_TYPE_UNSPECIFIED"] = 0;
                             values[valuesById[1] = "MIGRATION"] = 1;
                             values[valuesById[2] = "CONTINUOUS_REPLICATION"] = 2;
+                            values[valuesById[3] = "ONPREM_REPLICATION"] = 3;
+                            values[valuesById[4] = "REVERSE_ONPREM_REPLICATION"] = 4;
                             return values;
                         })();
     
@@ -20934,6 +21004,686 @@
                     })();
     
                     /**
+                     * ServiceLevel enum.
+                     * @name google.cloud.netapp.v1.ServiceLevel
+                     * @enum {number}
+                     * @property {number} SERVICE_LEVEL_UNSPECIFIED=0 SERVICE_LEVEL_UNSPECIFIED value
+                     * @property {number} PREMIUM=1 PREMIUM value
+                     * @property {number} EXTREME=2 EXTREME value
+                     * @property {number} STANDARD=3 STANDARD value
+                     * @property {number} FLEX=4 FLEX value
+                     */
+                    v1.ServiceLevel = (function() {
+                        var valuesById = {}, values = Object.create(valuesById);
+                        values[valuesById[0] = "SERVICE_LEVEL_UNSPECIFIED"] = 0;
+                        values[valuesById[1] = "PREMIUM"] = 1;
+                        values[valuesById[2] = "EXTREME"] = 2;
+                        values[valuesById[3] = "STANDARD"] = 3;
+                        values[valuesById[4] = "FLEX"] = 4;
+                        return values;
+                    })();
+    
+                    /**
+                     * FlexPerformance enum.
+                     * @name google.cloud.netapp.v1.FlexPerformance
+                     * @enum {number}
+                     * @property {number} FLEX_PERFORMANCE_UNSPECIFIED=0 FLEX_PERFORMANCE_UNSPECIFIED value
+                     * @property {number} FLEX_PERFORMANCE_DEFAULT=1 FLEX_PERFORMANCE_DEFAULT value
+                     * @property {number} FLEX_PERFORMANCE_CUSTOM=2 FLEX_PERFORMANCE_CUSTOM value
+                     */
+                    v1.FlexPerformance = (function() {
+                        var valuesById = {}, values = Object.create(valuesById);
+                        values[valuesById[0] = "FLEX_PERFORMANCE_UNSPECIFIED"] = 0;
+                        values[valuesById[1] = "FLEX_PERFORMANCE_DEFAULT"] = 1;
+                        values[valuesById[2] = "FLEX_PERFORMANCE_CUSTOM"] = 2;
+                        return values;
+                    })();
+    
+                    /**
+                     * EncryptionType enum.
+                     * @name google.cloud.netapp.v1.EncryptionType
+                     * @enum {number}
+                     * @property {number} ENCRYPTION_TYPE_UNSPECIFIED=0 ENCRYPTION_TYPE_UNSPECIFIED value
+                     * @property {number} SERVICE_MANAGED=1 SERVICE_MANAGED value
+                     * @property {number} CLOUD_KMS=2 CLOUD_KMS value
+                     */
+                    v1.EncryptionType = (function() {
+                        var valuesById = {}, values = Object.create(valuesById);
+                        values[valuesById[0] = "ENCRYPTION_TYPE_UNSPECIFIED"] = 0;
+                        values[valuesById[1] = "SERVICE_MANAGED"] = 1;
+                        values[valuesById[2] = "CLOUD_KMS"] = 2;
+                        return values;
+                    })();
+    
+                    /**
+                     * DirectoryServiceType enum.
+                     * @name google.cloud.netapp.v1.DirectoryServiceType
+                     * @enum {number}
+                     * @property {number} DIRECTORY_SERVICE_TYPE_UNSPECIFIED=0 DIRECTORY_SERVICE_TYPE_UNSPECIFIED value
+                     * @property {number} ACTIVE_DIRECTORY=1 ACTIVE_DIRECTORY value
+                     */
+                    v1.DirectoryServiceType = (function() {
+                        var valuesById = {}, values = Object.create(valuesById);
+                        values[valuesById[0] = "DIRECTORY_SERVICE_TYPE_UNSPECIFIED"] = 0;
+                        values[valuesById[1] = "ACTIVE_DIRECTORY"] = 1;
+                        return values;
+                    })();
+    
+                    /**
+                     * HybridReplicationSchedule enum.
+                     * @name google.cloud.netapp.v1.HybridReplicationSchedule
+                     * @enum {number}
+                     * @property {number} HYBRID_REPLICATION_SCHEDULE_UNSPECIFIED=0 HYBRID_REPLICATION_SCHEDULE_UNSPECIFIED value
+                     * @property {number} EVERY_10_MINUTES=1 EVERY_10_MINUTES value
+                     * @property {number} HOURLY=2 HOURLY value
+                     * @property {number} DAILY=3 DAILY value
+                     */
+                    v1.HybridReplicationSchedule = (function() {
+                        var valuesById = {}, values = Object.create(valuesById);
+                        values[valuesById[0] = "HYBRID_REPLICATION_SCHEDULE_UNSPECIFIED"] = 0;
+                        values[valuesById[1] = "EVERY_10_MINUTES"] = 1;
+                        values[valuesById[2] = "HOURLY"] = 2;
+                        values[valuesById[3] = "DAILY"] = 3;
+                        return values;
+                    })();
+    
+                    /**
+                     * QosType enum.
+                     * @name google.cloud.netapp.v1.QosType
+                     * @enum {number}
+                     * @property {number} QOS_TYPE_UNSPECIFIED=0 QOS_TYPE_UNSPECIFIED value
+                     * @property {number} AUTO=1 AUTO value
+                     * @property {number} MANUAL=2 MANUAL value
+                     */
+                    v1.QosType = (function() {
+                        var valuesById = {}, values = Object.create(valuesById);
+                        values[valuesById[0] = "QOS_TYPE_UNSPECIFIED"] = 0;
+                        values[valuesById[1] = "AUTO"] = 1;
+                        values[valuesById[2] = "MANUAL"] = 2;
+                        return values;
+                    })();
+    
+                    v1.LocationMetadata = (function() {
+    
+                        /**
+                         * Properties of a LocationMetadata.
+                         * @memberof google.cloud.netapp.v1
+                         * @interface ILocationMetadata
+                         * @property {Array.<google.cloud.netapp.v1.ServiceLevel>|null} [supportedServiceLevels] LocationMetadata supportedServiceLevels
+                         * @property {Array.<google.cloud.netapp.v1.FlexPerformance>|null} [supportedFlexPerformance] LocationMetadata supportedFlexPerformance
+                         * @property {boolean|null} [hasVcp] LocationMetadata hasVcp
+                         */
+    
+                        /**
+                         * Constructs a new LocationMetadata.
+                         * @memberof google.cloud.netapp.v1
+                         * @classdesc Represents a LocationMetadata.
+                         * @implements ILocationMetadata
+                         * @constructor
+                         * @param {google.cloud.netapp.v1.ILocationMetadata=} [properties] Properties to set
+                         */
+                        function LocationMetadata(properties) {
+                            this.supportedServiceLevels = [];
+                            this.supportedFlexPerformance = [];
+                            if (properties)
+                                for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                                    if (properties[keys[i]] != null)
+                                        this[keys[i]] = properties[keys[i]];
+                        }
+    
+                        /**
+                         * LocationMetadata supportedServiceLevels.
+                         * @member {Array.<google.cloud.netapp.v1.ServiceLevel>} supportedServiceLevels
+                         * @memberof google.cloud.netapp.v1.LocationMetadata
+                         * @instance
+                         */
+                        LocationMetadata.prototype.supportedServiceLevels = $util.emptyArray;
+    
+                        /**
+                         * LocationMetadata supportedFlexPerformance.
+                         * @member {Array.<google.cloud.netapp.v1.FlexPerformance>} supportedFlexPerformance
+                         * @memberof google.cloud.netapp.v1.LocationMetadata
+                         * @instance
+                         */
+                        LocationMetadata.prototype.supportedFlexPerformance = $util.emptyArray;
+    
+                        /**
+                         * LocationMetadata hasVcp.
+                         * @member {boolean} hasVcp
+                         * @memberof google.cloud.netapp.v1.LocationMetadata
+                         * @instance
+                         */
+                        LocationMetadata.prototype.hasVcp = false;
+    
+                        /**
+                         * Creates a new LocationMetadata instance using the specified properties.
+                         * @function create
+                         * @memberof google.cloud.netapp.v1.LocationMetadata
+                         * @static
+                         * @param {google.cloud.netapp.v1.ILocationMetadata=} [properties] Properties to set
+                         * @returns {google.cloud.netapp.v1.LocationMetadata} LocationMetadata instance
+                         */
+                        LocationMetadata.create = function create(properties) {
+                            return new LocationMetadata(properties);
+                        };
+    
+                        /**
+                         * Encodes the specified LocationMetadata message. Does not implicitly {@link google.cloud.netapp.v1.LocationMetadata.verify|verify} messages.
+                         * @function encode
+                         * @memberof google.cloud.netapp.v1.LocationMetadata
+                         * @static
+                         * @param {google.cloud.netapp.v1.ILocationMetadata} message LocationMetadata message or plain object to encode
+                         * @param {$protobuf.Writer} [writer] Writer to encode to
+                         * @returns {$protobuf.Writer} Writer
+                         */
+                        LocationMetadata.encode = function encode(message, writer) {
+                            if (!writer)
+                                writer = $Writer.create();
+                            if (message.supportedServiceLevels != null && message.supportedServiceLevels.length) {
+                                writer.uint32(/* id 1, wireType 2 =*/10).fork();
+                                for (var i = 0; i < message.supportedServiceLevels.length; ++i)
+                                    writer.int32(message.supportedServiceLevels[i]);
+                                writer.ldelim();
+                            }
+                            if (message.supportedFlexPerformance != null && message.supportedFlexPerformance.length) {
+                                writer.uint32(/* id 2, wireType 2 =*/18).fork();
+                                for (var i = 0; i < message.supportedFlexPerformance.length; ++i)
+                                    writer.int32(message.supportedFlexPerformance[i]);
+                                writer.ldelim();
+                            }
+                            if (message.hasVcp != null && Object.hasOwnProperty.call(message, "hasVcp"))
+                                writer.uint32(/* id 3, wireType 0 =*/24).bool(message.hasVcp);
+                            return writer;
+                        };
+    
+                        /**
+                         * Encodes the specified LocationMetadata message, length delimited. Does not implicitly {@link google.cloud.netapp.v1.LocationMetadata.verify|verify} messages.
+                         * @function encodeDelimited
+                         * @memberof google.cloud.netapp.v1.LocationMetadata
+                         * @static
+                         * @param {google.cloud.netapp.v1.ILocationMetadata} message LocationMetadata message or plain object to encode
+                         * @param {$protobuf.Writer} [writer] Writer to encode to
+                         * @returns {$protobuf.Writer} Writer
+                         */
+                        LocationMetadata.encodeDelimited = function encodeDelimited(message, writer) {
+                            return this.encode(message, writer).ldelim();
+                        };
+    
+                        /**
+                         * Decodes a LocationMetadata message from the specified reader or buffer.
+                         * @function decode
+                         * @memberof google.cloud.netapp.v1.LocationMetadata
+                         * @static
+                         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                         * @param {number} [length] Message length if known beforehand
+                         * @returns {google.cloud.netapp.v1.LocationMetadata} LocationMetadata
+                         * @throws {Error} If the payload is not a reader or valid buffer
+                         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                         */
+                        LocationMetadata.decode = function decode(reader, length, error) {
+                            if (!(reader instanceof $Reader))
+                                reader = $Reader.create(reader);
+                            var end = length === undefined ? reader.len : reader.pos + length, message = new $root.google.cloud.netapp.v1.LocationMetadata();
+                            while (reader.pos < end) {
+                                var tag = reader.uint32();
+                                if (tag === error)
+                                    break;
+                                switch (tag >>> 3) {
+                                case 1: {
+                                        if (!(message.supportedServiceLevels && message.supportedServiceLevels.length))
+                                            message.supportedServiceLevels = [];
+                                        if ((tag & 7) === 2) {
+                                            var end2 = reader.uint32() + reader.pos;
+                                            while (reader.pos < end2)
+                                                message.supportedServiceLevels.push(reader.int32());
+                                        } else
+                                            message.supportedServiceLevels.push(reader.int32());
+                                        break;
+                                    }
+                                case 2: {
+                                        if (!(message.supportedFlexPerformance && message.supportedFlexPerformance.length))
+                                            message.supportedFlexPerformance = [];
+                                        if ((tag & 7) === 2) {
+                                            var end2 = reader.uint32() + reader.pos;
+                                            while (reader.pos < end2)
+                                                message.supportedFlexPerformance.push(reader.int32());
+                                        } else
+                                            message.supportedFlexPerformance.push(reader.int32());
+                                        break;
+                                    }
+                                case 3: {
+                                        message.hasVcp = reader.bool();
+                                        break;
+                                    }
+                                default:
+                                    reader.skipType(tag & 7);
+                                    break;
+                                }
+                            }
+                            return message;
+                        };
+    
+                        /**
+                         * Decodes a LocationMetadata message from the specified reader or buffer, length delimited.
+                         * @function decodeDelimited
+                         * @memberof google.cloud.netapp.v1.LocationMetadata
+                         * @static
+                         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                         * @returns {google.cloud.netapp.v1.LocationMetadata} LocationMetadata
+                         * @throws {Error} If the payload is not a reader or valid buffer
+                         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                         */
+                        LocationMetadata.decodeDelimited = function decodeDelimited(reader) {
+                            if (!(reader instanceof $Reader))
+                                reader = new $Reader(reader);
+                            return this.decode(reader, reader.uint32());
+                        };
+    
+                        /**
+                         * Verifies a LocationMetadata message.
+                         * @function verify
+                         * @memberof google.cloud.netapp.v1.LocationMetadata
+                         * @static
+                         * @param {Object.<string,*>} message Plain object to verify
+                         * @returns {string|null} `null` if valid, otherwise the reason why it is not
+                         */
+                        LocationMetadata.verify = function verify(message) {
+                            if (typeof message !== "object" || message === null)
+                                return "object expected";
+                            if (message.supportedServiceLevels != null && message.hasOwnProperty("supportedServiceLevels")) {
+                                if (!Array.isArray(message.supportedServiceLevels))
+                                    return "supportedServiceLevels: array expected";
+                                for (var i = 0; i < message.supportedServiceLevels.length; ++i)
+                                    switch (message.supportedServiceLevels[i]) {
+                                    default:
+                                        return "supportedServiceLevels: enum value[] expected";
+                                    case 0:
+                                    case 1:
+                                    case 2:
+                                    case 3:
+                                    case 4:
+                                        break;
+                                    }
+                            }
+                            if (message.supportedFlexPerformance != null && message.hasOwnProperty("supportedFlexPerformance")) {
+                                if (!Array.isArray(message.supportedFlexPerformance))
+                                    return "supportedFlexPerformance: array expected";
+                                for (var i = 0; i < message.supportedFlexPerformance.length; ++i)
+                                    switch (message.supportedFlexPerformance[i]) {
+                                    default:
+                                        return "supportedFlexPerformance: enum value[] expected";
+                                    case 0:
+                                    case 1:
+                                    case 2:
+                                        break;
+                                    }
+                            }
+                            if (message.hasVcp != null && message.hasOwnProperty("hasVcp"))
+                                if (typeof message.hasVcp !== "boolean")
+                                    return "hasVcp: boolean expected";
+                            return null;
+                        };
+    
+                        /**
+                         * Creates a LocationMetadata message from a plain object. Also converts values to their respective internal types.
+                         * @function fromObject
+                         * @memberof google.cloud.netapp.v1.LocationMetadata
+                         * @static
+                         * @param {Object.<string,*>} object Plain object
+                         * @returns {google.cloud.netapp.v1.LocationMetadata} LocationMetadata
+                         */
+                        LocationMetadata.fromObject = function fromObject(object) {
+                            if (object instanceof $root.google.cloud.netapp.v1.LocationMetadata)
+                                return object;
+                            var message = new $root.google.cloud.netapp.v1.LocationMetadata();
+                            if (object.supportedServiceLevels) {
+                                if (!Array.isArray(object.supportedServiceLevels))
+                                    throw TypeError(".google.cloud.netapp.v1.LocationMetadata.supportedServiceLevels: array expected");
+                                message.supportedServiceLevels = [];
+                                for (var i = 0; i < object.supportedServiceLevels.length; ++i)
+                                    switch (object.supportedServiceLevels[i]) {
+                                    default:
+                                        if (typeof object.supportedServiceLevels[i] === "number") {
+                                            message.supportedServiceLevels[i] = object.supportedServiceLevels[i];
+                                            break;
+                                        }
+                                    case "SERVICE_LEVEL_UNSPECIFIED":
+                                    case 0:
+                                        message.supportedServiceLevels[i] = 0;
+                                        break;
+                                    case "PREMIUM":
+                                    case 1:
+                                        message.supportedServiceLevels[i] = 1;
+                                        break;
+                                    case "EXTREME":
+                                    case 2:
+                                        message.supportedServiceLevels[i] = 2;
+                                        break;
+                                    case "STANDARD":
+                                    case 3:
+                                        message.supportedServiceLevels[i] = 3;
+                                        break;
+                                    case "FLEX":
+                                    case 4:
+                                        message.supportedServiceLevels[i] = 4;
+                                        break;
+                                    }
+                            }
+                            if (object.supportedFlexPerformance) {
+                                if (!Array.isArray(object.supportedFlexPerformance))
+                                    throw TypeError(".google.cloud.netapp.v1.LocationMetadata.supportedFlexPerformance: array expected");
+                                message.supportedFlexPerformance = [];
+                                for (var i = 0; i < object.supportedFlexPerformance.length; ++i)
+                                    switch (object.supportedFlexPerformance[i]) {
+                                    default:
+                                        if (typeof object.supportedFlexPerformance[i] === "number") {
+                                            message.supportedFlexPerformance[i] = object.supportedFlexPerformance[i];
+                                            break;
+                                        }
+                                    case "FLEX_PERFORMANCE_UNSPECIFIED":
+                                    case 0:
+                                        message.supportedFlexPerformance[i] = 0;
+                                        break;
+                                    case "FLEX_PERFORMANCE_DEFAULT":
+                                    case 1:
+                                        message.supportedFlexPerformance[i] = 1;
+                                        break;
+                                    case "FLEX_PERFORMANCE_CUSTOM":
+                                    case 2:
+                                        message.supportedFlexPerformance[i] = 2;
+                                        break;
+                                    }
+                            }
+                            if (object.hasVcp != null)
+                                message.hasVcp = Boolean(object.hasVcp);
+                            return message;
+                        };
+    
+                        /**
+                         * Creates a plain object from a LocationMetadata message. Also converts values to other types if specified.
+                         * @function toObject
+                         * @memberof google.cloud.netapp.v1.LocationMetadata
+                         * @static
+                         * @param {google.cloud.netapp.v1.LocationMetadata} message LocationMetadata
+                         * @param {$protobuf.IConversionOptions} [options] Conversion options
+                         * @returns {Object.<string,*>} Plain object
+                         */
+                        LocationMetadata.toObject = function toObject(message, options) {
+                            if (!options)
+                                options = {};
+                            var object = {};
+                            if (options.arrays || options.defaults) {
+                                object.supportedServiceLevels = [];
+                                object.supportedFlexPerformance = [];
+                            }
+                            if (options.defaults)
+                                object.hasVcp = false;
+                            if (message.supportedServiceLevels && message.supportedServiceLevels.length) {
+                                object.supportedServiceLevels = [];
+                                for (var j = 0; j < message.supportedServiceLevels.length; ++j)
+                                    object.supportedServiceLevels[j] = options.enums === String ? $root.google.cloud.netapp.v1.ServiceLevel[message.supportedServiceLevels[j]] === undefined ? message.supportedServiceLevels[j] : $root.google.cloud.netapp.v1.ServiceLevel[message.supportedServiceLevels[j]] : message.supportedServiceLevels[j];
+                            }
+                            if (message.supportedFlexPerformance && message.supportedFlexPerformance.length) {
+                                object.supportedFlexPerformance = [];
+                                for (var j = 0; j < message.supportedFlexPerformance.length; ++j)
+                                    object.supportedFlexPerformance[j] = options.enums === String ? $root.google.cloud.netapp.v1.FlexPerformance[message.supportedFlexPerformance[j]] === undefined ? message.supportedFlexPerformance[j] : $root.google.cloud.netapp.v1.FlexPerformance[message.supportedFlexPerformance[j]] : message.supportedFlexPerformance[j];
+                            }
+                            if (message.hasVcp != null && message.hasOwnProperty("hasVcp"))
+                                object.hasVcp = message.hasVcp;
+                            return object;
+                        };
+    
+                        /**
+                         * Converts this LocationMetadata to JSON.
+                         * @function toJSON
+                         * @memberof google.cloud.netapp.v1.LocationMetadata
+                         * @instance
+                         * @returns {Object.<string,*>} JSON object
+                         */
+                        LocationMetadata.prototype.toJSON = function toJSON() {
+                            return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+                        };
+    
+                        /**
+                         * Gets the default type url for LocationMetadata
+                         * @function getTypeUrl
+                         * @memberof google.cloud.netapp.v1.LocationMetadata
+                         * @static
+                         * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                         * @returns {string} The default type url
+                         */
+                        LocationMetadata.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+                            if (typeUrlPrefix === undefined) {
+                                typeUrlPrefix = "type.googleapis.com";
+                            }
+                            return typeUrlPrefix + "/google.cloud.netapp.v1.LocationMetadata";
+                        };
+    
+                        return LocationMetadata;
+                    })();
+    
+                    v1.UserCommands = (function() {
+    
+                        /**
+                         * Properties of a UserCommands.
+                         * @memberof google.cloud.netapp.v1
+                         * @interface IUserCommands
+                         * @property {Array.<string>|null} [commands] UserCommands commands
+                         */
+    
+                        /**
+                         * Constructs a new UserCommands.
+                         * @memberof google.cloud.netapp.v1
+                         * @classdesc Represents a UserCommands.
+                         * @implements IUserCommands
+                         * @constructor
+                         * @param {google.cloud.netapp.v1.IUserCommands=} [properties] Properties to set
+                         */
+                        function UserCommands(properties) {
+                            this.commands = [];
+                            if (properties)
+                                for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                                    if (properties[keys[i]] != null)
+                                        this[keys[i]] = properties[keys[i]];
+                        }
+    
+                        /**
+                         * UserCommands commands.
+                         * @member {Array.<string>} commands
+                         * @memberof google.cloud.netapp.v1.UserCommands
+                         * @instance
+                         */
+                        UserCommands.prototype.commands = $util.emptyArray;
+    
+                        /**
+                         * Creates a new UserCommands instance using the specified properties.
+                         * @function create
+                         * @memberof google.cloud.netapp.v1.UserCommands
+                         * @static
+                         * @param {google.cloud.netapp.v1.IUserCommands=} [properties] Properties to set
+                         * @returns {google.cloud.netapp.v1.UserCommands} UserCommands instance
+                         */
+                        UserCommands.create = function create(properties) {
+                            return new UserCommands(properties);
+                        };
+    
+                        /**
+                         * Encodes the specified UserCommands message. Does not implicitly {@link google.cloud.netapp.v1.UserCommands.verify|verify} messages.
+                         * @function encode
+                         * @memberof google.cloud.netapp.v1.UserCommands
+                         * @static
+                         * @param {google.cloud.netapp.v1.IUserCommands} message UserCommands message or plain object to encode
+                         * @param {$protobuf.Writer} [writer] Writer to encode to
+                         * @returns {$protobuf.Writer} Writer
+                         */
+                        UserCommands.encode = function encode(message, writer) {
+                            if (!writer)
+                                writer = $Writer.create();
+                            if (message.commands != null && message.commands.length)
+                                for (var i = 0; i < message.commands.length; ++i)
+                                    writer.uint32(/* id 1, wireType 2 =*/10).string(message.commands[i]);
+                            return writer;
+                        };
+    
+                        /**
+                         * Encodes the specified UserCommands message, length delimited. Does not implicitly {@link google.cloud.netapp.v1.UserCommands.verify|verify} messages.
+                         * @function encodeDelimited
+                         * @memberof google.cloud.netapp.v1.UserCommands
+                         * @static
+                         * @param {google.cloud.netapp.v1.IUserCommands} message UserCommands message or plain object to encode
+                         * @param {$protobuf.Writer} [writer] Writer to encode to
+                         * @returns {$protobuf.Writer} Writer
+                         */
+                        UserCommands.encodeDelimited = function encodeDelimited(message, writer) {
+                            return this.encode(message, writer).ldelim();
+                        };
+    
+                        /**
+                         * Decodes a UserCommands message from the specified reader or buffer.
+                         * @function decode
+                         * @memberof google.cloud.netapp.v1.UserCommands
+                         * @static
+                         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                         * @param {number} [length] Message length if known beforehand
+                         * @returns {google.cloud.netapp.v1.UserCommands} UserCommands
+                         * @throws {Error} If the payload is not a reader or valid buffer
+                         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                         */
+                        UserCommands.decode = function decode(reader, length, error) {
+                            if (!(reader instanceof $Reader))
+                                reader = $Reader.create(reader);
+                            var end = length === undefined ? reader.len : reader.pos + length, message = new $root.google.cloud.netapp.v1.UserCommands();
+                            while (reader.pos < end) {
+                                var tag = reader.uint32();
+                                if (tag === error)
+                                    break;
+                                switch (tag >>> 3) {
+                                case 1: {
+                                        if (!(message.commands && message.commands.length))
+                                            message.commands = [];
+                                        message.commands.push(reader.string());
+                                        break;
+                                    }
+                                default:
+                                    reader.skipType(tag & 7);
+                                    break;
+                                }
+                            }
+                            return message;
+                        };
+    
+                        /**
+                         * Decodes a UserCommands message from the specified reader or buffer, length delimited.
+                         * @function decodeDelimited
+                         * @memberof google.cloud.netapp.v1.UserCommands
+                         * @static
+                         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                         * @returns {google.cloud.netapp.v1.UserCommands} UserCommands
+                         * @throws {Error} If the payload is not a reader or valid buffer
+                         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                         */
+                        UserCommands.decodeDelimited = function decodeDelimited(reader) {
+                            if (!(reader instanceof $Reader))
+                                reader = new $Reader(reader);
+                            return this.decode(reader, reader.uint32());
+                        };
+    
+                        /**
+                         * Verifies a UserCommands message.
+                         * @function verify
+                         * @memberof google.cloud.netapp.v1.UserCommands
+                         * @static
+                         * @param {Object.<string,*>} message Plain object to verify
+                         * @returns {string|null} `null` if valid, otherwise the reason why it is not
+                         */
+                        UserCommands.verify = function verify(message) {
+                            if (typeof message !== "object" || message === null)
+                                return "object expected";
+                            if (message.commands != null && message.hasOwnProperty("commands")) {
+                                if (!Array.isArray(message.commands))
+                                    return "commands: array expected";
+                                for (var i = 0; i < message.commands.length; ++i)
+                                    if (!$util.isString(message.commands[i]))
+                                        return "commands: string[] expected";
+                            }
+                            return null;
+                        };
+    
+                        /**
+                         * Creates a UserCommands message from a plain object. Also converts values to their respective internal types.
+                         * @function fromObject
+                         * @memberof google.cloud.netapp.v1.UserCommands
+                         * @static
+                         * @param {Object.<string,*>} object Plain object
+                         * @returns {google.cloud.netapp.v1.UserCommands} UserCommands
+                         */
+                        UserCommands.fromObject = function fromObject(object) {
+                            if (object instanceof $root.google.cloud.netapp.v1.UserCommands)
+                                return object;
+                            var message = new $root.google.cloud.netapp.v1.UserCommands();
+                            if (object.commands) {
+                                if (!Array.isArray(object.commands))
+                                    throw TypeError(".google.cloud.netapp.v1.UserCommands.commands: array expected");
+                                message.commands = [];
+                                for (var i = 0; i < object.commands.length; ++i)
+                                    message.commands[i] = String(object.commands[i]);
+                            }
+                            return message;
+                        };
+    
+                        /**
+                         * Creates a plain object from a UserCommands message. Also converts values to other types if specified.
+                         * @function toObject
+                         * @memberof google.cloud.netapp.v1.UserCommands
+                         * @static
+                         * @param {google.cloud.netapp.v1.UserCommands} message UserCommands
+                         * @param {$protobuf.IConversionOptions} [options] Conversion options
+                         * @returns {Object.<string,*>} Plain object
+                         */
+                        UserCommands.toObject = function toObject(message, options) {
+                            if (!options)
+                                options = {};
+                            var object = {};
+                            if (options.arrays || options.defaults)
+                                object.commands = [];
+                            if (message.commands && message.commands.length) {
+                                object.commands = [];
+                                for (var j = 0; j < message.commands.length; ++j)
+                                    object.commands[j] = message.commands[j];
+                            }
+                            return object;
+                        };
+    
+                        /**
+                         * Converts this UserCommands to JSON.
+                         * @function toJSON
+                         * @memberof google.cloud.netapp.v1.UserCommands
+                         * @instance
+                         * @returns {Object.<string,*>} JSON object
+                         */
+                        UserCommands.prototype.toJSON = function toJSON() {
+                            return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+                        };
+    
+                        /**
+                         * Gets the default type url for UserCommands
+                         * @function getTypeUrl
+                         * @memberof google.cloud.netapp.v1.UserCommands
+                         * @static
+                         * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                         * @returns {string} The default type url
+                         */
+                        UserCommands.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+                            if (typeUrlPrefix === undefined) {
+                                typeUrlPrefix = "type.googleapis.com";
+                            }
+                            return typeUrlPrefix + "/google.cloud.netapp.v1.UserCommands";
+                        };
+    
+                        return UserCommands;
+                    })();
+    
+                    /**
                      * Protocols enum.
                      * @name google.cloud.netapp.v1.Protocols
                      * @enum {number}
@@ -22820,6 +23570,8 @@
                          * @property {string|null} [zone] Volume zone
                          * @property {number|Long|null} [coldTierSizeGib] Volume coldTierSizeGib
                          * @property {google.cloud.netapp.v1.IHybridReplicationParameters|null} [hybridReplicationParameters] Volume hybridReplicationParameters
+                         * @property {number|null} [throughputMibps] Volume throughputMibps
+                         * @property {number|Long|null} [hotTierSizeUsedGib] Volume hotTierSizeUsedGib
                          */
     
                         /**
@@ -23146,6 +23898,22 @@
                          */
                         Volume.prototype.hybridReplicationParameters = null;
     
+                        /**
+                         * Volume throughputMibps.
+                         * @member {number} throughputMibps
+                         * @memberof google.cloud.netapp.v1.Volume
+                         * @instance
+                         */
+                        Volume.prototype.throughputMibps = 0;
+    
+                        /**
+                         * Volume hotTierSizeUsedGib.
+                         * @member {number|Long} hotTierSizeUsedGib
+                         * @memberof google.cloud.netapp.v1.Volume
+                         * @instance
+                         */
+                        Volume.prototype.hotTierSizeUsedGib = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+    
                         // OneOf field names bound to virtual getters and setters
                         var $oneOfFields;
     
@@ -23275,6 +24043,10 @@
                                 writer.uint32(/* id 39, wireType 0 =*/312).int64(message.coldTierSizeGib);
                             if (message.hybridReplicationParameters != null && Object.hasOwnProperty.call(message, "hybridReplicationParameters"))
                                 $root.google.cloud.netapp.v1.HybridReplicationParameters.encode(message.hybridReplicationParameters, writer.uint32(/* id 40, wireType 2 =*/322).fork()).ldelim();
+                            if (message.throughputMibps != null && Object.hasOwnProperty.call(message, "throughputMibps"))
+                                writer.uint32(/* id 41, wireType 1 =*/329).double(message.throughputMibps);
+                            if (message.hotTierSizeUsedGib != null && Object.hasOwnProperty.call(message, "hotTierSizeUsedGib"))
+                                writer.uint32(/* id 44, wireType 0 =*/352).int64(message.hotTierSizeUsedGib);
                             return writer;
                         };
     
@@ -23503,6 +24275,14 @@
                                     }
                                 case 40: {
                                         message.hybridReplicationParameters = $root.google.cloud.netapp.v1.HybridReplicationParameters.decode(reader, reader.uint32());
+                                        break;
+                                    }
+                                case 41: {
+                                        message.throughputMibps = reader.double();
+                                        break;
+                                    }
+                                case 44: {
+                                        message.hotTierSizeUsedGib = reader.int64();
                                         break;
                                     }
                                 default:
@@ -23756,6 +24536,12 @@
                                 if (error)
                                     return "hybridReplicationParameters." + error;
                             }
+                            if (message.throughputMibps != null && message.hasOwnProperty("throughputMibps"))
+                                if (typeof message.throughputMibps !== "number")
+                                    return "throughputMibps: number expected";
+                            if (message.hotTierSizeUsedGib != null && message.hasOwnProperty("hotTierSizeUsedGib"))
+                                if (!$util.isInteger(message.hotTierSizeUsedGib) && !(message.hotTierSizeUsedGib && $util.isInteger(message.hotTierSizeUsedGib.low) && $util.isInteger(message.hotTierSizeUsedGib.high)))
+                                    return "hotTierSizeUsedGib: integer|Long expected";
                             return null;
                         };
     
@@ -24107,6 +24893,17 @@
                                     throw TypeError(".google.cloud.netapp.v1.Volume.hybridReplicationParameters: object expected");
                                 message.hybridReplicationParameters = $root.google.cloud.netapp.v1.HybridReplicationParameters.fromObject(object.hybridReplicationParameters);
                             }
+                            if (object.throughputMibps != null)
+                                message.throughputMibps = Number(object.throughputMibps);
+                            if (object.hotTierSizeUsedGib != null)
+                                if ($util.Long)
+                                    (message.hotTierSizeUsedGib = $util.Long.fromValue(object.hotTierSizeUsedGib)).unsigned = false;
+                                else if (typeof object.hotTierSizeUsedGib === "string")
+                                    message.hotTierSizeUsedGib = parseInt(object.hotTierSizeUsedGib, 10);
+                                else if (typeof object.hotTierSizeUsedGib === "number")
+                                    message.hotTierSizeUsedGib = object.hotTierSizeUsedGib;
+                                else if (typeof object.hotTierSizeUsedGib === "object")
+                                    message.hotTierSizeUsedGib = new $util.LongBits(object.hotTierSizeUsedGib.low >>> 0, object.hotTierSizeUsedGib.high >>> 0).toNumber();
                             return message;
                         };
     
@@ -24175,6 +24972,12 @@
                                 } else
                                     object.coldTierSizeGib = options.longs === String ? "0" : 0;
                                 object.hybridReplicationParameters = null;
+                                object.throughputMibps = 0;
+                                if ($util.Long) {
+                                    var long = new $util.Long(0, 0, false);
+                                    object.hotTierSizeUsedGib = options.longs === String ? long.toString() : options.longs === Number ? long.toNumber() : long;
+                                } else
+                                    object.hotTierSizeUsedGib = options.longs === String ? "0" : 0;
                             }
                             if (message.name != null && message.hasOwnProperty("name"))
                                 object.name = message.name;
@@ -24283,6 +25086,13 @@
                                     object.coldTierSizeGib = options.longs === String ? $util.Long.prototype.toString.call(message.coldTierSizeGib) : options.longs === Number ? new $util.LongBits(message.coldTierSizeGib.low >>> 0, message.coldTierSizeGib.high >>> 0).toNumber() : message.coldTierSizeGib;
                             if (message.hybridReplicationParameters != null && message.hasOwnProperty("hybridReplicationParameters"))
                                 object.hybridReplicationParameters = $root.google.cloud.netapp.v1.HybridReplicationParameters.toObject(message.hybridReplicationParameters, options);
+                            if (message.throughputMibps != null && message.hasOwnProperty("throughputMibps"))
+                                object.throughputMibps = options.json && !isFinite(message.throughputMibps) ? String(message.throughputMibps) : message.throughputMibps;
+                            if (message.hotTierSizeUsedGib != null && message.hasOwnProperty("hotTierSizeUsedGib"))
+                                if (typeof message.hotTierSizeUsedGib === "number")
+                                    object.hotTierSizeUsedGib = options.longs === String ? String(message.hotTierSizeUsedGib) : message.hotTierSizeUsedGib;
+                                else
+                                    object.hotTierSizeUsedGib = options.longs === String ? $util.Long.prototype.toString.call(message.hotTierSizeUsedGib) : options.longs === Number ? new $util.LongBits(message.hotTierSizeUsedGib.low >>> 0, message.hotTierSizeUsedGib.high >>> 0).toNumber() : message.hotTierSizeUsedGib;
                             return object;
                         };
     
@@ -27603,6 +28413,7 @@
                          * @interface ITieringPolicy
                          * @property {google.cloud.netapp.v1.TieringPolicy.TierAction|null} [tierAction] TieringPolicy tierAction
                          * @property {number|null} [coolingThresholdDays] TieringPolicy coolingThresholdDays
+                         * @property {boolean|null} [hotTierBypassModeEnabled] TieringPolicy hotTierBypassModeEnabled
                          */
     
                         /**
@@ -27636,6 +28447,14 @@
                          */
                         TieringPolicy.prototype.coolingThresholdDays = null;
     
+                        /**
+                         * TieringPolicy hotTierBypassModeEnabled.
+                         * @member {boolean|null|undefined} hotTierBypassModeEnabled
+                         * @memberof google.cloud.netapp.v1.TieringPolicy
+                         * @instance
+                         */
+                        TieringPolicy.prototype.hotTierBypassModeEnabled = null;
+    
                         // OneOf field names bound to virtual getters and setters
                         var $oneOfFields;
     
@@ -27648,6 +28467,12 @@
                         // Virtual OneOf for proto3 optional field
                         Object.defineProperty(TieringPolicy.prototype, "_coolingThresholdDays", {
                             get: $util.oneOfGetter($oneOfFields = ["coolingThresholdDays"]),
+                            set: $util.oneOfSetter($oneOfFields)
+                        });
+    
+                        // Virtual OneOf for proto3 optional field
+                        Object.defineProperty(TieringPolicy.prototype, "_hotTierBypassModeEnabled", {
+                            get: $util.oneOfGetter($oneOfFields = ["hotTierBypassModeEnabled"]),
                             set: $util.oneOfSetter($oneOfFields)
                         });
     
@@ -27679,6 +28504,8 @@
                                 writer.uint32(/* id 1, wireType 0 =*/8).int32(message.tierAction);
                             if (message.coolingThresholdDays != null && Object.hasOwnProperty.call(message, "coolingThresholdDays"))
                                 writer.uint32(/* id 2, wireType 0 =*/16).int32(message.coolingThresholdDays);
+                            if (message.hotTierBypassModeEnabled != null && Object.hasOwnProperty.call(message, "hotTierBypassModeEnabled"))
+                                writer.uint32(/* id 3, wireType 0 =*/24).bool(message.hotTierBypassModeEnabled);
                             return writer;
                         };
     
@@ -27721,6 +28548,10 @@
                                     }
                                 case 2: {
                                         message.coolingThresholdDays = reader.int32();
+                                        break;
+                                    }
+                                case 3: {
+                                        message.hotTierBypassModeEnabled = reader.bool();
                                         break;
                                     }
                                 default:
@@ -27775,6 +28606,11 @@
                                 if (!$util.isInteger(message.coolingThresholdDays))
                                     return "coolingThresholdDays: integer expected";
                             }
+                            if (message.hotTierBypassModeEnabled != null && message.hasOwnProperty("hotTierBypassModeEnabled")) {
+                                properties._hotTierBypassModeEnabled = 1;
+                                if (typeof message.hotTierBypassModeEnabled !== "boolean")
+                                    return "hotTierBypassModeEnabled: boolean expected";
+                            }
                             return null;
                         };
     
@@ -27812,6 +28648,8 @@
                             }
                             if (object.coolingThresholdDays != null)
                                 message.coolingThresholdDays = object.coolingThresholdDays | 0;
+                            if (object.hotTierBypassModeEnabled != null)
+                                message.hotTierBypassModeEnabled = Boolean(object.hotTierBypassModeEnabled);
                             return message;
                         };
     
@@ -27837,6 +28675,11 @@
                                 object.coolingThresholdDays = message.coolingThresholdDays;
                                 if (options.oneofs)
                                     object._coolingThresholdDays = "coolingThresholdDays";
+                            }
+                            if (message.hotTierBypassModeEnabled != null && message.hasOwnProperty("hotTierBypassModeEnabled")) {
+                                object.hotTierBypassModeEnabled = message.hotTierBypassModeEnabled;
+                                if (options.oneofs)
+                                    object._hotTierBypassModeEnabled = "hotTierBypassModeEnabled";
                             }
                             return object;
                         };
@@ -27900,6 +28743,9 @@
                          * @property {string|null} [clusterLocation] HybridReplicationParameters clusterLocation
                          * @property {string|null} [description] HybridReplicationParameters description
                          * @property {Object.<string,string>|null} [labels] HybridReplicationParameters labels
+                         * @property {google.cloud.netapp.v1.HybridReplicationSchedule|null} [replicationSchedule] HybridReplicationParameters replicationSchedule
+                         * @property {google.cloud.netapp.v1.HybridReplicationParameters.VolumeHybridReplicationType|null} [hybridReplicationType] HybridReplicationParameters hybridReplicationType
+                         * @property {number|null} [largeVolumeConstituentCount] HybridReplicationParameters largeVolumeConstituentCount
                          */
     
                         /**
@@ -27984,6 +28830,30 @@
                         HybridReplicationParameters.prototype.labels = $util.emptyObject;
     
                         /**
+                         * HybridReplicationParameters replicationSchedule.
+                         * @member {google.cloud.netapp.v1.HybridReplicationSchedule} replicationSchedule
+                         * @memberof google.cloud.netapp.v1.HybridReplicationParameters
+                         * @instance
+                         */
+                        HybridReplicationParameters.prototype.replicationSchedule = 0;
+    
+                        /**
+                         * HybridReplicationParameters hybridReplicationType.
+                         * @member {google.cloud.netapp.v1.HybridReplicationParameters.VolumeHybridReplicationType} hybridReplicationType
+                         * @memberof google.cloud.netapp.v1.HybridReplicationParameters
+                         * @instance
+                         */
+                        HybridReplicationParameters.prototype.hybridReplicationType = 0;
+    
+                        /**
+                         * HybridReplicationParameters largeVolumeConstituentCount.
+                         * @member {number} largeVolumeConstituentCount
+                         * @memberof google.cloud.netapp.v1.HybridReplicationParameters
+                         * @instance
+                         */
+                        HybridReplicationParameters.prototype.largeVolumeConstituentCount = 0;
+    
+                        /**
                          * Creates a new HybridReplicationParameters instance using the specified properties.
                          * @function create
                          * @memberof google.cloud.netapp.v1.HybridReplicationParameters
@@ -28025,6 +28895,12 @@
                             if (message.labels != null && Object.hasOwnProperty.call(message, "labels"))
                                 for (var keys = Object.keys(message.labels), i = 0; i < keys.length; ++i)
                                     writer.uint32(/* id 8, wireType 2 =*/66).fork().uint32(/* id 1, wireType 2 =*/10).string(keys[i]).uint32(/* id 2, wireType 2 =*/18).string(message.labels[keys[i]]).ldelim();
+                            if (message.replicationSchedule != null && Object.hasOwnProperty.call(message, "replicationSchedule"))
+                                writer.uint32(/* id 9, wireType 0 =*/72).int32(message.replicationSchedule);
+                            if (message.hybridReplicationType != null && Object.hasOwnProperty.call(message, "hybridReplicationType"))
+                                writer.uint32(/* id 10, wireType 0 =*/80).int32(message.hybridReplicationType);
+                            if (message.largeVolumeConstituentCount != null && Object.hasOwnProperty.call(message, "largeVolumeConstituentCount"))
+                                writer.uint32(/* id 11, wireType 0 =*/88).int32(message.largeVolumeConstituentCount);
                             return writer;
                         };
     
@@ -28114,6 +28990,18 @@
                                         message.labels[key] = value;
                                         break;
                                     }
+                                case 9: {
+                                        message.replicationSchedule = reader.int32();
+                                        break;
+                                    }
+                                case 10: {
+                                        message.hybridReplicationType = reader.int32();
+                                        break;
+                                    }
+                                case 11: {
+                                        message.largeVolumeConstituentCount = reader.int32();
+                                        break;
+                                    }
                                 default:
                                     reader.skipType(tag & 7);
                                     break;
@@ -28182,6 +29070,30 @@
                                     if (!$util.isString(message.labels[key[i]]))
                                         return "labels: string{k:string} expected";
                             }
+                            if (message.replicationSchedule != null && message.hasOwnProperty("replicationSchedule"))
+                                switch (message.replicationSchedule) {
+                                default:
+                                    return "replicationSchedule: enum value expected";
+                                case 0:
+                                case 1:
+                                case 2:
+                                case 3:
+                                    break;
+                                }
+                            if (message.hybridReplicationType != null && message.hasOwnProperty("hybridReplicationType"))
+                                switch (message.hybridReplicationType) {
+                                default:
+                                    return "hybridReplicationType: enum value expected";
+                                case 0:
+                                case 1:
+                                case 2:
+                                case 3:
+                                case 4:
+                                    break;
+                                }
+                            if (message.largeVolumeConstituentCount != null && message.hasOwnProperty("largeVolumeConstituentCount"))
+                                if (!$util.isInteger(message.largeVolumeConstituentCount))
+                                    return "largeVolumeConstituentCount: integer expected";
                             return null;
                         };
     
@@ -28223,6 +29135,60 @@
                                 for (var keys = Object.keys(object.labels), i = 0; i < keys.length; ++i)
                                     message.labels[keys[i]] = String(object.labels[keys[i]]);
                             }
+                            switch (object.replicationSchedule) {
+                            default:
+                                if (typeof object.replicationSchedule === "number") {
+                                    message.replicationSchedule = object.replicationSchedule;
+                                    break;
+                                }
+                                break;
+                            case "HYBRID_REPLICATION_SCHEDULE_UNSPECIFIED":
+                            case 0:
+                                message.replicationSchedule = 0;
+                                break;
+                            case "EVERY_10_MINUTES":
+                            case 1:
+                                message.replicationSchedule = 1;
+                                break;
+                            case "HOURLY":
+                            case 2:
+                                message.replicationSchedule = 2;
+                                break;
+                            case "DAILY":
+                            case 3:
+                                message.replicationSchedule = 3;
+                                break;
+                            }
+                            switch (object.hybridReplicationType) {
+                            default:
+                                if (typeof object.hybridReplicationType === "number") {
+                                    message.hybridReplicationType = object.hybridReplicationType;
+                                    break;
+                                }
+                                break;
+                            case "VOLUME_HYBRID_REPLICATION_TYPE_UNSPECIFIED":
+                            case 0:
+                                message.hybridReplicationType = 0;
+                                break;
+                            case "MIGRATION":
+                            case 1:
+                                message.hybridReplicationType = 1;
+                                break;
+                            case "CONTINUOUS_REPLICATION":
+                            case 2:
+                                message.hybridReplicationType = 2;
+                                break;
+                            case "ONPREM_REPLICATION":
+                            case 3:
+                                message.hybridReplicationType = 3;
+                                break;
+                            case "REVERSE_ONPREM_REPLICATION":
+                            case 4:
+                                message.hybridReplicationType = 4;
+                                break;
+                            }
+                            if (object.largeVolumeConstituentCount != null)
+                                message.largeVolumeConstituentCount = object.largeVolumeConstituentCount | 0;
                             return message;
                         };
     
@@ -28250,6 +29216,9 @@
                                 object.peerSvmName = "";
                                 object.clusterLocation = "";
                                 object.description = "";
+                                object.replicationSchedule = options.enums === String ? "HYBRID_REPLICATION_SCHEDULE_UNSPECIFIED" : 0;
+                                object.hybridReplicationType = options.enums === String ? "VOLUME_HYBRID_REPLICATION_TYPE_UNSPECIFIED" : 0;
+                                object.largeVolumeConstituentCount = 0;
                             }
                             if (message.replication != null && message.hasOwnProperty("replication"))
                                 object.replication = message.replication;
@@ -28274,6 +29243,12 @@
                                 for (var j = 0; j < keys2.length; ++j)
                                     object.labels[keys2[j]] = message.labels[keys2[j]];
                             }
+                            if (message.replicationSchedule != null && message.hasOwnProperty("replicationSchedule"))
+                                object.replicationSchedule = options.enums === String ? $root.google.cloud.netapp.v1.HybridReplicationSchedule[message.replicationSchedule] === undefined ? message.replicationSchedule : $root.google.cloud.netapp.v1.HybridReplicationSchedule[message.replicationSchedule] : message.replicationSchedule;
+                            if (message.hybridReplicationType != null && message.hasOwnProperty("hybridReplicationType"))
+                                object.hybridReplicationType = options.enums === String ? $root.google.cloud.netapp.v1.HybridReplicationParameters.VolumeHybridReplicationType[message.hybridReplicationType] === undefined ? message.hybridReplicationType : $root.google.cloud.netapp.v1.HybridReplicationParameters.VolumeHybridReplicationType[message.hybridReplicationType] : message.hybridReplicationType;
+                            if (message.largeVolumeConstituentCount != null && message.hasOwnProperty("largeVolumeConstituentCount"))
+                                object.largeVolumeConstituentCount = message.largeVolumeConstituentCount;
                             return object;
                         };
     
@@ -28303,408 +29278,27 @@
                             return typeUrlPrefix + "/google.cloud.netapp.v1.HybridReplicationParameters";
                         };
     
+                        /**
+                         * VolumeHybridReplicationType enum.
+                         * @name google.cloud.netapp.v1.HybridReplicationParameters.VolumeHybridReplicationType
+                         * @enum {number}
+                         * @property {number} VOLUME_HYBRID_REPLICATION_TYPE_UNSPECIFIED=0 VOLUME_HYBRID_REPLICATION_TYPE_UNSPECIFIED value
+                         * @property {number} MIGRATION=1 MIGRATION value
+                         * @property {number} CONTINUOUS_REPLICATION=2 CONTINUOUS_REPLICATION value
+                         * @property {number} ONPREM_REPLICATION=3 ONPREM_REPLICATION value
+                         * @property {number} REVERSE_ONPREM_REPLICATION=4 REVERSE_ONPREM_REPLICATION value
+                         */
+                        HybridReplicationParameters.VolumeHybridReplicationType = (function() {
+                            var valuesById = {}, values = Object.create(valuesById);
+                            values[valuesById[0] = "VOLUME_HYBRID_REPLICATION_TYPE_UNSPECIFIED"] = 0;
+                            values[valuesById[1] = "MIGRATION"] = 1;
+                            values[valuesById[2] = "CONTINUOUS_REPLICATION"] = 2;
+                            values[valuesById[3] = "ONPREM_REPLICATION"] = 3;
+                            values[valuesById[4] = "REVERSE_ONPREM_REPLICATION"] = 4;
+                            return values;
+                        })();
+    
                         return HybridReplicationParameters;
-                    })();
-    
-                    /**
-                     * ServiceLevel enum.
-                     * @name google.cloud.netapp.v1.ServiceLevel
-                     * @enum {number}
-                     * @property {number} SERVICE_LEVEL_UNSPECIFIED=0 SERVICE_LEVEL_UNSPECIFIED value
-                     * @property {number} PREMIUM=1 PREMIUM value
-                     * @property {number} EXTREME=2 EXTREME value
-                     * @property {number} STANDARD=3 STANDARD value
-                     * @property {number} FLEX=4 FLEX value
-                     */
-                    v1.ServiceLevel = (function() {
-                        var valuesById = {}, values = Object.create(valuesById);
-                        values[valuesById[0] = "SERVICE_LEVEL_UNSPECIFIED"] = 0;
-                        values[valuesById[1] = "PREMIUM"] = 1;
-                        values[valuesById[2] = "EXTREME"] = 2;
-                        values[valuesById[3] = "STANDARD"] = 3;
-                        values[valuesById[4] = "FLEX"] = 4;
-                        return values;
-                    })();
-    
-                    /**
-                     * FlexPerformance enum.
-                     * @name google.cloud.netapp.v1.FlexPerformance
-                     * @enum {number}
-                     * @property {number} FLEX_PERFORMANCE_UNSPECIFIED=0 FLEX_PERFORMANCE_UNSPECIFIED value
-                     * @property {number} FLEX_PERFORMANCE_DEFAULT=1 FLEX_PERFORMANCE_DEFAULT value
-                     * @property {number} FLEX_PERFORMANCE_CUSTOM=2 FLEX_PERFORMANCE_CUSTOM value
-                     */
-                    v1.FlexPerformance = (function() {
-                        var valuesById = {}, values = Object.create(valuesById);
-                        values[valuesById[0] = "FLEX_PERFORMANCE_UNSPECIFIED"] = 0;
-                        values[valuesById[1] = "FLEX_PERFORMANCE_DEFAULT"] = 1;
-                        values[valuesById[2] = "FLEX_PERFORMANCE_CUSTOM"] = 2;
-                        return values;
-                    })();
-    
-                    /**
-                     * EncryptionType enum.
-                     * @name google.cloud.netapp.v1.EncryptionType
-                     * @enum {number}
-                     * @property {number} ENCRYPTION_TYPE_UNSPECIFIED=0 ENCRYPTION_TYPE_UNSPECIFIED value
-                     * @property {number} SERVICE_MANAGED=1 SERVICE_MANAGED value
-                     * @property {number} CLOUD_KMS=2 CLOUD_KMS value
-                     */
-                    v1.EncryptionType = (function() {
-                        var valuesById = {}, values = Object.create(valuesById);
-                        values[valuesById[0] = "ENCRYPTION_TYPE_UNSPECIFIED"] = 0;
-                        values[valuesById[1] = "SERVICE_MANAGED"] = 1;
-                        values[valuesById[2] = "CLOUD_KMS"] = 2;
-                        return values;
-                    })();
-    
-                    /**
-                     * DirectoryServiceType enum.
-                     * @name google.cloud.netapp.v1.DirectoryServiceType
-                     * @enum {number}
-                     * @property {number} DIRECTORY_SERVICE_TYPE_UNSPECIFIED=0 DIRECTORY_SERVICE_TYPE_UNSPECIFIED value
-                     * @property {number} ACTIVE_DIRECTORY=1 ACTIVE_DIRECTORY value
-                     */
-                    v1.DirectoryServiceType = (function() {
-                        var valuesById = {}, values = Object.create(valuesById);
-                        values[valuesById[0] = "DIRECTORY_SERVICE_TYPE_UNSPECIFIED"] = 0;
-                        values[valuesById[1] = "ACTIVE_DIRECTORY"] = 1;
-                        return values;
-                    })();
-    
-                    v1.LocationMetadata = (function() {
-    
-                        /**
-                         * Properties of a LocationMetadata.
-                         * @memberof google.cloud.netapp.v1
-                         * @interface ILocationMetadata
-                         * @property {Array.<google.cloud.netapp.v1.ServiceLevel>|null} [supportedServiceLevels] LocationMetadata supportedServiceLevels
-                         * @property {Array.<google.cloud.netapp.v1.FlexPerformance>|null} [supportedFlexPerformance] LocationMetadata supportedFlexPerformance
-                         */
-    
-                        /**
-                         * Constructs a new LocationMetadata.
-                         * @memberof google.cloud.netapp.v1
-                         * @classdesc Represents a LocationMetadata.
-                         * @implements ILocationMetadata
-                         * @constructor
-                         * @param {google.cloud.netapp.v1.ILocationMetadata=} [properties] Properties to set
-                         */
-                        function LocationMetadata(properties) {
-                            this.supportedServiceLevels = [];
-                            this.supportedFlexPerformance = [];
-                            if (properties)
-                                for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                                    if (properties[keys[i]] != null)
-                                        this[keys[i]] = properties[keys[i]];
-                        }
-    
-                        /**
-                         * LocationMetadata supportedServiceLevels.
-                         * @member {Array.<google.cloud.netapp.v1.ServiceLevel>} supportedServiceLevels
-                         * @memberof google.cloud.netapp.v1.LocationMetadata
-                         * @instance
-                         */
-                        LocationMetadata.prototype.supportedServiceLevels = $util.emptyArray;
-    
-                        /**
-                         * LocationMetadata supportedFlexPerformance.
-                         * @member {Array.<google.cloud.netapp.v1.FlexPerformance>} supportedFlexPerformance
-                         * @memberof google.cloud.netapp.v1.LocationMetadata
-                         * @instance
-                         */
-                        LocationMetadata.prototype.supportedFlexPerformance = $util.emptyArray;
-    
-                        /**
-                         * Creates a new LocationMetadata instance using the specified properties.
-                         * @function create
-                         * @memberof google.cloud.netapp.v1.LocationMetadata
-                         * @static
-                         * @param {google.cloud.netapp.v1.ILocationMetadata=} [properties] Properties to set
-                         * @returns {google.cloud.netapp.v1.LocationMetadata} LocationMetadata instance
-                         */
-                        LocationMetadata.create = function create(properties) {
-                            return new LocationMetadata(properties);
-                        };
-    
-                        /**
-                         * Encodes the specified LocationMetadata message. Does not implicitly {@link google.cloud.netapp.v1.LocationMetadata.verify|verify} messages.
-                         * @function encode
-                         * @memberof google.cloud.netapp.v1.LocationMetadata
-                         * @static
-                         * @param {google.cloud.netapp.v1.ILocationMetadata} message LocationMetadata message or plain object to encode
-                         * @param {$protobuf.Writer} [writer] Writer to encode to
-                         * @returns {$protobuf.Writer} Writer
-                         */
-                        LocationMetadata.encode = function encode(message, writer) {
-                            if (!writer)
-                                writer = $Writer.create();
-                            if (message.supportedServiceLevels != null && message.supportedServiceLevels.length) {
-                                writer.uint32(/* id 1, wireType 2 =*/10).fork();
-                                for (var i = 0; i < message.supportedServiceLevels.length; ++i)
-                                    writer.int32(message.supportedServiceLevels[i]);
-                                writer.ldelim();
-                            }
-                            if (message.supportedFlexPerformance != null && message.supportedFlexPerformance.length) {
-                                writer.uint32(/* id 2, wireType 2 =*/18).fork();
-                                for (var i = 0; i < message.supportedFlexPerformance.length; ++i)
-                                    writer.int32(message.supportedFlexPerformance[i]);
-                                writer.ldelim();
-                            }
-                            return writer;
-                        };
-    
-                        /**
-                         * Encodes the specified LocationMetadata message, length delimited. Does not implicitly {@link google.cloud.netapp.v1.LocationMetadata.verify|verify} messages.
-                         * @function encodeDelimited
-                         * @memberof google.cloud.netapp.v1.LocationMetadata
-                         * @static
-                         * @param {google.cloud.netapp.v1.ILocationMetadata} message LocationMetadata message or plain object to encode
-                         * @param {$protobuf.Writer} [writer] Writer to encode to
-                         * @returns {$protobuf.Writer} Writer
-                         */
-                        LocationMetadata.encodeDelimited = function encodeDelimited(message, writer) {
-                            return this.encode(message, writer).ldelim();
-                        };
-    
-                        /**
-                         * Decodes a LocationMetadata message from the specified reader or buffer.
-                         * @function decode
-                         * @memberof google.cloud.netapp.v1.LocationMetadata
-                         * @static
-                         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
-                         * @param {number} [length] Message length if known beforehand
-                         * @returns {google.cloud.netapp.v1.LocationMetadata} LocationMetadata
-                         * @throws {Error} If the payload is not a reader or valid buffer
-                         * @throws {$protobuf.util.ProtocolError} If required fields are missing
-                         */
-                        LocationMetadata.decode = function decode(reader, length, error) {
-                            if (!(reader instanceof $Reader))
-                                reader = $Reader.create(reader);
-                            var end = length === undefined ? reader.len : reader.pos + length, message = new $root.google.cloud.netapp.v1.LocationMetadata();
-                            while (reader.pos < end) {
-                                var tag = reader.uint32();
-                                if (tag === error)
-                                    break;
-                                switch (tag >>> 3) {
-                                case 1: {
-                                        if (!(message.supportedServiceLevels && message.supportedServiceLevels.length))
-                                            message.supportedServiceLevels = [];
-                                        if ((tag & 7) === 2) {
-                                            var end2 = reader.uint32() + reader.pos;
-                                            while (reader.pos < end2)
-                                                message.supportedServiceLevels.push(reader.int32());
-                                        } else
-                                            message.supportedServiceLevels.push(reader.int32());
-                                        break;
-                                    }
-                                case 2: {
-                                        if (!(message.supportedFlexPerformance && message.supportedFlexPerformance.length))
-                                            message.supportedFlexPerformance = [];
-                                        if ((tag & 7) === 2) {
-                                            var end2 = reader.uint32() + reader.pos;
-                                            while (reader.pos < end2)
-                                                message.supportedFlexPerformance.push(reader.int32());
-                                        } else
-                                            message.supportedFlexPerformance.push(reader.int32());
-                                        break;
-                                    }
-                                default:
-                                    reader.skipType(tag & 7);
-                                    break;
-                                }
-                            }
-                            return message;
-                        };
-    
-                        /**
-                         * Decodes a LocationMetadata message from the specified reader or buffer, length delimited.
-                         * @function decodeDelimited
-                         * @memberof google.cloud.netapp.v1.LocationMetadata
-                         * @static
-                         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
-                         * @returns {google.cloud.netapp.v1.LocationMetadata} LocationMetadata
-                         * @throws {Error} If the payload is not a reader or valid buffer
-                         * @throws {$protobuf.util.ProtocolError} If required fields are missing
-                         */
-                        LocationMetadata.decodeDelimited = function decodeDelimited(reader) {
-                            if (!(reader instanceof $Reader))
-                                reader = new $Reader(reader);
-                            return this.decode(reader, reader.uint32());
-                        };
-    
-                        /**
-                         * Verifies a LocationMetadata message.
-                         * @function verify
-                         * @memberof google.cloud.netapp.v1.LocationMetadata
-                         * @static
-                         * @param {Object.<string,*>} message Plain object to verify
-                         * @returns {string|null} `null` if valid, otherwise the reason why it is not
-                         */
-                        LocationMetadata.verify = function verify(message) {
-                            if (typeof message !== "object" || message === null)
-                                return "object expected";
-                            if (message.supportedServiceLevels != null && message.hasOwnProperty("supportedServiceLevels")) {
-                                if (!Array.isArray(message.supportedServiceLevels))
-                                    return "supportedServiceLevels: array expected";
-                                for (var i = 0; i < message.supportedServiceLevels.length; ++i)
-                                    switch (message.supportedServiceLevels[i]) {
-                                    default:
-                                        return "supportedServiceLevels: enum value[] expected";
-                                    case 0:
-                                    case 1:
-                                    case 2:
-                                    case 3:
-                                    case 4:
-                                        break;
-                                    }
-                            }
-                            if (message.supportedFlexPerformance != null && message.hasOwnProperty("supportedFlexPerformance")) {
-                                if (!Array.isArray(message.supportedFlexPerformance))
-                                    return "supportedFlexPerformance: array expected";
-                                for (var i = 0; i < message.supportedFlexPerformance.length; ++i)
-                                    switch (message.supportedFlexPerformance[i]) {
-                                    default:
-                                        return "supportedFlexPerformance: enum value[] expected";
-                                    case 0:
-                                    case 1:
-                                    case 2:
-                                        break;
-                                    }
-                            }
-                            return null;
-                        };
-    
-                        /**
-                         * Creates a LocationMetadata message from a plain object. Also converts values to their respective internal types.
-                         * @function fromObject
-                         * @memberof google.cloud.netapp.v1.LocationMetadata
-                         * @static
-                         * @param {Object.<string,*>} object Plain object
-                         * @returns {google.cloud.netapp.v1.LocationMetadata} LocationMetadata
-                         */
-                        LocationMetadata.fromObject = function fromObject(object) {
-                            if (object instanceof $root.google.cloud.netapp.v1.LocationMetadata)
-                                return object;
-                            var message = new $root.google.cloud.netapp.v1.LocationMetadata();
-                            if (object.supportedServiceLevels) {
-                                if (!Array.isArray(object.supportedServiceLevels))
-                                    throw TypeError(".google.cloud.netapp.v1.LocationMetadata.supportedServiceLevels: array expected");
-                                message.supportedServiceLevels = [];
-                                for (var i = 0; i < object.supportedServiceLevels.length; ++i)
-                                    switch (object.supportedServiceLevels[i]) {
-                                    default:
-                                        if (typeof object.supportedServiceLevels[i] === "number") {
-                                            message.supportedServiceLevels[i] = object.supportedServiceLevels[i];
-                                            break;
-                                        }
-                                    case "SERVICE_LEVEL_UNSPECIFIED":
-                                    case 0:
-                                        message.supportedServiceLevels[i] = 0;
-                                        break;
-                                    case "PREMIUM":
-                                    case 1:
-                                        message.supportedServiceLevels[i] = 1;
-                                        break;
-                                    case "EXTREME":
-                                    case 2:
-                                        message.supportedServiceLevels[i] = 2;
-                                        break;
-                                    case "STANDARD":
-                                    case 3:
-                                        message.supportedServiceLevels[i] = 3;
-                                        break;
-                                    case "FLEX":
-                                    case 4:
-                                        message.supportedServiceLevels[i] = 4;
-                                        break;
-                                    }
-                            }
-                            if (object.supportedFlexPerformance) {
-                                if (!Array.isArray(object.supportedFlexPerformance))
-                                    throw TypeError(".google.cloud.netapp.v1.LocationMetadata.supportedFlexPerformance: array expected");
-                                message.supportedFlexPerformance = [];
-                                for (var i = 0; i < object.supportedFlexPerformance.length; ++i)
-                                    switch (object.supportedFlexPerformance[i]) {
-                                    default:
-                                        if (typeof object.supportedFlexPerformance[i] === "number") {
-                                            message.supportedFlexPerformance[i] = object.supportedFlexPerformance[i];
-                                            break;
-                                        }
-                                    case "FLEX_PERFORMANCE_UNSPECIFIED":
-                                    case 0:
-                                        message.supportedFlexPerformance[i] = 0;
-                                        break;
-                                    case "FLEX_PERFORMANCE_DEFAULT":
-                                    case 1:
-                                        message.supportedFlexPerformance[i] = 1;
-                                        break;
-                                    case "FLEX_PERFORMANCE_CUSTOM":
-                                    case 2:
-                                        message.supportedFlexPerformance[i] = 2;
-                                        break;
-                                    }
-                            }
-                            return message;
-                        };
-    
-                        /**
-                         * Creates a plain object from a LocationMetadata message. Also converts values to other types if specified.
-                         * @function toObject
-                         * @memberof google.cloud.netapp.v1.LocationMetadata
-                         * @static
-                         * @param {google.cloud.netapp.v1.LocationMetadata} message LocationMetadata
-                         * @param {$protobuf.IConversionOptions} [options] Conversion options
-                         * @returns {Object.<string,*>} Plain object
-                         */
-                        LocationMetadata.toObject = function toObject(message, options) {
-                            if (!options)
-                                options = {};
-                            var object = {};
-                            if (options.arrays || options.defaults) {
-                                object.supportedServiceLevels = [];
-                                object.supportedFlexPerformance = [];
-                            }
-                            if (message.supportedServiceLevels && message.supportedServiceLevels.length) {
-                                object.supportedServiceLevels = [];
-                                for (var j = 0; j < message.supportedServiceLevels.length; ++j)
-                                    object.supportedServiceLevels[j] = options.enums === String ? $root.google.cloud.netapp.v1.ServiceLevel[message.supportedServiceLevels[j]] === undefined ? message.supportedServiceLevels[j] : $root.google.cloud.netapp.v1.ServiceLevel[message.supportedServiceLevels[j]] : message.supportedServiceLevels[j];
-                            }
-                            if (message.supportedFlexPerformance && message.supportedFlexPerformance.length) {
-                                object.supportedFlexPerformance = [];
-                                for (var j = 0; j < message.supportedFlexPerformance.length; ++j)
-                                    object.supportedFlexPerformance[j] = options.enums === String ? $root.google.cloud.netapp.v1.FlexPerformance[message.supportedFlexPerformance[j]] === undefined ? message.supportedFlexPerformance[j] : $root.google.cloud.netapp.v1.FlexPerformance[message.supportedFlexPerformance[j]] : message.supportedFlexPerformance[j];
-                            }
-                            return object;
-                        };
-    
-                        /**
-                         * Converts this LocationMetadata to JSON.
-                         * @function toJSON
-                         * @memberof google.cloud.netapp.v1.LocationMetadata
-                         * @instance
-                         * @returns {Object.<string,*>} JSON object
-                         */
-                        LocationMetadata.prototype.toJSON = function toJSON() {
-                            return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
-                        };
-    
-                        /**
-                         * Gets the default type url for LocationMetadata
-                         * @function getTypeUrl
-                         * @memberof google.cloud.netapp.v1.LocationMetadata
-                         * @static
-                         * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
-                         * @returns {string} The default type url
-                         */
-                        LocationMetadata.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
-                            if (typeUrlPrefix === undefined) {
-                                typeUrlPrefix = "type.googleapis.com";
-                            }
-                            return typeUrlPrefix + "/google.cloud.netapp.v1.LocationMetadata";
-                        };
-    
-                        return LocationMetadata;
                     })();
     
                     v1.ListSnapshotsRequest = (function() {
@@ -32384,6 +32978,12 @@
                          * @property {boolean|null} [customPerformanceEnabled] StoragePool customPerformanceEnabled
                          * @property {number|Long|null} [totalThroughputMibps] StoragePool totalThroughputMibps
                          * @property {number|Long|null} [totalIops] StoragePool totalIops
+                         * @property {number|Long|null} [hotTierSizeGib] StoragePool hotTierSizeGib
+                         * @property {boolean|null} [enableHotTierAutoResize] StoragePool enableHotTierAutoResize
+                         * @property {google.cloud.netapp.v1.QosType|null} [qosType] StoragePool qosType
+                         * @property {number|null} [availableThroughputMibps] StoragePool availableThroughputMibps
+                         * @property {number|Long|null} [coldTierSizeUsedGib] StoragePool coldTierSizeUsedGib
+                         * @property {number|Long|null} [hotTierSizeUsedGib] StoragePool hotTierSizeUsedGib
                          */
     
                         /**
@@ -32602,12 +33202,66 @@
                          */
                         StoragePool.prototype.totalIops = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
     
+                        /**
+                         * StoragePool hotTierSizeGib.
+                         * @member {number|Long} hotTierSizeGib
+                         * @memberof google.cloud.netapp.v1.StoragePool
+                         * @instance
+                         */
+                        StoragePool.prototype.hotTierSizeGib = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+    
+                        /**
+                         * StoragePool enableHotTierAutoResize.
+                         * @member {boolean|null|undefined} enableHotTierAutoResize
+                         * @memberof google.cloud.netapp.v1.StoragePool
+                         * @instance
+                         */
+                        StoragePool.prototype.enableHotTierAutoResize = null;
+    
+                        /**
+                         * StoragePool qosType.
+                         * @member {google.cloud.netapp.v1.QosType} qosType
+                         * @memberof google.cloud.netapp.v1.StoragePool
+                         * @instance
+                         */
+                        StoragePool.prototype.qosType = 0;
+    
+                        /**
+                         * StoragePool availableThroughputMibps.
+                         * @member {number} availableThroughputMibps
+                         * @memberof google.cloud.netapp.v1.StoragePool
+                         * @instance
+                         */
+                        StoragePool.prototype.availableThroughputMibps = 0;
+    
+                        /**
+                         * StoragePool coldTierSizeUsedGib.
+                         * @member {number|Long} coldTierSizeUsedGib
+                         * @memberof google.cloud.netapp.v1.StoragePool
+                         * @instance
+                         */
+                        StoragePool.prototype.coldTierSizeUsedGib = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+    
+                        /**
+                         * StoragePool hotTierSizeUsedGib.
+                         * @member {number|Long} hotTierSizeUsedGib
+                         * @memberof google.cloud.netapp.v1.StoragePool
+                         * @instance
+                         */
+                        StoragePool.prototype.hotTierSizeUsedGib = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+    
                         // OneOf field names bound to virtual getters and setters
                         var $oneOfFields;
     
                         // Virtual OneOf for proto3 optional field
                         Object.defineProperty(StoragePool.prototype, "_globalAccessAllowed", {
                             get: $util.oneOfGetter($oneOfFields = ["globalAccessAllowed"]),
+                            set: $util.oneOfSetter($oneOfFields)
+                        });
+    
+                        // Virtual OneOf for proto3 optional field
+                        Object.defineProperty(StoragePool.prototype, "_enableHotTierAutoResize", {
+                            get: $util.oneOfGetter($oneOfFields = ["enableHotTierAutoResize"]),
                             set: $util.oneOfSetter($oneOfFields)
                         });
     
@@ -32686,6 +33340,18 @@
                                 writer.uint32(/* id 26, wireType 0 =*/208).int64(message.totalThroughputMibps);
                             if (message.totalIops != null && Object.hasOwnProperty.call(message, "totalIops"))
                                 writer.uint32(/* id 27, wireType 0 =*/216).int64(message.totalIops);
+                            if (message.hotTierSizeGib != null && Object.hasOwnProperty.call(message, "hotTierSizeGib"))
+                                writer.uint32(/* id 28, wireType 0 =*/224).int64(message.hotTierSizeGib);
+                            if (message.enableHotTierAutoResize != null && Object.hasOwnProperty.call(message, "enableHotTierAutoResize"))
+                                writer.uint32(/* id 29, wireType 0 =*/232).bool(message.enableHotTierAutoResize);
+                            if (message.qosType != null && Object.hasOwnProperty.call(message, "qosType"))
+                                writer.uint32(/* id 30, wireType 0 =*/240).int32(message.qosType);
+                            if (message.availableThroughputMibps != null && Object.hasOwnProperty.call(message, "availableThroughputMibps"))
+                                writer.uint32(/* id 31, wireType 1 =*/249).double(message.availableThroughputMibps);
+                            if (message.coldTierSizeUsedGib != null && Object.hasOwnProperty.call(message, "coldTierSizeUsedGib"))
+                                writer.uint32(/* id 33, wireType 0 =*/264).int64(message.coldTierSizeUsedGib);
+                            if (message.hotTierSizeUsedGib != null && Object.hasOwnProperty.call(message, "hotTierSizeUsedGib"))
+                                writer.uint32(/* id 34, wireType 0 =*/272).int64(message.hotTierSizeUsedGib);
                             return writer;
                         };
     
@@ -32841,6 +33507,30 @@
                                         message.totalIops = reader.int64();
                                         break;
                                     }
+                                case 28: {
+                                        message.hotTierSizeGib = reader.int64();
+                                        break;
+                                    }
+                                case 29: {
+                                        message.enableHotTierAutoResize = reader.bool();
+                                        break;
+                                    }
+                                case 30: {
+                                        message.qosType = reader.int32();
+                                        break;
+                                    }
+                                case 31: {
+                                        message.availableThroughputMibps = reader.double();
+                                        break;
+                                    }
+                                case 33: {
+                                        message.coldTierSizeUsedGib = reader.int64();
+                                        break;
+                                    }
+                                case 34: {
+                                        message.hotTierSizeUsedGib = reader.int64();
+                                        break;
+                                    }
                                 default:
                                     reader.skipType(tag & 7);
                                     break;
@@ -32986,6 +33676,32 @@
                             if (message.totalIops != null && message.hasOwnProperty("totalIops"))
                                 if (!$util.isInteger(message.totalIops) && !(message.totalIops && $util.isInteger(message.totalIops.low) && $util.isInteger(message.totalIops.high)))
                                     return "totalIops: integer|Long expected";
+                            if (message.hotTierSizeGib != null && message.hasOwnProperty("hotTierSizeGib"))
+                                if (!$util.isInteger(message.hotTierSizeGib) && !(message.hotTierSizeGib && $util.isInteger(message.hotTierSizeGib.low) && $util.isInteger(message.hotTierSizeGib.high)))
+                                    return "hotTierSizeGib: integer|Long expected";
+                            if (message.enableHotTierAutoResize != null && message.hasOwnProperty("enableHotTierAutoResize")) {
+                                properties._enableHotTierAutoResize = 1;
+                                if (typeof message.enableHotTierAutoResize !== "boolean")
+                                    return "enableHotTierAutoResize: boolean expected";
+                            }
+                            if (message.qosType != null && message.hasOwnProperty("qosType"))
+                                switch (message.qosType) {
+                                default:
+                                    return "qosType: enum value expected";
+                                case 0:
+                                case 1:
+                                case 2:
+                                    break;
+                                }
+                            if (message.availableThroughputMibps != null && message.hasOwnProperty("availableThroughputMibps"))
+                                if (typeof message.availableThroughputMibps !== "number")
+                                    return "availableThroughputMibps: number expected";
+                            if (message.coldTierSizeUsedGib != null && message.hasOwnProperty("coldTierSizeUsedGib"))
+                                if (!$util.isInteger(message.coldTierSizeUsedGib) && !(message.coldTierSizeUsedGib && $util.isInteger(message.coldTierSizeUsedGib.low) && $util.isInteger(message.coldTierSizeUsedGib.high)))
+                                    return "coldTierSizeUsedGib: integer|Long expected";
+                            if (message.hotTierSizeUsedGib != null && message.hasOwnProperty("hotTierSizeUsedGib"))
+                                if (!$util.isInteger(message.hotTierSizeUsedGib) && !(message.hotTierSizeUsedGib && $util.isInteger(message.hotTierSizeUsedGib.low) && $util.isInteger(message.hotTierSizeUsedGib.high)))
+                                    return "hotTierSizeUsedGib: integer|Long expected";
                             return null;
                         };
     
@@ -33169,6 +33885,57 @@
                                     message.totalIops = object.totalIops;
                                 else if (typeof object.totalIops === "object")
                                     message.totalIops = new $util.LongBits(object.totalIops.low >>> 0, object.totalIops.high >>> 0).toNumber();
+                            if (object.hotTierSizeGib != null)
+                                if ($util.Long)
+                                    (message.hotTierSizeGib = $util.Long.fromValue(object.hotTierSizeGib)).unsigned = false;
+                                else if (typeof object.hotTierSizeGib === "string")
+                                    message.hotTierSizeGib = parseInt(object.hotTierSizeGib, 10);
+                                else if (typeof object.hotTierSizeGib === "number")
+                                    message.hotTierSizeGib = object.hotTierSizeGib;
+                                else if (typeof object.hotTierSizeGib === "object")
+                                    message.hotTierSizeGib = new $util.LongBits(object.hotTierSizeGib.low >>> 0, object.hotTierSizeGib.high >>> 0).toNumber();
+                            if (object.enableHotTierAutoResize != null)
+                                message.enableHotTierAutoResize = Boolean(object.enableHotTierAutoResize);
+                            switch (object.qosType) {
+                            default:
+                                if (typeof object.qosType === "number") {
+                                    message.qosType = object.qosType;
+                                    break;
+                                }
+                                break;
+                            case "QOS_TYPE_UNSPECIFIED":
+                            case 0:
+                                message.qosType = 0;
+                                break;
+                            case "AUTO":
+                            case 1:
+                                message.qosType = 1;
+                                break;
+                            case "MANUAL":
+                            case 2:
+                                message.qosType = 2;
+                                break;
+                            }
+                            if (object.availableThroughputMibps != null)
+                                message.availableThroughputMibps = Number(object.availableThroughputMibps);
+                            if (object.coldTierSizeUsedGib != null)
+                                if ($util.Long)
+                                    (message.coldTierSizeUsedGib = $util.Long.fromValue(object.coldTierSizeUsedGib)).unsigned = false;
+                                else if (typeof object.coldTierSizeUsedGib === "string")
+                                    message.coldTierSizeUsedGib = parseInt(object.coldTierSizeUsedGib, 10);
+                                else if (typeof object.coldTierSizeUsedGib === "number")
+                                    message.coldTierSizeUsedGib = object.coldTierSizeUsedGib;
+                                else if (typeof object.coldTierSizeUsedGib === "object")
+                                    message.coldTierSizeUsedGib = new $util.LongBits(object.coldTierSizeUsedGib.low >>> 0, object.coldTierSizeUsedGib.high >>> 0).toNumber();
+                            if (object.hotTierSizeUsedGib != null)
+                                if ($util.Long)
+                                    (message.hotTierSizeUsedGib = $util.Long.fromValue(object.hotTierSizeUsedGib)).unsigned = false;
+                                else if (typeof object.hotTierSizeUsedGib === "string")
+                                    message.hotTierSizeUsedGib = parseInt(object.hotTierSizeUsedGib, 10);
+                                else if (typeof object.hotTierSizeUsedGib === "number")
+                                    message.hotTierSizeUsedGib = object.hotTierSizeUsedGib;
+                                else if (typeof object.hotTierSizeUsedGib === "object")
+                                    message.hotTierSizeUsedGib = new $util.LongBits(object.hotTierSizeUsedGib.low >>> 0, object.hotTierSizeUsedGib.high >>> 0).toNumber();
                             return message;
                         };
     
@@ -33227,6 +33994,23 @@
                                     object.totalIops = options.longs === String ? long.toString() : options.longs === Number ? long.toNumber() : long;
                                 } else
                                     object.totalIops = options.longs === String ? "0" : 0;
+                                if ($util.Long) {
+                                    var long = new $util.Long(0, 0, false);
+                                    object.hotTierSizeGib = options.longs === String ? long.toString() : options.longs === Number ? long.toNumber() : long;
+                                } else
+                                    object.hotTierSizeGib = options.longs === String ? "0" : 0;
+                                object.qosType = options.enums === String ? "QOS_TYPE_UNSPECIFIED" : 0;
+                                object.availableThroughputMibps = 0;
+                                if ($util.Long) {
+                                    var long = new $util.Long(0, 0, false);
+                                    object.coldTierSizeUsedGib = options.longs === String ? long.toString() : options.longs === Number ? long.toNumber() : long;
+                                } else
+                                    object.coldTierSizeUsedGib = options.longs === String ? "0" : 0;
+                                if ($util.Long) {
+                                    var long = new $util.Long(0, 0, false);
+                                    object.hotTierSizeUsedGib = options.longs === String ? long.toString() : options.longs === Number ? long.toNumber() : long;
+                                } else
+                                    object.hotTierSizeUsedGib = options.longs === String ? "0" : 0;
                             }
                             if (message.name != null && message.hasOwnProperty("name"))
                                 object.name = message.name;
@@ -33297,6 +34081,30 @@
                                     object.totalIops = options.longs === String ? String(message.totalIops) : message.totalIops;
                                 else
                                     object.totalIops = options.longs === String ? $util.Long.prototype.toString.call(message.totalIops) : options.longs === Number ? new $util.LongBits(message.totalIops.low >>> 0, message.totalIops.high >>> 0).toNumber() : message.totalIops;
+                            if (message.hotTierSizeGib != null && message.hasOwnProperty("hotTierSizeGib"))
+                                if (typeof message.hotTierSizeGib === "number")
+                                    object.hotTierSizeGib = options.longs === String ? String(message.hotTierSizeGib) : message.hotTierSizeGib;
+                                else
+                                    object.hotTierSizeGib = options.longs === String ? $util.Long.prototype.toString.call(message.hotTierSizeGib) : options.longs === Number ? new $util.LongBits(message.hotTierSizeGib.low >>> 0, message.hotTierSizeGib.high >>> 0).toNumber() : message.hotTierSizeGib;
+                            if (message.enableHotTierAutoResize != null && message.hasOwnProperty("enableHotTierAutoResize")) {
+                                object.enableHotTierAutoResize = message.enableHotTierAutoResize;
+                                if (options.oneofs)
+                                    object._enableHotTierAutoResize = "enableHotTierAutoResize";
+                            }
+                            if (message.qosType != null && message.hasOwnProperty("qosType"))
+                                object.qosType = options.enums === String ? $root.google.cloud.netapp.v1.QosType[message.qosType] === undefined ? message.qosType : $root.google.cloud.netapp.v1.QosType[message.qosType] : message.qosType;
+                            if (message.availableThroughputMibps != null && message.hasOwnProperty("availableThroughputMibps"))
+                                object.availableThroughputMibps = options.json && !isFinite(message.availableThroughputMibps) ? String(message.availableThroughputMibps) : message.availableThroughputMibps;
+                            if (message.coldTierSizeUsedGib != null && message.hasOwnProperty("coldTierSizeUsedGib"))
+                                if (typeof message.coldTierSizeUsedGib === "number")
+                                    object.coldTierSizeUsedGib = options.longs === String ? String(message.coldTierSizeUsedGib) : message.coldTierSizeUsedGib;
+                                else
+                                    object.coldTierSizeUsedGib = options.longs === String ? $util.Long.prototype.toString.call(message.coldTierSizeUsedGib) : options.longs === Number ? new $util.LongBits(message.coldTierSizeUsedGib.low >>> 0, message.coldTierSizeUsedGib.high >>> 0).toNumber() : message.coldTierSizeUsedGib;
+                            if (message.hotTierSizeUsedGib != null && message.hasOwnProperty("hotTierSizeUsedGib"))
+                                if (typeof message.hotTierSizeUsedGib === "number")
+                                    object.hotTierSizeUsedGib = options.longs === String ? String(message.hotTierSizeUsedGib) : message.hotTierSizeUsedGib;
+                                else
+                                    object.hotTierSizeUsedGib = options.longs === String ? $util.Long.prototype.toString.call(message.hotTierSizeUsedGib) : options.longs === Number ? new $util.LongBits(message.hotTierSizeUsedGib.low >>> 0, message.hotTierSizeUsedGib.high >>> 0).toNumber() : message.hotTierSizeUsedGib;
                             return object;
                         };
     
