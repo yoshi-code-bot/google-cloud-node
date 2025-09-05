@@ -20,8 +20,8 @@
 
 'use strict';
 
-function main(parent, datacenterConnectorId, datacenterConnector) {
-  // [START vmmigration_v1_generated_VmMigration_CreateDatacenterConnector_async]
+function main(parent, imageImportId, imageImport) {
+  // [START vmmigration_v1_generated_VmMigration_CreateImageImport_async]
   /**
    * This snippet has been automatically generated and should be regarded as a code template only.
    * It will require modifications to work.
@@ -29,22 +29,22 @@ function main(parent, datacenterConnectorId, datacenterConnector) {
    * TODO(developer): Uncomment these variables before running the sample.
    */
   /**
-   *  Required. The DatacenterConnector's parent.
-   *  Required. The Source in where the new DatacenterConnector will be created.
-   *  For example:
-   *  `projects/my-project/locations/us-central1/sources/my-source`
+   *  Required. The ImageImport's parent.
    */
   // const parent = 'abc123'
   /**
-   *  Required. The datacenterConnector identifier.
+   *  Required. The image import identifier.
+   *  This value maximum length is 63 characters, and valid characters are
+   *  /[a-z][0-9]-/. It must start with an english letter and must not end with a
+   *  hyphen.
    */
-  // const datacenterConnectorId = 'abc123'
+  // const imageImportId = 'abc123'
   /**
    *  Required. The create request body.
    */
-  // const datacenterConnector = {}
+  // const imageImport = {}
   /**
-   *  A request ID to identify requests. Specify a unique request ID
+   *  Optional. A request ID to identify requests. Specify a unique request ID
    *  so that if you must retry your request, the server will know to ignore
    *  the request if it has already been completed. The server will guarantee
    *  that for at least 60 minutes since the first request.
@@ -64,22 +64,22 @@ function main(parent, datacenterConnectorId, datacenterConnector) {
   // Instantiates a client
   const vmmigrationClient = new VmMigrationClient();
 
-  async function callCreateDatacenterConnector() {
+  async function callCreateImageImport() {
     // Construct request
     const request = {
       parent,
-      datacenterConnectorId,
-      datacenterConnector,
+      imageImportId,
+      imageImport,
     };
 
     // Run request
-    const [operation] = await vmmigrationClient.createDatacenterConnector(request);
+    const [operation] = await vmmigrationClient.createImageImport(request);
     const [response] = await operation.promise();
     console.log(response);
   }
 
-  callCreateDatacenterConnector();
-  // [END vmmigration_v1_generated_VmMigration_CreateDatacenterConnector_async]
+  callCreateImageImport();
+  // [END vmmigration_v1_generated_VmMigration_CreateImageImport_async]
 }
 
 process.on('unhandledRejection', err => {

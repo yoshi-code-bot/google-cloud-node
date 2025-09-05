@@ -20,8 +20,8 @@
 
 'use strict';
 
-function main(name) {
-  // [START vmmigration_v1_generated_VmMigration_DeleteSource_async]
+function main(parent) {
+  // [START vmmigration_v1_generated_VmMigration_ListImageImportJobs_async]
   /**
    * This snippet has been automatically generated and should be regarded as a code template only.
    * It will require modifications to work.
@@ -29,23 +29,34 @@ function main(name) {
    * TODO(developer): Uncomment these variables before running the sample.
    */
   /**
-   *  Required. The Source name.
+   *  Required. The parent, which owns this collection of targets.
    */
-  // const name = 'abc123'
+  // const parent = 'abc123'
   /**
-   *  Optional. A request ID to identify requests. Specify a unique request ID
-   *  so that if you must retry your request, the server will know to ignore
-   *  the request if it has already been completed. The server will guarantee
-   *  that for at least 60 minutes after the first request.
-   *  For example, consider a situation where you make an initial request and
-   *  the request times out. If you make the request again with the same request
-   *  ID, the server can check if original operation with the same request ID
-   *  was received, and if so, will ignore the second request. This prevents
-   *  clients from accidentally creating duplicate commitments.
-   *  The request ID must be a valid UUID with the exception that zero UUID is
-   *  not supported (00000000-0000-0000-0000-000000000000).
+   *  Optional. The maximum number of targets to return. The service may return
+   *  fewer than this value. If unspecified, at most 500 targets will be
+   *  returned. The maximum value is 1000; values above 1000 will be coerced to
+   *  1000.
    */
-  // const requestId = 'abc123'
+  // const pageSize = 1234
+  /**
+   *  Optional. A page token, received from a previous `ListImageImportJobs`
+   *  call. Provide this to retrieve the subsequent page.
+   *  When paginating, all other parameters provided to `ListImageImportJobs`
+   *  must match the call that provided the page token.
+   */
+  // const pageToken = 'abc123'
+  /**
+   *  Optional. The filter request (according to <a
+   *  href="https://google.aip.dev/160" target="_blank">AIP-160</a>).
+   */
+  // const filter = 'abc123'
+  /**
+   *  Optional. The order by fields for the result (according to <a
+   *  href="https://google.aip.dev/132#ordering" target="_blank">AIP-132</a>).
+   *  Currently ordering is only possible by "name" field.
+   */
+  // const orderBy = 'abc123'
 
   // Imports the Vmmigration library
   const {VmMigrationClient} = require('@google-cloud/vmmigration').v1;
@@ -53,20 +64,21 @@ function main(name) {
   // Instantiates a client
   const vmmigrationClient = new VmMigrationClient();
 
-  async function callDeleteSource() {
+  async function callListImageImportJobs() {
     // Construct request
     const request = {
-      name,
+      parent,
     };
 
     // Run request
-    const [operation] = await vmmigrationClient.deleteSource(request);
-    const [response] = await operation.promise();
-    console.log(response);
+    const iterable = vmmigrationClient.listImageImportJobsAsync(request);
+    for await (const response of iterable) {
+        console.log(response);
+    }
   }
 
-  callDeleteSource();
-  // [END vmmigration_v1_generated_VmMigration_DeleteSource_async]
+  callListImageImportJobs();
+  // [END vmmigration_v1_generated_VmMigration_ListImageImportJobs_async]
 }
 
 process.on('unhandledRejection', err => {

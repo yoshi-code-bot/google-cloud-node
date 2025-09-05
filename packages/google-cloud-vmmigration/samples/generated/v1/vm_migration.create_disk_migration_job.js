@@ -20,8 +20,8 @@
 
 'use strict';
 
-function main(parent, datacenterConnectorId, datacenterConnector) {
-  // [START vmmigration_v1_generated_VmMigration_CreateDatacenterConnector_async]
+function main(parent, diskMigrationJobId, diskMigrationJob) {
+  // [START vmmigration_v1_generated_VmMigration_CreateDiskMigrationJob_async]
   /**
    * This snippet has been automatically generated and should be regarded as a code template only.
    * It will require modifications to work.
@@ -29,27 +29,27 @@ function main(parent, datacenterConnectorId, datacenterConnector) {
    * TODO(developer): Uncomment these variables before running the sample.
    */
   /**
-   *  Required. The DatacenterConnector's parent.
-   *  Required. The Source in where the new DatacenterConnector will be created.
-   *  For example:
-   *  `projects/my-project/locations/us-central1/sources/my-source`
+   *  Required. The DiskMigrationJob's parent.
    */
   // const parent = 'abc123'
   /**
-   *  Required. The datacenterConnector identifier.
+   *  Required. The DiskMigrationJob identifier.
+   *  The maximum length of this value is 63 characters.
+   *  Valid characters are lower case Latin letters, digits and hyphen.
+   *  It must start with a Latin letter and must not end with a hyphen.
    */
-  // const datacenterConnectorId = 'abc123'
+  // const diskMigrationJobId = 'abc123'
   /**
    *  Required. The create request body.
    */
-  // const datacenterConnector = {}
+  // const diskMigrationJob = {}
   /**
-   *  A request ID to identify requests. Specify a unique request ID
+   *  Optional. A request ID to identify requests. Specify a unique request ID
    *  so that if you must retry your request, the server will know to ignore
    *  the request if it has already been completed. The server will guarantee
    *  that for at least 60 minutes since the first request.
    *  For example, consider a situation where you make an initial request and
-   *  the request times out. If you make the request again with the same request
+   *  the request timed out. If you make the request again with the same request
    *  ID, the server can check if original operation with the same request ID
    *  was received, and if so, will ignore the second request. This prevents
    *  clients from accidentally creating duplicate commitments.
@@ -64,22 +64,22 @@ function main(parent, datacenterConnectorId, datacenterConnector) {
   // Instantiates a client
   const vmmigrationClient = new VmMigrationClient();
 
-  async function callCreateDatacenterConnector() {
+  async function callCreateDiskMigrationJob() {
     // Construct request
     const request = {
       parent,
-      datacenterConnectorId,
-      datacenterConnector,
+      diskMigrationJobId,
+      diskMigrationJob,
     };
 
     // Run request
-    const [operation] = await vmmigrationClient.createDatacenterConnector(request);
+    const [operation] = await vmmigrationClient.createDiskMigrationJob(request);
     const [response] = await operation.promise();
     console.log(response);
   }
 
-  callCreateDatacenterConnector();
-  // [END vmmigration_v1_generated_VmMigration_CreateDatacenterConnector_async]
+  callCreateDiskMigrationJob();
+  // [END vmmigration_v1_generated_VmMigration_CreateDiskMigrationJob_async]
 }
 
 process.on('unhandledRejection', err => {
