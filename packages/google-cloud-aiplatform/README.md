@@ -900,3 +900,9 @@ See [LICENSE](https://github.com/googleapis/google-cloud-node/blob/main/LICENSE)
 [billing]: https://support.google.com/cloud/answer/6293499#enable-billing
 [enable_api]: https://console.cloud.google.com/flows/enableapi?apiid=aiplatform.googleapis.com
 [auth]: https://cloud.google.com/docs/authentication/external/set-up-adc-local
+
+
+Google Cloud Vertex AI is an integrated suite of machine learning tools
+and services for building and using ML models with AutoML or custom code.
+It offers both novices and experts the best workbench for the entire
+machine learning development lifecycle.
