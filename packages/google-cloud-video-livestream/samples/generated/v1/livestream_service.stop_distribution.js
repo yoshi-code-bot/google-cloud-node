@@ -20,8 +20,8 @@
 
 'use strict';
 
-function main(parent, asset, assetId) {
-  // [START livestream_v1_generated_LivestreamService_CreateAsset_async]
+function main(name) {
+  // [START livestream_v1_generated_LivestreamService_StopDistribution_async]
   /**
    * This snippet has been automatically generated and should be regarded as a code template only.
    * It will require modifications to work.
@@ -29,24 +29,18 @@ function main(parent, asset, assetId) {
    * TODO(developer): Uncomment these variables before running the sample.
    */
   /**
-   *  Required. The parent location for the resource, in the form of:
-   *  `projects/{project}/locations/{location}`.
+   *  Required. The name of the channel resource, in the form of:
+   *  `projects/{project}/locations/{location}/channels/{channelId}`.
    */
-  // const parent = 'abc123'
+  // const name = 'abc123'
   /**
-   *  Required. The asset resource to be created.
+   *  Optional. A list of key to identify the distribution configuration in the
+   *  channel resource. If left empty, all the distributions in the channel
+   *  specification will be stopped.
    */
-  // const asset = {}
+  // const distributionKeys = ['abc','def']
   /**
-   *  Required. The ID of the asset resource to be created.
-   *  This value must be 1-63 characters, begin and end with a lower-case letter
-   *  or a number, and consist of only lower-case letters, numbers, and hyphens.
-   *  In other words, it must match the following regex:
-   *  `^[a-z0-9]([a-z0-9-]{0,61}[a-z0-9])?$`.
-   */
-  // const assetId = 'abc123'
-  /**
-   *  A request ID to identify requests. Specify a unique request ID
+   *  Optional. A request ID to identify requests. Specify a unique request ID
    *  so that if you must retry your request, the server will know to ignore
    *  the request if it has already been completed. The server will guarantee
    *  that for at least 60 minutes since the first request.
@@ -66,22 +60,20 @@ function main(parent, asset, assetId) {
   // Instantiates a client
   const livestreamClient = new LivestreamServiceClient();
 
-  async function callCreateAsset() {
+  async function callStopDistribution() {
     // Construct request
     const request = {
-      parent,
-      asset,
-      assetId,
+      name,
     };
 
     // Run request
-    const [operation] = await livestreamClient.createAsset(request);
+    const [operation] = await livestreamClient.stopDistribution(request);
     const [response] = await operation.promise();
     console.log(response);
   }
 
-  callCreateAsset();
-  // [END livestream_v1_generated_LivestreamService_CreateAsset_async]
+  callStopDistribution();
+  // [END livestream_v1_generated_LivestreamService_StopDistribution_async]
 }
 
 process.on('unhandledRejection', err => {
