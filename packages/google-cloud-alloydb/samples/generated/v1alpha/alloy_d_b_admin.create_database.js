@@ -20,8 +20,8 @@
 
 'use strict';
 
-function main(instance, database, user, sqlStatement) {
-  // [START alloydb_v1beta_generated_AlloyDBAdmin_ExecuteSql_async]
+function main(parent, databaseId, database) {
+  // [START alloydb_v1alpha_generated_AlloyDBAdmin_CreateDatabase_async]
   /**
    * This snippet has been automatically generated and should be regarded as a code template only.
    * It will require modifications to work.
@@ -29,59 +29,39 @@ function main(instance, database, user, sqlStatement) {
    * TODO(developer): Uncomment these variables before running the sample.
    */
   /**
-   *  Optional. The database native user’s password.
+   *  Required. Value for parent.
    */
-  // const password = 'abc123'
+  // const parent = 'abc123'
   /**
-   *  Required. The instance where the SQL will be executed. For the required
-   *  format, see the comment on the Instance.name field.
+   *  Required. ID of the requesting object.
    */
-  // const instance = 'abc123'
+  // const databaseId = 'abc123'
   /**
-   *  Required. Name of the database where the query will be executed.
-   *  Note - Value provided should be the same as expected from `SELECT
-   *  current_database();` and NOT as a resource reference.
+   *  Required. The resource being created.
    */
-  // const database = 'abc123'
-  /**
-   *  Required. Database user to be used for executing the SQL.
-   *  Note - Value provided should be the same as expected from
-   *  `SELECT current_user;` and NOT as a resource reference.
-   */
-  // const user = 'abc123'
-  /**
-   *  Required. SQL statement to execute on database. Any valid statement is
-   *  permitted, including DDL, DML, DQL statements.
-   */
-  // const sqlStatement = 'abc123'
-  /**
-   *  Optional. If set, validates the sql statement by performing
-   *  syntax and semantic validation and doesn't execute the query.
-   */
-  // const validateOnly = true
+  // const database = {}
 
   // Imports the Alloydb library
-  const {AlloyDBAdminClient} = require('@google-cloud/alloydb').v1beta;
+  const {AlloyDBAdminClient} = require('@google-cloud/alloydb').v1alpha;
 
   // Instantiates a client
   const alloydbClient = new AlloyDBAdminClient();
 
-  async function callExecuteSql() {
+  async function callCreateDatabase() {
     // Construct request
     const request = {
-      instance,
+      parent,
+      databaseId,
       database,
-      user,
-      sqlStatement,
     };
 
     // Run request
-    const response = await alloydbClient.executeSql(request);
+    const response = await alloydbClient.createDatabase(request);
     console.log(response);
   }
 
-  callExecuteSql();
-  // [END alloydb_v1beta_generated_AlloyDBAdmin_ExecuteSql_async]
+  callCreateDatabase();
+  // [END alloydb_v1alpha_generated_AlloyDBAdmin_CreateDatabase_async]
 }
 
 process.on('unhandledRejection', err => {
