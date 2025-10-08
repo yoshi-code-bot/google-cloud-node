@@ -20,8 +20,8 @@
 
 'use strict';
 
-function main() {
-  // [START bigqueryreservation_v1_generated_ReservationService_MergeCapacityCommitments_async]
+function main(parent) {
+  // [START bigqueryreservation_v1_generated_ReservationService_ListReservationGroups_async]
   /**
    * This snippet has been automatically generated and should be regarded as a code template only.
    * It will require modifications to work.
@@ -29,25 +29,18 @@ function main() {
    * TODO(developer): Uncomment these variables before running the sample.
    */
   /**
-   *  Parent resource that identifies admin project and location e.g.,
-   *   `projects/myproject/locations/us`
+   *  Required. The parent resource name containing project and location, e.g.:
+   *    `projects/myproject/locations/US`
    */
   // const parent = 'abc123'
   /**
-   *  Ids of capacity commitments to merge.
-   *  These capacity commitments must exist under admin project and location
-   *  specified in the parent.
-   *  ID is the last portion of capacity commitment name e.g., 'abc' for
-   *  projects/myproject/locations/US/capacityCommitments/abc
+   *  The maximum number of items to return per page.
    */
-  // const capacityCommitmentIds = ['abc','def']
+  // const pageSize = 1234
   /**
-   *  Optional. The optional resulting capacity commitment ID. Capacity
-   *  commitment name will be generated automatically if this field is empty.
-   *  This field must only contain lower case alphanumeric characters or dashes.
-   *  The first and last character cannot be a dash. Max length is 64 characters.
+   *  The next_page_token value returned from a previous List request, if any.
    */
-  // const capacityCommitmentId = 'abc123'
+  // const pageToken = 'abc123'
 
   // Imports the Reservation library
   const {ReservationServiceClient} = require('@google-cloud/bigquery-reservation').v1;
@@ -55,18 +48,21 @@ function main() {
   // Instantiates a client
   const reservationClient = new ReservationServiceClient();
 
-  async function callMergeCapacityCommitments() {
+  async function callListReservationGroups() {
     // Construct request
     const request = {
+      parent,
     };
 
     // Run request
-    const response = await reservationClient.mergeCapacityCommitments(request);
-    console.log(response);
+    const iterable = reservationClient.listReservationGroupsAsync(request);
+    for await (const response of iterable) {
+        console.log(response);
+    }
   }
 
-  callMergeCapacityCommitments();
-  // [END bigqueryreservation_v1_generated_ReservationService_MergeCapacityCommitments_async]
+  callListReservationGroups();
+  // [END bigqueryreservation_v1_generated_ReservationService_ListReservationGroups_async]
 }
 
 process.on('unhandledRejection', err => {

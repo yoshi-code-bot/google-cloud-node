@@ -20,8 +20,8 @@
 
 'use strict';
 
-function main() {
-  // [START bigqueryreservation_v1_generated_ReservationService_MergeCapacityCommitments_async]
+function main(resource, policy) {
+  // [START bigqueryreservation_v1_generated_ReservationService_SetIamPolicy_async]
   /**
    * This snippet has been automatically generated and should be regarded as a code template only.
    * It will require modifications to work.
@@ -29,25 +29,24 @@ function main() {
    * TODO(developer): Uncomment these variables before running the sample.
    */
   /**
-   *  Parent resource that identifies admin project and location e.g.,
-   *   `projects/myproject/locations/us`
+   *  REQUIRED: The resource for which the policy is being specified.
+   *  See the operation documentation for the appropriate value for this field.
    */
-  // const parent = 'abc123'
+  // const resource = 'abc123'
   /**
-   *  Ids of capacity commitments to merge.
-   *  These capacity commitments must exist under admin project and location
-   *  specified in the parent.
-   *  ID is the last portion of capacity commitment name e.g., 'abc' for
-   *  projects/myproject/locations/US/capacityCommitments/abc
+   *  REQUIRED: The complete policy to be applied to the `resource`. The size of
+   *  the policy is limited to a few 10s of KB. An empty policy is a
+   *  valid policy but certain Cloud Platform services (such as Projects)
+   *  might reject them.
    */
-  // const capacityCommitmentIds = ['abc','def']
+  // const policy = {}
   /**
-   *  Optional. The optional resulting capacity commitment ID. Capacity
-   *  commitment name will be generated automatically if this field is empty.
-   *  This field must only contain lower case alphanumeric characters or dashes.
-   *  The first and last character cannot be a dash. Max length is 64 characters.
+   *  OPTIONAL: A FieldMask specifying which fields of the policy to modify. Only
+   *  the fields in the mask will be modified. If no mask is provided, the
+   *  following default mask is used:
+   *  `paths: "bindings, etag"`
    */
-  // const capacityCommitmentId = 'abc123'
+  // const updateMask = {}
 
   // Imports the Reservation library
   const {ReservationServiceClient} = require('@google-cloud/bigquery-reservation').v1;
@@ -55,18 +54,20 @@ function main() {
   // Instantiates a client
   const reservationClient = new ReservationServiceClient();
 
-  async function callMergeCapacityCommitments() {
+  async function callSetIamPolicy() {
     // Construct request
     const request = {
+      resource,
+      policy,
     };
 
     // Run request
-    const response = await reservationClient.mergeCapacityCommitments(request);
+    const response = await reservationClient.setIamPolicy(request);
     console.log(response);
   }
 
-  callMergeCapacityCommitments();
-  // [END bigqueryreservation_v1_generated_ReservationService_MergeCapacityCommitments_async]
+  callSetIamPolicy();
+  // [END bigqueryreservation_v1_generated_ReservationService_SetIamPolicy_async]
 }
 
 process.on('unhandledRejection', err => {
