@@ -2962,6 +2962,25 @@
                         }
                       }
                     },
+                    "ImageConfig": {
+                      "oneofs": {
+                        "_aspectRatio": {
+                          "oneof": [
+                            "aspectRatio"
+                          ]
+                        }
+                      },
+                      "fields": {
+                        "aspectRatio": {
+                          "type": "string",
+                          "id": 2,
+                          "options": {
+                            "(google.api.field_behavior)": "OPTIONAL",
+                            "proto3_optional": true
+                          }
+                        }
+                      }
+                    },
                     "GenerationConfig": {
                       "oneofs": {
                         "_temperature": {
@@ -3027,6 +3046,11 @@
                         "_routingConfig": {
                           "oneof": [
                             "routingConfig"
+                          ]
+                        },
+                        "_imageConfig": {
+                          "oneof": [
+                            "imageConfig"
                           ]
                         }
                       },
@@ -3155,6 +3179,14 @@
                           "id": 25,
                           "options": {
                             "(google.api.field_behavior)": "OPTIONAL"
+                          }
+                        },
+                        "imageConfig": {
+                          "type": "ImageConfig",
+                          "id": 30,
+                          "options": {
+                            "(google.api.field_behavior)": "OPTIONAL",
+                            "proto3_optional": true
                           }
                         }
                       },
@@ -32038,6 +32070,11 @@
                     },
                     "ReasoningEngineSpec": {
                       "oneofs": {
+                        "deploymentSource": {
+                          "oneof": [
+                            "sourceCodeSpec"
+                          ]
+                        },
                         "_serviceAccount": {
                           "oneof": [
                             "serviceAccount"
@@ -32045,6 +32082,10 @@
                         }
                       },
                       "fields": {
+                        "sourceCodeSpec": {
+                          "type": "SourceCodeSpec",
+                          "id": 11
+                        },
                         "serviceAccount": {
                           "type": "string",
                           "id": 1,
@@ -32191,6 +32232,75 @@
                               }
                             }
                           }
+                        },
+                        "SourceCodeSpec": {
+                          "oneofs": {
+                            "source": {
+                              "oneof": [
+                                "inlineSource"
+                              ]
+                            },
+                            "languageSpec": {
+                              "oneof": [
+                                "pythonSpec"
+                              ]
+                            }
+                          },
+                          "fields": {
+                            "inlineSource": {
+                              "type": "InlineSource",
+                              "id": 1
+                            },
+                            "pythonSpec": {
+                              "type": "PythonSpec",
+                              "id": 2
+                            }
+                          },
+                          "nested": {
+                            "InlineSource": {
+                              "fields": {
+                                "sourceArchive": {
+                                  "type": "bytes",
+                                  "id": 1,
+                                  "options": {
+                                    "(google.api.field_behavior)": "INPUT_ONLY"
+                                  }
+                                }
+                              }
+                            },
+                            "PythonSpec": {
+                              "fields": {
+                                "version": {
+                                  "type": "string",
+                                  "id": 1,
+                                  "options": {
+                                    "(google.api.field_behavior)": "OPTIONAL"
+                                  }
+                                },
+                                "entrypointModule": {
+                                  "type": "string",
+                                  "id": 2,
+                                  "options": {
+                                    "(google.api.field_behavior)": "OPTIONAL"
+                                  }
+                                },
+                                "entrypointObject": {
+                                  "type": "string",
+                                  "id": 3,
+                                  "options": {
+                                    "(google.api.field_behavior)": "OPTIONAL"
+                                  }
+                                },
+                                "requirementsFile": {
+                                  "type": "string",
+                                  "id": 4,
+                                  "options": {
+                                    "(google.api.field_behavior)": "OPTIONAL"
+                                  }
+                                }
+                              }
+                            }
+                          }
                         }
                       }
                     },
@@ -32254,6 +32364,11 @@
                         "encryptionSpec": {
                           "type": "EncryptionSpec",
                           "id": 11
+                        },
+                        "labels": {
+                          "keyType": "string",
+                          "type": "string",
+                          "id": 17
                         }
                       }
                     },
@@ -78608,6 +78723,11 @@
                     },
                     "ReasoningEngineSpec": {
                       "oneofs": {
+                        "deploymentSource": {
+                          "oneof": [
+                            "sourceCodeSpec"
+                          ]
+                        },
                         "_serviceAccount": {
                           "oneof": [
                             "serviceAccount"
@@ -78615,6 +78735,10 @@
                         }
                       },
                       "fields": {
+                        "sourceCodeSpec": {
+                          "type": "SourceCodeSpec",
+                          "id": 11
+                        },
                         "serviceAccount": {
                           "type": "string",
                           "id": 1,
@@ -78761,6 +78885,75 @@
                               }
                             }
                           }
+                        },
+                        "SourceCodeSpec": {
+                          "oneofs": {
+                            "source": {
+                              "oneof": [
+                                "inlineSource"
+                              ]
+                            },
+                            "languageSpec": {
+                              "oneof": [
+                                "pythonSpec"
+                              ]
+                            }
+                          },
+                          "fields": {
+                            "inlineSource": {
+                              "type": "InlineSource",
+                              "id": 1
+                            },
+                            "pythonSpec": {
+                              "type": "PythonSpec",
+                              "id": 2
+                            }
+                          },
+                          "nested": {
+                            "InlineSource": {
+                              "fields": {
+                                "sourceArchive": {
+                                  "type": "bytes",
+                                  "id": 1,
+                                  "options": {
+                                    "(google.api.field_behavior)": "INPUT_ONLY"
+                                  }
+                                }
+                              }
+                            },
+                            "PythonSpec": {
+                              "fields": {
+                                "version": {
+                                  "type": "string",
+                                  "id": 1,
+                                  "options": {
+                                    "(google.api.field_behavior)": "OPTIONAL"
+                                  }
+                                },
+                                "entrypointModule": {
+                                  "type": "string",
+                                  "id": 2,
+                                  "options": {
+                                    "(google.api.field_behavior)": "OPTIONAL"
+                                  }
+                                },
+                                "entrypointObject": {
+                                  "type": "string",
+                                  "id": 3,
+                                  "options": {
+                                    "(google.api.field_behavior)": "OPTIONAL"
+                                  }
+                                },
+                                "requirementsFile": {
+                                  "type": "string",
+                                  "id": 4,
+                                  "options": {
+                                    "(google.api.field_behavior)": "OPTIONAL"
+                                  }
+                                }
+                              }
+                            }
+                          }
                         }
                       }
                     },
@@ -78831,6 +79024,11 @@
                         "encryptionSpec": {
                           "type": "EncryptionSpec",
                           "id": 11
+                        },
+                        "labels": {
+                          "keyType": "string",
+                          "type": "string",
+                          "id": 17
                         }
                       }
                     },
