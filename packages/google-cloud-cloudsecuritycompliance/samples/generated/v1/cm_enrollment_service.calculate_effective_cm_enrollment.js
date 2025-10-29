@@ -21,7 +21,7 @@
 'use strict';
 
 function main(name) {
-  // [START cloudsecuritycompliance_v1_generated_Config_DeleteFramework_async]
+  // [START cloudsecuritycompliance_v1_generated_CmEnrollmentService_CalculateEffectiveCmEnrollment_async]
   /**
    * This snippet has been automatically generated and should be regarded as a code template only.
    * It will require modifications to work.
@@ -29,31 +29,33 @@ function main(name) {
    * TODO(developer): Uncomment these variables before running the sample.
    */
   /**
-   *  Required. The name of the resource, in the format
-   *  `organizations/{organization}/locations/{location}/frameworks/{framework}`.
-   *  The only supported location is `global`.
+   *  Required. The name of the Compliance Manager enrollment to calculate.
+   *  Supported formats are the following:
+   *  * `organizations/{organization_id}/locations/{location}/cmEnrollment`
+   *  * `folders/{folder_id}/locations/{location}/cmEnrollment`
+   *  * `projects/{project_id}/locations/{location}/cmEnrollment`
    */
   // const name = 'abc123'
 
   // Imports the Cloudsecuritycompliance library
-  const {ConfigClient} = require('@google-cloud/cloudsecuritycompliance').v1;
+  const {CmEnrollmentServiceClient} = require('@google-cloud/cloudsecuritycompliance').v1;
 
   // Instantiates a client
-  const cloudsecuritycomplianceClient = new ConfigClient();
+  const cloudsecuritycomplianceClient = new CmEnrollmentServiceClient();
 
-  async function callDeleteFramework() {
+  async function callCalculateEffectiveCmEnrollment() {
     // Construct request
     const request = {
       name,
     };
 
     // Run request
-    const response = await cloudsecuritycomplianceClient.deleteFramework(request);
+    const response = await cloudsecuritycomplianceClient.calculateEffectiveCmEnrollment(request);
     console.log(response);
   }
 
-  callDeleteFramework();
-  // [END cloudsecuritycompliance_v1_generated_Config_DeleteFramework_async]
+  callCalculateEffectiveCmEnrollment();
+  // [END cloudsecuritycompliance_v1_generated_CmEnrollmentService_CalculateEffectiveCmEnrollment_async]
 }
 
 process.on('unhandledRejection', err => {

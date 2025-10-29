@@ -21,7 +21,7 @@
 'use strict';
 
 function main(parent) {
-  // [START cloudsecuritycompliance_v1_generated_Deployment_ListFrameworkDeployments_async]
+  // [START cloudsecuritycompliance_v1_generated_Audit_ListFrameworkAudits_async]
   /**
    * This snippet has been automatically generated and should be regarded as a code template only.
    * It will require modifications to work.
@@ -29,57 +29,55 @@ function main(parent) {
    * TODO(developer): Uncomment these variables before running the sample.
    */
   /**
-   *  Required. The parent resource of the framework deployment, in the format
-   *  `organizations/{organization}/locations/{location}`.
-   *  The only supported location is `global`.
+   *  Required. The parent resource where the framework audits are listed.
+   *  Supported formats are the following:
+   *  * `organizations/{organization_id}/locations/{location}`
+   *  * `folders/{folder_id}/locations/{location}`
+   *  * `projects/{project_id}/locations/{location}`
    */
   // const parent = 'abc123'
   /**
-   *  Optional. The requested page size. The server might return fewer items than
-   *  requested.
-   *  If unspecified, the server picks an appropriate default.
+   *  Optional. The maximum number of framework audits to return. The service
+   *  might return fewer audits than this value. If unspecified, a maximum of 10
+   *  framework audits are returned. The maximum value is 50; values above 50 are
+   *  limited to 50.
    */
   // const pageSize = 1234
   /**
-   *  Optional. A token that identifies a page of results the server should
-   *  return.
+   *  Optional. The `next_page_token` value that's returned from a previous list
+   *  request, if any.
    */
   // const pageToken = 'abc123'
   /**
-   *  Optional. The filter to be applied on the resource, as defined by
-   *  AIP-160: Filtering (https://google.aip.dev/160).
+   *  Optional. The filters to apply to the framework audits.
+   *  Supported filters are `compliance_framework`, `compliance_state`,
+   *  `create_time,` and `framework_audit_name`. If the filter is invalid, an
+   *  invalid argument error is returned.
+   *  For syntax details, see AIP-160 https://google.aip.dev/160.
    */
   // const filter = 'abc123'
-  /**
-   *  Optional. The sort order for the results. The following values are
-   *  supported:
-   *  * `name`
-   *  * `name desc`
-   *  If you do not specify a value, then the results are not sorted.
-   */
-  // const orderBy = 'abc123'
 
   // Imports the Cloudsecuritycompliance library
-  const {DeploymentClient} = require('@google-cloud/cloudsecuritycompliance').v1;
+  const {AuditClient} = require('@google-cloud/cloudsecuritycompliance').v1;
 
   // Instantiates a client
-  const cloudsecuritycomplianceClient = new DeploymentClient();
+  const cloudsecuritycomplianceClient = new AuditClient();
 
-  async function callListFrameworkDeployments() {
+  async function callListFrameworkAudits() {
     // Construct request
     const request = {
       parent,
     };
 
     // Run request
-    const iterable = cloudsecuritycomplianceClient.listFrameworkDeploymentsAsync(request);
+    const iterable = cloudsecuritycomplianceClient.listFrameworkAuditsAsync(request);
     for await (const response of iterable) {
         console.log(response);
     }
   }
 
-  callListFrameworkDeployments();
-  // [END cloudsecuritycompliance_v1_generated_Deployment_ListFrameworkDeployments_async]
+  callListFrameworkAudits();
+  // [END cloudsecuritycompliance_v1_generated_Audit_ListFrameworkAudits_async]
 }
 
 process.on('unhandledRejection', err => {

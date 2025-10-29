@@ -20,8 +20,8 @@
 
 'use strict';
 
-function main(name) {
-  // [START cloudsecuritycompliance_v1_generated_Config_DeleteFramework_async]
+function main(cmEnrollment) {
+  // [START cloudsecuritycompliance_v1_generated_CmEnrollmentService_UpdateCmEnrollment_async]
   /**
    * This snippet has been automatically generated and should be regarded as a code template only.
    * It will require modifications to work.
@@ -29,31 +29,34 @@ function main(name) {
    * TODO(developer): Uncomment these variables before running the sample.
    */
   /**
-   *  Required. The name of the resource, in the format
-   *  `organizations/{organization}/locations/{location}/frameworks/{framework}`.
-   *  The only supported location is `global`.
+   *  Required. The Compliance Manager enrollment to update.
+   *  The `name` field is used to identify the settings that you want to update.
    */
-  // const name = 'abc123'
+  // const cmEnrollment = {}
+  /**
+   *  Optional. The list of fields that you want to update.
+   */
+  // const updateMask = {}
 
   // Imports the Cloudsecuritycompliance library
-  const {ConfigClient} = require('@google-cloud/cloudsecuritycompliance').v1;
+  const {CmEnrollmentServiceClient} = require('@google-cloud/cloudsecuritycompliance').v1;
 
   // Instantiates a client
-  const cloudsecuritycomplianceClient = new ConfigClient();
+  const cloudsecuritycomplianceClient = new CmEnrollmentServiceClient();
 
-  async function callDeleteFramework() {
+  async function callUpdateCmEnrollment() {
     // Construct request
     const request = {
-      name,
+      cmEnrollment,
     };
 
     // Run request
-    const response = await cloudsecuritycomplianceClient.deleteFramework(request);
+    const response = await cloudsecuritycomplianceClient.updateCmEnrollment(request);
     console.log(response);
   }
 
-  callDeleteFramework();
-  // [END cloudsecuritycompliance_v1_generated_Config_DeleteFramework_async]
+  callUpdateCmEnrollment();
+  // [END cloudsecuritycompliance_v1_generated_CmEnrollmentService_UpdateCmEnrollment_async]
 }
 
 process.on('unhandledRejection', err => {

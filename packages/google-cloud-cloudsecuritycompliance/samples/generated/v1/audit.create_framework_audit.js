@@ -20,8 +20,8 @@
 
 'use strict';
 
-function main(name) {
-  // [START cloudsecuritycompliance_v1_generated_Config_DeleteFramework_async]
+function main(parent, frameworkAudit) {
+  // [START cloudsecuritycompliance_v1_generated_Audit_CreateFrameworkAudit_async]
   /**
    * This snippet has been automatically generated and should be regarded as a code template only.
    * It will require modifications to work.
@@ -29,31 +29,46 @@ function main(name) {
    * TODO(developer): Uncomment these variables before running the sample.
    */
   /**
-   *  Required. The name of the resource, in the format
-   *  `organizations/{organization}/locations/{location}/frameworks/{framework}`.
-   *  The only supported location is `global`.
+   *  Required. The parent resource where this framework audit is created.
+   *  Supported formats are the following:
+   *  * `organizations/{organization_id}/locations/{location}`
+   *  * `folders/{folder_id}/locations/{location}`
+   *  * `projects/{project_id}/locations/{location}`
    */
-  // const name = 'abc123'
+  // const parent = 'abc123'
+  /**
+   *  Optional. The ID to use for the framework audit. The ID becomes the final
+   *  component of the framework audit's full resource name.
+   *  The ID must be between 4-63 characters, and valid characters
+   *  are `\a-z 0-9 -\`.
+   */
+  // const frameworkAuditId = 'abc123'
+  /**
+   *  Required. The framework audit to create.
+   */
+  // const frameworkAudit = {}
 
   // Imports the Cloudsecuritycompliance library
-  const {ConfigClient} = require('@google-cloud/cloudsecuritycompliance').v1;
+  const {AuditClient} = require('@google-cloud/cloudsecuritycompliance').v1;
 
   // Instantiates a client
-  const cloudsecuritycomplianceClient = new ConfigClient();
+  const cloudsecuritycomplianceClient = new AuditClient();
 
-  async function callDeleteFramework() {
+  async function callCreateFrameworkAudit() {
     // Construct request
     const request = {
-      name,
+      parent,
+      frameworkAudit,
     };
 
     // Run request
-    const response = await cloudsecuritycomplianceClient.deleteFramework(request);
+    const [operation] = await cloudsecuritycomplianceClient.createFrameworkAudit(request);
+    const [response] = await operation.promise();
     console.log(response);
   }
 
-  callDeleteFramework();
-  // [END cloudsecuritycompliance_v1_generated_Config_DeleteFramework_async]
+  callCreateFrameworkAudit();
+  // [END cloudsecuritycompliance_v1_generated_Audit_CreateFrameworkAudit_async]
 }
 
 process.on('unhandledRejection', err => {
