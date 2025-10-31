@@ -18,7 +18,7 @@
 
 /* global window */
 import type * as gax from 'google-gax';
-import type {Callback, CallOptions, Descriptors, ClientOptions, GrpcClientOptions, LROperation, PaginationCallback, GaxCall, LocationsClient, LocationProtos} from 'google-gax';
+import type {Callback, CallOptions, Descriptors, ClientOptions, PaginationCallback, GaxCall, LocationsClient, LocationProtos} from 'google-gax';
 import {Transform} from 'stream';
 import * as protos from '../../protos/protos';
 import jsonProtos = require('../../protos/protos.json');
@@ -26,10 +26,10 @@ import {loggingUtils as logging, decodeAnyProtosInArray} from 'google-gax';
 
 /**
  * Client JSON configuration object, loaded from
- * `src/v1/audit_client_config.json`.
+ * `src/v1/monitoring_client_config.json`.
  * This file defines retry strategy and timeouts for all API methods in this library.
  */
-import * as gapicConfig from './audit_client_config.json';
+import * as gapicConfig from './monitoring_client_config.json';
 const version = require('../../../package.json').version;
 
 /**
@@ -37,7 +37,7 @@ const version = require('../../../package.json').version;
  * @class
  * @memberof v1
  */
-export class AuditClient {
+export class MonitoringClient {
   private _terminated = false;
   private _opts: ClientOptions;
   private _providedCustomServicePath: boolean;
@@ -60,11 +60,10 @@ export class AuditClient {
   innerApiCalls: {[name: string]: Function};
   locationsClient: LocationsClient;
   pathTemplates: {[name: string]: gax.PathTemplate};
-  operationsClient: gax.OperationsClient;
-  auditStub?: Promise<{[name: string]: Function}>;
+  monitoringStub?: Promise<{[name: string]: Function}>;
 
   /**
-   * Construct an instance of AuditClient.
+   * Construct an instance of MonitoringClient.
    *
    * @param {object} [options] - The configuration object.
    * The options accepted by the constructor are described in detail
@@ -99,12 +98,12 @@ export class AuditClient {
    *     HTTP implementation. Load only fallback version and pass it to the constructor:
    *     ```
    *     const gax = require('google-gax/build/src/fallback'); // avoids loading google-gax with gRPC
-   *     const client = new AuditClient({fallback: true}, gax);
+   *     const client = new MonitoringClient({fallback: true}, gax);
    *     ```
    */
   constructor(opts?: ClientOptions, gaxInstance?: typeof gax | typeof gax.fallback) {
     // Ensure that options include all the required fields.
-    const staticMembers = this.constructor as typeof AuditClient;
+    const staticMembers = this.constructor as typeof MonitoringClient;
     if (opts?.universe_domain && opts?.universeDomain && opts?.universe_domain !== opts?.universeDomain) {
       throw new Error('Please set either universe_domain or universeDomain, but not both.');
     }
@@ -262,38 +261,17 @@ export class AuditClient {
     // (e.g. 50 results at a time, with tokens to get subsequent
     // pages). Denote the keys used for pagination and results.
     this.descriptors.page = {
-      listFrameworkAudits:
-          new this._gaxModule.PageDescriptor('pageToken', 'nextPageToken', 'frameworkAudits')
-    };
-
-    const protoFilesRoot = this._gaxModule.protobufFromJSON(jsonProtos);
-    // This API contains "long-running operations", which return a
-    // an Operation object that allows for tracking of the operation,
-    // rather than holding a request open.
-    const lroOptions: GrpcClientOptions = {
-      auth: this.auth,
-      grpc: 'grpc' in this._gaxGrpc ? this._gaxGrpc.grpc : undefined
-    };
-    if (opts.fallback) {
-      lroOptions.protoJson = protoFilesRoot;
-      lroOptions.httpRules = [{selector: 'google.cloud.location.Locations.GetLocation',get: '/v1/{name=organizations/*/locations/*}',},{selector: 'google.cloud.location.Locations.ListLocations',get: '/v1/{name=organizations/*}/locations',},{selector: 'google.longrunning.Operations.CancelOperation',post: '/v1/{name=organizations/*/locations/*/operations/*}:cancel',body: '*',},{selector: 'google.longrunning.Operations.DeleteOperation',delete: '/v1/{name=organizations/*/locations/*/operations/*}',},{selector: 'google.longrunning.Operations.GetOperation',get: '/v1/{name=organizations/*/locations/*/operations/*}',},{selector: 'google.longrunning.Operations.ListOperations',get: '/v1/{name=organizations/*/locations/*}/operations',}];
-    }
-    this.operationsClient = this._gaxModule.lro(lroOptions).operationsClient(opts);
-    const createFrameworkAuditResponse = protoFilesRoot.lookup(
-      '.google.cloud.cloudsecuritycompliance.v1.FrameworkAudit') as gax.protobuf.Type;
-    const createFrameworkAuditMetadata = protoFilesRoot.lookup(
-      '.google.cloud.cloudsecuritycompliance.v1.OperationMetadata') as gax.protobuf.Type;
-
-    this.descriptors.longrunning = {
-      createFrameworkAudit: new this._gaxModule.LongrunningDescriptor(
-        this.operationsClient,
-        createFrameworkAuditResponse.decode.bind(createFrameworkAuditResponse),
-        createFrameworkAuditMetadata.decode.bind(createFrameworkAuditMetadata))
+      listFrameworkComplianceSummaries:
+          new this._gaxModule.PageDescriptor('pageToken', 'nextPageToken', 'frameworkComplianceSummaries'),
+      listFindingSummaries:
+          new this._gaxModule.PageDescriptor('pageToken', 'nextPageToken', 'findingSummaries'),
+      listControlComplianceSummaries:
+          new this._gaxModule.PageDescriptor('pageToken', 'nextPageToken', 'controlComplianceSummaries')
     };
 
     // Put together the default options sent with requests.
     this._defaults = this._gaxGrpc.constructSettings(
-        'google.cloud.cloudsecuritycompliance.v1.Audit', gapicConfig as gax.ClientConfig,
+        'google.cloud.cloudsecuritycompliance.v1.Monitoring', gapicConfig as gax.ClientConfig,
         opts.clientConfig || {}, {'x-goog-api-client': clientHeader.join(' ')});
 
     // Set up a dictionary of "inner API calls"; the core implementation
@@ -318,25 +296,25 @@ export class AuditClient {
    */
   initialize() {
     // If the client stub promise is already initialized, return immediately.
-    if (this.auditStub) {
-      return this.auditStub;
+    if (this.monitoringStub) {
+      return this.monitoringStub;
     }
 
     // Put together the "service stub" for
-    // google.cloud.cloudsecuritycompliance.v1.Audit.
-    this.auditStub = this._gaxGrpc.createStub(
+    // google.cloud.cloudsecuritycompliance.v1.Monitoring.
+    this.monitoringStub = this._gaxGrpc.createStub(
         this._opts.fallback ?
-          (this._protos as protobuf.Root).lookupService('google.cloud.cloudsecuritycompliance.v1.Audit') :
+          (this._protos as protobuf.Root).lookupService('google.cloud.cloudsecuritycompliance.v1.Monitoring') :
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          (this._protos as any).google.cloud.cloudsecuritycompliance.v1.Audit,
+          (this._protos as any).google.cloud.cloudsecuritycompliance.v1.Monitoring,
         this._opts, this._providedCustomServicePath) as Promise<{[method: string]: Function}>;
 
     // Iterate over each of the methods that the service provides
     // and create an API call method for each.
-    const auditStubMethods =
-        ['generateFrameworkAuditScopeReport', 'createFrameworkAudit', 'listFrameworkAudits', 'getFrameworkAudit'];
-    for (const methodName of auditStubMethods) {
-      const callPromise = this.auditStub.then(
+    const monitoringStubMethods =
+        ['listFrameworkComplianceSummaries', 'listFindingSummaries', 'fetchFrameworkComplianceReport', 'listControlComplianceSummaries', 'aggregateFrameworkComplianceReport'];
+    for (const methodName of monitoringStubMethods) {
+      const callPromise = this.monitoringStub.then(
         stub => (...args: Array<{}>) => {
           if (this._terminated) {
             return Promise.reject('The client has already been closed.');
@@ -350,7 +328,6 @@ export class AuditClient {
 
       const descriptor =
         this.descriptors.page[methodName] ||
-        this.descriptors.longrunning[methodName] ||
         undefined;
       const apiCall = this._gaxModule.createApiCall(
         callPromise,
@@ -362,7 +339,7 @@ export class AuditClient {
       this.innerApiCalls[methodName] = apiCall;
     }
 
-    return this.auditStub;
+    return this.monitoringStub;
   }
 
   /**
@@ -439,164 +416,56 @@ export class AuditClient {
   // -- Service calls --
   // -------------------
 /**
- * Generates an audit scope report for a framework.
- *
- * @param {Object} request
- *   The request object that will be sent.
- * @param {string} request.scope
- *   Required. The organization, folder or project for the audit report.
- *
- *   Supported formats are the following:
- *
- *   * `projects/{project_id}/locations/{location}`
- *   * `folders/{folder_id}/locations/{location}`
- *   * `organizations/{organization_id}/locations/{location}`
- * @param {google.cloud.cloudsecuritycompliance.v1.GenerateFrameworkAuditScopeReportRequest.Format} request.reportFormat
- *   Required. The format that the scope report bytes is returned in.
- * @param {string} request.complianceFramework
- *   Required. The compliance framework that the scope report is generated for.
- * @param {object} [options]
- *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
- * @returns {Promise} - The promise which resolves to an array.
- *   The first element of the array is an object representing {@link protos.google.cloud.cloudsecuritycompliance.v1.GenerateFrameworkAuditScopeReportResponse|GenerateFrameworkAuditScopeReportResponse}.
- *   Please see the {@link https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#regular-methods | documentation }
- *   for more details and examples.
- * @example <caption>include:samples/generated/v1/audit.generate_framework_audit_scope_report.js</caption>
- * region_tag:cloudsecuritycompliance_v1_generated_Audit_GenerateFrameworkAuditScopeReport_async
- */
-  generateFrameworkAuditScopeReport(
-      request?: protos.google.cloud.cloudsecuritycompliance.v1.IGenerateFrameworkAuditScopeReportRequest,
-      options?: CallOptions):
-      Promise<[
-        protos.google.cloud.cloudsecuritycompliance.v1.IGenerateFrameworkAuditScopeReportResponse,
-        protos.google.cloud.cloudsecuritycompliance.v1.IGenerateFrameworkAuditScopeReportRequest|undefined, {}|undefined
-      ]>;
-  generateFrameworkAuditScopeReport(
-      request: protos.google.cloud.cloudsecuritycompliance.v1.IGenerateFrameworkAuditScopeReportRequest,
-      options: CallOptions,
-      callback: Callback<
-          protos.google.cloud.cloudsecuritycompliance.v1.IGenerateFrameworkAuditScopeReportResponse,
-          protos.google.cloud.cloudsecuritycompliance.v1.IGenerateFrameworkAuditScopeReportRequest|null|undefined,
-          {}|null|undefined>): void;
-  generateFrameworkAuditScopeReport(
-      request: protos.google.cloud.cloudsecuritycompliance.v1.IGenerateFrameworkAuditScopeReportRequest,
-      callback: Callback<
-          protos.google.cloud.cloudsecuritycompliance.v1.IGenerateFrameworkAuditScopeReportResponse,
-          protos.google.cloud.cloudsecuritycompliance.v1.IGenerateFrameworkAuditScopeReportRequest|null|undefined,
-          {}|null|undefined>): void;
-  generateFrameworkAuditScopeReport(
-      request?: protos.google.cloud.cloudsecuritycompliance.v1.IGenerateFrameworkAuditScopeReportRequest,
-      optionsOrCallback?: CallOptions|Callback<
-          protos.google.cloud.cloudsecuritycompliance.v1.IGenerateFrameworkAuditScopeReportResponse,
-          protos.google.cloud.cloudsecuritycompliance.v1.IGenerateFrameworkAuditScopeReportRequest|null|undefined,
-          {}|null|undefined>,
-      callback?: Callback<
-          protos.google.cloud.cloudsecuritycompliance.v1.IGenerateFrameworkAuditScopeReportResponse,
-          protos.google.cloud.cloudsecuritycompliance.v1.IGenerateFrameworkAuditScopeReportRequest|null|undefined,
-          {}|null|undefined>):
-      Promise<[
-        protos.google.cloud.cloudsecuritycompliance.v1.IGenerateFrameworkAuditScopeReportResponse,
-        protos.google.cloud.cloudsecuritycompliance.v1.IGenerateFrameworkAuditScopeReportRequest|undefined, {}|undefined
-      ]>|void {
-    request = request || {};
-    let options: CallOptions;
-    if (typeof optionsOrCallback === 'function' && callback === undefined) {
-      callback = optionsOrCallback;
-      options = {};
-    }
-    else {
-      options = optionsOrCallback as CallOptions;
-    }
-    options = options || {};
-    options.otherArgs = options.otherArgs || {};
-    options.otherArgs.headers = options.otherArgs.headers || {};
-    options.otherArgs.headers[
-      'x-goog-request-params'
-    ] = this._gaxModule.routingHeader.fromParams({
-      'scope': request.scope ?? '',
-    });
-    this.initialize().catch(err => {throw err});
-    this._log.info('generateFrameworkAuditScopeReport request %j', request);
-    const wrappedCallback: Callback<
-        protos.google.cloud.cloudsecuritycompliance.v1.IGenerateFrameworkAuditScopeReportResponse,
-        protos.google.cloud.cloudsecuritycompliance.v1.IGenerateFrameworkAuditScopeReportRequest|null|undefined,
-        {}|null|undefined>|undefined = callback
-      ? (error, response, options, rawResponse) => {
-          this._log.info('generateFrameworkAuditScopeReport response %j', response);
-          callback!(error, response, options, rawResponse); // We verified callback above.
-        }
-      : undefined;
-    return this.innerApiCalls.generateFrameworkAuditScopeReport(request, options, wrappedCallback)
-      ?.then(([response, options, rawResponse]: [
-        protos.google.cloud.cloudsecuritycompliance.v1.IGenerateFrameworkAuditScopeReportResponse,
-        protos.google.cloud.cloudsecuritycompliance.v1.IGenerateFrameworkAuditScopeReportRequest|undefined,
-        {}|undefined
-      ]) => {
-        this._log.info('generateFrameworkAuditScopeReport response %j', response);
-        return [response, options, rawResponse];
-      }).catch((error: any) => {
-        if (error && 'statusDetails' in error && error.statusDetails instanceof Array) {
-          const protos = this._gaxModule.protobuf.Root.fromJSON(jsonProtos) as unknown as gax.protobuf.Type;
-          error.statusDetails = decodeAnyProtosInArray(error.statusDetails, protos);
-        }
-        throw error;
-      });
-  }
-/**
- * Gets the details for a framework audit.
+ * Fetches the framework compliance report for a given scope.
  *
  * @param {Object} request
  *   The request object that will be sent.
  * @param {string} request.name
- *   Required. The name of the framework audit to retrieve.
- *
- *   Supported formats are the following:
- *
- *   * `organizations/{organization_id}/locations/{location}/frameworkAudits/{frameworkAuditName}`
- *   * `folders/{folder_id}/locations/{location}/frameworkAudits/{frameworkAuditName}`
- *   * `projects/{project_id}/locations/{location}/frameworkAudits/{frameworkAuditName}`
+ *   Required. The name of the framework compliance report to retrieve.
+ * @param {google.protobuf.Timestamp} [request.endTime]
+ *   Optional. The end time of the report.
  * @param {object} [options]
  *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
  * @returns {Promise} - The promise which resolves to an array.
- *   The first element of the array is an object representing {@link protos.google.cloud.cloudsecuritycompliance.v1.FrameworkAudit|FrameworkAudit}.
+ *   The first element of the array is an object representing {@link protos.google.cloud.cloudsecuritycompliance.v1.FrameworkComplianceReport|FrameworkComplianceReport}.
  *   Please see the {@link https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#regular-methods | documentation }
  *   for more details and examples.
- * @example <caption>include:samples/generated/v1/audit.get_framework_audit.js</caption>
- * region_tag:cloudsecuritycompliance_v1_generated_Audit_GetFrameworkAudit_async
+ * @example <caption>include:samples/generated/v1/monitoring.fetch_framework_compliance_report.js</caption>
+ * region_tag:cloudsecuritycompliance_v1_generated_Monitoring_FetchFrameworkComplianceReport_async
  */
-  getFrameworkAudit(
-      request?: protos.google.cloud.cloudsecuritycompliance.v1.IGetFrameworkAuditRequest,
+  fetchFrameworkComplianceReport(
+      request?: protos.google.cloud.cloudsecuritycompliance.v1.IFetchFrameworkComplianceReportRequest,
       options?: CallOptions):
       Promise<[
-        protos.google.cloud.cloudsecuritycompliance.v1.IFrameworkAudit,
-        protos.google.cloud.cloudsecuritycompliance.v1.IGetFrameworkAuditRequest|undefined, {}|undefined
+        protos.google.cloud.cloudsecuritycompliance.v1.IFrameworkComplianceReport,
+        protos.google.cloud.cloudsecuritycompliance.v1.IFetchFrameworkComplianceReportRequest|undefined, {}|undefined
       ]>;
-  getFrameworkAudit(
-      request: protos.google.cloud.cloudsecuritycompliance.v1.IGetFrameworkAuditRequest,
+  fetchFrameworkComplianceReport(
+      request: protos.google.cloud.cloudsecuritycompliance.v1.IFetchFrameworkComplianceReportRequest,
       options: CallOptions,
       callback: Callback<
-          protos.google.cloud.cloudsecuritycompliance.v1.IFrameworkAudit,
-          protos.google.cloud.cloudsecuritycompliance.v1.IGetFrameworkAuditRequest|null|undefined,
+          protos.google.cloud.cloudsecuritycompliance.v1.IFrameworkComplianceReport,
+          protos.google.cloud.cloudsecuritycompliance.v1.IFetchFrameworkComplianceReportRequest|null|undefined,
           {}|null|undefined>): void;
-  getFrameworkAudit(
-      request: protos.google.cloud.cloudsecuritycompliance.v1.IGetFrameworkAuditRequest,
+  fetchFrameworkComplianceReport(
+      request: protos.google.cloud.cloudsecuritycompliance.v1.IFetchFrameworkComplianceReportRequest,
       callback: Callback<
-          protos.google.cloud.cloudsecuritycompliance.v1.IFrameworkAudit,
-          protos.google.cloud.cloudsecuritycompliance.v1.IGetFrameworkAuditRequest|null|undefined,
+          protos.google.cloud.cloudsecuritycompliance.v1.IFrameworkComplianceReport,
+          protos.google.cloud.cloudsecuritycompliance.v1.IFetchFrameworkComplianceReportRequest|null|undefined,
           {}|null|undefined>): void;
-  getFrameworkAudit(
-      request?: protos.google.cloud.cloudsecuritycompliance.v1.IGetFrameworkAuditRequest,
+  fetchFrameworkComplianceReport(
+      request?: protos.google.cloud.cloudsecuritycompliance.v1.IFetchFrameworkComplianceReportRequest,
       optionsOrCallback?: CallOptions|Callback<
-          protos.google.cloud.cloudsecuritycompliance.v1.IFrameworkAudit,
-          protos.google.cloud.cloudsecuritycompliance.v1.IGetFrameworkAuditRequest|null|undefined,
+          protos.google.cloud.cloudsecuritycompliance.v1.IFrameworkComplianceReport,
+          protos.google.cloud.cloudsecuritycompliance.v1.IFetchFrameworkComplianceReportRequest|null|undefined,
           {}|null|undefined>,
       callback?: Callback<
-          protos.google.cloud.cloudsecuritycompliance.v1.IFrameworkAudit,
-          protos.google.cloud.cloudsecuritycompliance.v1.IGetFrameworkAuditRequest|null|undefined,
+          protos.google.cloud.cloudsecuritycompliance.v1.IFrameworkComplianceReport,
+          protos.google.cloud.cloudsecuritycompliance.v1.IFetchFrameworkComplianceReportRequest|null|undefined,
           {}|null|undefined>):
       Promise<[
-        protos.google.cloud.cloudsecuritycompliance.v1.IFrameworkAudit,
-        protos.google.cloud.cloudsecuritycompliance.v1.IGetFrameworkAuditRequest|undefined, {}|undefined
+        protos.google.cloud.cloudsecuritycompliance.v1.IFrameworkComplianceReport,
+        protos.google.cloud.cloudsecuritycompliance.v1.IFetchFrameworkComplianceReportRequest|undefined, {}|undefined
       ]>|void {
     request = request || {};
     let options: CallOptions;
@@ -616,23 +485,23 @@ export class AuditClient {
       'name': request.name ?? '',
     });
     this.initialize().catch(err => {throw err});
-    this._log.info('getFrameworkAudit request %j', request);
+    this._log.info('fetchFrameworkComplianceReport request %j', request);
     const wrappedCallback: Callback<
-        protos.google.cloud.cloudsecuritycompliance.v1.IFrameworkAudit,
-        protos.google.cloud.cloudsecuritycompliance.v1.IGetFrameworkAuditRequest|null|undefined,
+        protos.google.cloud.cloudsecuritycompliance.v1.IFrameworkComplianceReport,
+        protos.google.cloud.cloudsecuritycompliance.v1.IFetchFrameworkComplianceReportRequest|null|undefined,
         {}|null|undefined>|undefined = callback
       ? (error, response, options, rawResponse) => {
-          this._log.info('getFrameworkAudit response %j', response);
+          this._log.info('fetchFrameworkComplianceReport response %j', response);
           callback!(error, response, options, rawResponse); // We verified callback above.
         }
       : undefined;
-    return this.innerApiCalls.getFrameworkAudit(request, options, wrappedCallback)
+    return this.innerApiCalls.fetchFrameworkComplianceReport(request, options, wrappedCallback)
       ?.then(([response, options, rawResponse]: [
-        protos.google.cloud.cloudsecuritycompliance.v1.IFrameworkAudit,
-        protos.google.cloud.cloudsecuritycompliance.v1.IGetFrameworkAuditRequest|undefined,
+        protos.google.cloud.cloudsecuritycompliance.v1.IFrameworkComplianceReport,
+        protos.google.cloud.cloudsecuritycompliance.v1.IFetchFrameworkComplianceReportRequest|undefined,
         {}|undefined
       ]) => {
-        this._log.info('getFrameworkAudit response %j', response);
+        this._log.info('fetchFrameworkComplianceReport response %j', response);
         return [response, options, rawResponse];
       }).catch((error: any) => {
         if (error && 'statusDetails' in error && error.statusDetails instanceof Array) {
@@ -642,72 +511,64 @@ export class AuditClient {
         throw error;
       });
   }
-
 /**
- * Creates an audit scope report for a framework.
+ * Gets the aggregated compliance report over time for a given scope.
  *
  * @param {Object} request
  *   The request object that will be sent.
- * @param {string} request.parent
- *   Required. The parent resource where this framework audit is created.
+ * @param {string} request.name
+ *   Required. The name of the aggregated compliance report over time to
+ *   retrieve.
  *
- *   Supported formats are the following:
- *
- *   * `organizations/{organization_id}/locations/{location}`
- *   * `folders/{folder_id}/locations/{location}`
- *   * `projects/{project_id}/locations/{location}`
- * @param {string} [request.frameworkAuditId]
- *   Optional. The ID to use for the framework audit. The ID becomes the final
- *   component of the framework audit's full resource name.
- *
- *   The ID must be between 4-63 characters, and valid characters
- *   are `\{@link protos.0-9|a-z}-\`.
- * @param {google.cloud.cloudsecuritycompliance.v1.FrameworkAudit} request.frameworkAudit
- *   Required. The framework audit to create.
+ *   The supported format is:
+ *   `organizations/{organization_id}/locations/{location}/frameworkComplianceReports/{framework_compliance_report}`
+ * @param {google.type.Interval} [request.interval]
+ *   Optional. The start and end time range for the aggregated compliance
+ *   report.
+ * @param {string} [request.filter]
+ *   Optional. The filtering results.
  * @param {object} [options]
  *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
  * @returns {Promise} - The promise which resolves to an array.
- *   The first element of the array is an object representing
- *   a long running operation. Its `promise()` method returns a promise
- *   you can `await` for.
- *   Please see the {@link https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#long-running-operations | documentation }
+ *   The first element of the array is an object representing {@link protos.google.cloud.cloudsecuritycompliance.v1.AggregateFrameworkComplianceReportResponse|AggregateFrameworkComplianceReportResponse}.
+ *   Please see the {@link https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#regular-methods | documentation }
  *   for more details and examples.
- * @example <caption>include:samples/generated/v1/audit.create_framework_audit.js</caption>
- * region_tag:cloudsecuritycompliance_v1_generated_Audit_CreateFrameworkAudit_async
+ * @example <caption>include:samples/generated/v1/monitoring.aggregate_framework_compliance_report.js</caption>
+ * region_tag:cloudsecuritycompliance_v1_generated_Monitoring_AggregateFrameworkComplianceReport_async
  */
-  createFrameworkAudit(
-      request?: protos.google.cloud.cloudsecuritycompliance.v1.ICreateFrameworkAuditRequest,
+  aggregateFrameworkComplianceReport(
+      request?: protos.google.cloud.cloudsecuritycompliance.v1.IAggregateFrameworkComplianceReportRequest,
       options?: CallOptions):
       Promise<[
-        LROperation<protos.google.cloud.cloudsecuritycompliance.v1.IFrameworkAudit, protos.google.cloud.cloudsecuritycompliance.v1.IOperationMetadata>,
-        protos.google.longrunning.IOperation|undefined, {}|undefined
+        protos.google.cloud.cloudsecuritycompliance.v1.IAggregateFrameworkComplianceReportResponse,
+        protos.google.cloud.cloudsecuritycompliance.v1.IAggregateFrameworkComplianceReportRequest|undefined, {}|undefined
       ]>;
-  createFrameworkAudit(
-      request: protos.google.cloud.cloudsecuritycompliance.v1.ICreateFrameworkAuditRequest,
+  aggregateFrameworkComplianceReport(
+      request: protos.google.cloud.cloudsecuritycompliance.v1.IAggregateFrameworkComplianceReportRequest,
       options: CallOptions,
       callback: Callback<
-          LROperation<protos.google.cloud.cloudsecuritycompliance.v1.IFrameworkAudit, protos.google.cloud.cloudsecuritycompliance.v1.IOperationMetadata>,
-          protos.google.longrunning.IOperation|null|undefined,
+          protos.google.cloud.cloudsecuritycompliance.v1.IAggregateFrameworkComplianceReportResponse,
+          protos.google.cloud.cloudsecuritycompliance.v1.IAggregateFrameworkComplianceReportRequest|null|undefined,
           {}|null|undefined>): void;
-  createFrameworkAudit(
-      request: protos.google.cloud.cloudsecuritycompliance.v1.ICreateFrameworkAuditRequest,
+  aggregateFrameworkComplianceReport(
+      request: protos.google.cloud.cloudsecuritycompliance.v1.IAggregateFrameworkComplianceReportRequest,
       callback: Callback<
-          LROperation<protos.google.cloud.cloudsecuritycompliance.v1.IFrameworkAudit, protos.google.cloud.cloudsecuritycompliance.v1.IOperationMetadata>,
-          protos.google.longrunning.IOperation|null|undefined,
+          protos.google.cloud.cloudsecuritycompliance.v1.IAggregateFrameworkComplianceReportResponse,
+          protos.google.cloud.cloudsecuritycompliance.v1.IAggregateFrameworkComplianceReportRequest|null|undefined,
           {}|null|undefined>): void;
-  createFrameworkAudit(
-      request?: protos.google.cloud.cloudsecuritycompliance.v1.ICreateFrameworkAuditRequest,
+  aggregateFrameworkComplianceReport(
+      request?: protos.google.cloud.cloudsecuritycompliance.v1.IAggregateFrameworkComplianceReportRequest,
       optionsOrCallback?: CallOptions|Callback<
-          LROperation<protos.google.cloud.cloudsecuritycompliance.v1.IFrameworkAudit, protos.google.cloud.cloudsecuritycompliance.v1.IOperationMetadata>,
-          protos.google.longrunning.IOperation|null|undefined,
+          protos.google.cloud.cloudsecuritycompliance.v1.IAggregateFrameworkComplianceReportResponse,
+          protos.google.cloud.cloudsecuritycompliance.v1.IAggregateFrameworkComplianceReportRequest|null|undefined,
           {}|null|undefined>,
       callback?: Callback<
-          LROperation<protos.google.cloud.cloudsecuritycompliance.v1.IFrameworkAudit, protos.google.cloud.cloudsecuritycompliance.v1.IOperationMetadata>,
-          protos.google.longrunning.IOperation|null|undefined,
+          protos.google.cloud.cloudsecuritycompliance.v1.IAggregateFrameworkComplianceReportResponse,
+          protos.google.cloud.cloudsecuritycompliance.v1.IAggregateFrameworkComplianceReportRequest|null|undefined,
           {}|null|undefined>):
       Promise<[
-        LROperation<protos.google.cloud.cloudsecuritycompliance.v1.IFrameworkAudit, protos.google.cloud.cloudsecuritycompliance.v1.IOperationMetadata>,
-        protos.google.longrunning.IOperation|undefined, {}|undefined
+        protos.google.cloud.cloudsecuritycompliance.v1.IAggregateFrameworkComplianceReportResponse,
+        protos.google.cloud.cloudsecuritycompliance.v1.IAggregateFrameworkComplianceReportRequest|undefined, {}|undefined
       ]>|void {
     request = request || {};
     let options: CallOptions;
@@ -724,120 +585,98 @@ export class AuditClient {
     options.otherArgs.headers[
       'x-goog-request-params'
     ] = this._gaxModule.routingHeader.fromParams({
-      'parent': request.parent ?? '',
+      'name': request.name ?? '',
     });
     this.initialize().catch(err => {throw err});
+    this._log.info('aggregateFrameworkComplianceReport request %j', request);
     const wrappedCallback: Callback<
-          LROperation<protos.google.cloud.cloudsecuritycompliance.v1.IFrameworkAudit, protos.google.cloud.cloudsecuritycompliance.v1.IOperationMetadata>,
-          protos.google.longrunning.IOperation|null|undefined,
-          {}|null|undefined>|undefined = callback
-      ? (error, response, rawResponse, _) => {
-          this._log.info('createFrameworkAudit response %j', rawResponse);
-          callback!(error, response, rawResponse, _); // We verified callback above.
+        protos.google.cloud.cloudsecuritycompliance.v1.IAggregateFrameworkComplianceReportResponse,
+        protos.google.cloud.cloudsecuritycompliance.v1.IAggregateFrameworkComplianceReportRequest|null|undefined,
+        {}|null|undefined>|undefined = callback
+      ? (error, response, options, rawResponse) => {
+          this._log.info('aggregateFrameworkComplianceReport response %j', response);
+          callback!(error, response, options, rawResponse); // We verified callback above.
         }
       : undefined;
-    this._log.info('createFrameworkAudit request %j', request);
-    return this.innerApiCalls.createFrameworkAudit(request, options, wrappedCallback)
-    ?.then(([response, rawResponse, _]: [
-      LROperation<protos.google.cloud.cloudsecuritycompliance.v1.IFrameworkAudit, protos.google.cloud.cloudsecuritycompliance.v1.IOperationMetadata>,
-      protos.google.longrunning.IOperation|undefined, {}|undefined
-    ]) => {
-      this._log.info('createFrameworkAudit response %j', rawResponse);
-      return [response, rawResponse, _];
-    });
+    return this.innerApiCalls.aggregateFrameworkComplianceReport(request, options, wrappedCallback)
+      ?.then(([response, options, rawResponse]: [
+        protos.google.cloud.cloudsecuritycompliance.v1.IAggregateFrameworkComplianceReportResponse,
+        protos.google.cloud.cloudsecuritycompliance.v1.IAggregateFrameworkComplianceReportRequest|undefined,
+        {}|undefined
+      ]) => {
+        this._log.info('aggregateFrameworkComplianceReport response %j', response);
+        return [response, options, rawResponse];
+      }).catch((error: any) => {
+        if (error && 'statusDetails' in error && error.statusDetails instanceof Array) {
+          const protos = this._gaxModule.protobuf.Root.fromJSON(jsonProtos) as unknown as gax.protobuf.Type;
+          error.statusDetails = decodeAnyProtosInArray(error.statusDetails, protos);
+        }
+        throw error;
+      });
   }
-/**
- * Check the status of the long running operation returned by `createFrameworkAudit()`.
- * @param {String} name
- *   The operation name that will be passed.
- * @returns {Promise} - The promise which resolves to an object.
- *   The decoded operation object has result and metadata field to get information from.
- *   Please see the {@link https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#long-running-operations | documentation }
- *   for more details and examples.
- * @example <caption>include:samples/generated/v1/audit.create_framework_audit.js</caption>
- * region_tag:cloudsecuritycompliance_v1_generated_Audit_CreateFrameworkAudit_async
- */
-  async checkCreateFrameworkAuditProgress(name: string): Promise<LROperation<protos.google.cloud.cloudsecuritycompliance.v1.FrameworkAudit, protos.google.cloud.cloudsecuritycompliance.v1.OperationMetadata>>{
-    this._log.info('createFrameworkAudit long-running');
-    const request = new this._gaxModule.operationsProtos.google.longrunning.GetOperationRequest({name});
-    const [operation] = await this.operationsClient.getOperation(request);
-    const decodeOperation = new this._gaxModule.Operation(operation, this.descriptors.longrunning.createFrameworkAudit, this._gaxModule.createDefaultBackoffSettings());
-    return decodeOperation as LROperation<protos.google.cloud.cloudsecuritycompliance.v1.FrameworkAudit, protos.google.cloud.cloudsecuritycompliance.v1.OperationMetadata>;
-  }
+
  /**
- * Lists the framework audits for a given organization, folder, or project.
+ * Lists the framework compliance summary for a given scope.
  *
  * @param {Object} request
  *   The request object that will be sent.
  * @param {string} request.parent
- *   Required. The parent resource where the framework audits are listed.
- *
- *   Supported formats are the following:
- *
- *   * `organizations/{organization_id}/locations/{location}`
- *   * `folders/{folder_id}/locations/{location}`
- *   * `projects/{project_id}/locations/{location}`
+ *   Required. The parent scope for the framework compliance summary.
  * @param {number} [request.pageSize]
- *   Optional. The maximum number of framework audits to return. The service
- *   might return fewer audits than this value. If unspecified, a maximum of 10
- *   framework audits are returned. The maximum value is 50; values above 50 are
- *   limited to 50.
+ *   Optional. The requested page size. The server might return fewer items than
+ *   requested. If unspecified, the server picks an appropriate default.
  * @param {string} [request.pageToken]
- *   Optional. The `next_page_token` value that's returned from a previous list
- *   request, if any.
+ *   Optional. A token that identifies the page of results that the server
+ *   should return.
  * @param {string} [request.filter]
- *   Optional. The filters to apply to the framework audits.
- *   Supported filters are `compliance_framework`, `compliance_state`,
- *   `create_time,` and `framework_audit_name`. If the filter is invalid, an
- *   invalid argument error is returned.
- *   For syntax details, see {@link protos.https://google.aip.dev/160|AIP-160}.
+ *   Optional. The filtering results.
  * @param {object} [options]
  *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
  * @returns {Promise} - The promise which resolves to an array.
- *   The first element of the array is Array of {@link protos.google.cloud.cloudsecuritycompliance.v1.FrameworkAudit|FrameworkAudit}.
+ *   The first element of the array is Array of {@link protos.google.cloud.cloudsecuritycompliance.v1.FrameworkComplianceSummary|FrameworkComplianceSummary}.
  *   The client library will perform auto-pagination by default: it will call the API as many
  *   times as needed and will merge results from all the pages into this array.
  *   Note that it can affect your quota.
- *   We recommend using `listFrameworkAuditsAsync()`
+ *   We recommend using `listFrameworkComplianceSummariesAsync()`
  *   method described below for async iteration which you can stop as needed.
  *   Please see the {@link https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#auto-pagination | documentation }
  *   for more details and examples.
  */
-  listFrameworkAudits(
-      request?: protos.google.cloud.cloudsecuritycompliance.v1.IListFrameworkAuditsRequest,
+  listFrameworkComplianceSummaries(
+      request?: protos.google.cloud.cloudsecuritycompliance.v1.IListFrameworkComplianceSummariesRequest,
       options?: CallOptions):
       Promise<[
-        protos.google.cloud.cloudsecuritycompliance.v1.IFrameworkAudit[],
-        protos.google.cloud.cloudsecuritycompliance.v1.IListFrameworkAuditsRequest|null,
-        protos.google.cloud.cloudsecuritycompliance.v1.IListFrameworkAuditsResponse
+        protos.google.cloud.cloudsecuritycompliance.v1.IFrameworkComplianceSummary[],
+        protos.google.cloud.cloudsecuritycompliance.v1.IListFrameworkComplianceSummariesRequest|null,
+        protos.google.cloud.cloudsecuritycompliance.v1.IListFrameworkComplianceSummariesResponse
       ]>;
-  listFrameworkAudits(
-      request: protos.google.cloud.cloudsecuritycompliance.v1.IListFrameworkAuditsRequest,
+  listFrameworkComplianceSummaries(
+      request: protos.google.cloud.cloudsecuritycompliance.v1.IListFrameworkComplianceSummariesRequest,
       options: CallOptions,
       callback: PaginationCallback<
-          protos.google.cloud.cloudsecuritycompliance.v1.IListFrameworkAuditsRequest,
-          protos.google.cloud.cloudsecuritycompliance.v1.IListFrameworkAuditsResponse|null|undefined,
-          protos.google.cloud.cloudsecuritycompliance.v1.IFrameworkAudit>): void;
-  listFrameworkAudits(
-      request: protos.google.cloud.cloudsecuritycompliance.v1.IListFrameworkAuditsRequest,
+          protos.google.cloud.cloudsecuritycompliance.v1.IListFrameworkComplianceSummariesRequest,
+          protos.google.cloud.cloudsecuritycompliance.v1.IListFrameworkComplianceSummariesResponse|null|undefined,
+          protos.google.cloud.cloudsecuritycompliance.v1.IFrameworkComplianceSummary>): void;
+  listFrameworkComplianceSummaries(
+      request: protos.google.cloud.cloudsecuritycompliance.v1.IListFrameworkComplianceSummariesRequest,
       callback: PaginationCallback<
-          protos.google.cloud.cloudsecuritycompliance.v1.IListFrameworkAuditsRequest,
-          protos.google.cloud.cloudsecuritycompliance.v1.IListFrameworkAuditsResponse|null|undefined,
-          protos.google.cloud.cloudsecuritycompliance.v1.IFrameworkAudit>): void;
-  listFrameworkAudits(
-      request?: protos.google.cloud.cloudsecuritycompliance.v1.IListFrameworkAuditsRequest,
+          protos.google.cloud.cloudsecuritycompliance.v1.IListFrameworkComplianceSummariesRequest,
+          protos.google.cloud.cloudsecuritycompliance.v1.IListFrameworkComplianceSummariesResponse|null|undefined,
+          protos.google.cloud.cloudsecuritycompliance.v1.IFrameworkComplianceSummary>): void;
+  listFrameworkComplianceSummaries(
+      request?: protos.google.cloud.cloudsecuritycompliance.v1.IListFrameworkComplianceSummariesRequest,
       optionsOrCallback?: CallOptions|PaginationCallback<
-          protos.google.cloud.cloudsecuritycompliance.v1.IListFrameworkAuditsRequest,
-          protos.google.cloud.cloudsecuritycompliance.v1.IListFrameworkAuditsResponse|null|undefined,
-          protos.google.cloud.cloudsecuritycompliance.v1.IFrameworkAudit>,
+          protos.google.cloud.cloudsecuritycompliance.v1.IListFrameworkComplianceSummariesRequest,
+          protos.google.cloud.cloudsecuritycompliance.v1.IListFrameworkComplianceSummariesResponse|null|undefined,
+          protos.google.cloud.cloudsecuritycompliance.v1.IFrameworkComplianceSummary>,
       callback?: PaginationCallback<
-          protos.google.cloud.cloudsecuritycompliance.v1.IListFrameworkAuditsRequest,
-          protos.google.cloud.cloudsecuritycompliance.v1.IListFrameworkAuditsResponse|null|undefined,
-          protos.google.cloud.cloudsecuritycompliance.v1.IFrameworkAudit>):
+          protos.google.cloud.cloudsecuritycompliance.v1.IListFrameworkComplianceSummariesRequest,
+          protos.google.cloud.cloudsecuritycompliance.v1.IListFrameworkComplianceSummariesResponse|null|undefined,
+          protos.google.cloud.cloudsecuritycompliance.v1.IFrameworkComplianceSummary>):
       Promise<[
-        protos.google.cloud.cloudsecuritycompliance.v1.IFrameworkAudit[],
-        protos.google.cloud.cloudsecuritycompliance.v1.IListFrameworkAuditsRequest|null,
-        protos.google.cloud.cloudsecuritycompliance.v1.IListFrameworkAuditsResponse
+        protos.google.cloud.cloudsecuritycompliance.v1.IFrameworkComplianceSummary[],
+        protos.google.cloud.cloudsecuritycompliance.v1.IListFrameworkComplianceSummariesRequest|null,
+        protos.google.cloud.cloudsecuritycompliance.v1.IListFrameworkComplianceSummariesResponse
       ]>|void {
     request = request || {};
     let options: CallOptions;
@@ -858,66 +697,54 @@ export class AuditClient {
     });
     this.initialize().catch(err => {throw err});
     const wrappedCallback: PaginationCallback<
-      protos.google.cloud.cloudsecuritycompliance.v1.IListFrameworkAuditsRequest,
-      protos.google.cloud.cloudsecuritycompliance.v1.IListFrameworkAuditsResponse|null|undefined,
-      protos.google.cloud.cloudsecuritycompliance.v1.IFrameworkAudit>|undefined = callback
+      protos.google.cloud.cloudsecuritycompliance.v1.IListFrameworkComplianceSummariesRequest,
+      protos.google.cloud.cloudsecuritycompliance.v1.IListFrameworkComplianceSummariesResponse|null|undefined,
+      protos.google.cloud.cloudsecuritycompliance.v1.IFrameworkComplianceSummary>|undefined = callback
       ? (error, values, nextPageRequest, rawResponse) => {
-          this._log.info('listFrameworkAudits values %j', values);
+          this._log.info('listFrameworkComplianceSummaries values %j', values);
           callback!(error, values, nextPageRequest, rawResponse); // We verified callback above.
         }
       : undefined;
-    this._log.info('listFrameworkAudits request %j', request);
+    this._log.info('listFrameworkComplianceSummaries request %j', request);
     return this.innerApiCalls
-      .listFrameworkAudits(request, options, wrappedCallback)
+      .listFrameworkComplianceSummaries(request, options, wrappedCallback)
       ?.then(([response, input, output]: [
-        protos.google.cloud.cloudsecuritycompliance.v1.IFrameworkAudit[],
-        protos.google.cloud.cloudsecuritycompliance.v1.IListFrameworkAuditsRequest|null,
-        protos.google.cloud.cloudsecuritycompliance.v1.IListFrameworkAuditsResponse
+        protos.google.cloud.cloudsecuritycompliance.v1.IFrameworkComplianceSummary[],
+        protos.google.cloud.cloudsecuritycompliance.v1.IListFrameworkComplianceSummariesRequest|null,
+        protos.google.cloud.cloudsecuritycompliance.v1.IListFrameworkComplianceSummariesResponse
       ]) => {
-        this._log.info('listFrameworkAudits values %j', response);
+        this._log.info('listFrameworkComplianceSummaries values %j', response);
         return [response, input, output];
       });
   }
 
 /**
- * Equivalent to `listFrameworkAudits`, but returns a NodeJS Stream object.
+ * Equivalent to `listFrameworkComplianceSummaries`, but returns a NodeJS Stream object.
  * @param {Object} request
  *   The request object that will be sent.
  * @param {string} request.parent
- *   Required. The parent resource where the framework audits are listed.
- *
- *   Supported formats are the following:
- *
- *   * `organizations/{organization_id}/locations/{location}`
- *   * `folders/{folder_id}/locations/{location}`
- *   * `projects/{project_id}/locations/{location}`
+ *   Required. The parent scope for the framework compliance summary.
  * @param {number} [request.pageSize]
- *   Optional. The maximum number of framework audits to return. The service
- *   might return fewer audits than this value. If unspecified, a maximum of 10
- *   framework audits are returned. The maximum value is 50; values above 50 are
- *   limited to 50.
+ *   Optional. The requested page size. The server might return fewer items than
+ *   requested. If unspecified, the server picks an appropriate default.
  * @param {string} [request.pageToken]
- *   Optional. The `next_page_token` value that's returned from a previous list
- *   request, if any.
+ *   Optional. A token that identifies the page of results that the server
+ *   should return.
  * @param {string} [request.filter]
- *   Optional. The filters to apply to the framework audits.
- *   Supported filters are `compliance_framework`, `compliance_state`,
- *   `create_time,` and `framework_audit_name`. If the filter is invalid, an
- *   invalid argument error is returned.
- *   For syntax details, see {@link protos.https://google.aip.dev/160|AIP-160}.
+ *   Optional. The filtering results.
  * @param {object} [options]
  *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
  * @returns {Stream}
- *   An object stream which emits an object representing {@link protos.google.cloud.cloudsecuritycompliance.v1.FrameworkAudit|FrameworkAudit} on 'data' event.
+ *   An object stream which emits an object representing {@link protos.google.cloud.cloudsecuritycompliance.v1.FrameworkComplianceSummary|FrameworkComplianceSummary} on 'data' event.
  *   The client library will perform auto-pagination by default: it will call the API as many
  *   times as needed. Note that it can affect your quota.
- *   We recommend using `listFrameworkAuditsAsync()`
+ *   We recommend using `listFrameworkComplianceSummariesAsync()`
  *   method described below for async iteration which you can stop as needed.
  *   Please see the {@link https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#auto-pagination | documentation }
  *   for more details and examples.
  */
-  listFrameworkAuditsStream(
-      request?: protos.google.cloud.cloudsecuritycompliance.v1.IListFrameworkAuditsRequest,
+  listFrameworkComplianceSummariesStream(
+      request?: protos.google.cloud.cloudsecuritycompliance.v1.IListFrameworkComplianceSummariesRequest,
       options?: CallOptions):
     Transform{
     request = request || {};
@@ -929,61 +756,49 @@ export class AuditClient {
     ] = this._gaxModule.routingHeader.fromParams({
       'parent': request.parent ?? '',
     });
-    const defaultCallSettings = this._defaults['listFrameworkAudits'];
+    const defaultCallSettings = this._defaults['listFrameworkComplianceSummaries'];
     const callSettings = defaultCallSettings.merge(options);
     this.initialize().catch(err => {throw err});
-    this._log.info('listFrameworkAudits stream %j', request);
-    return this.descriptors.page.listFrameworkAudits.createStream(
-      this.innerApiCalls.listFrameworkAudits as GaxCall,
+    this._log.info('listFrameworkComplianceSummaries stream %j', request);
+    return this.descriptors.page.listFrameworkComplianceSummaries.createStream(
+      this.innerApiCalls.listFrameworkComplianceSummaries as GaxCall,
       request,
       callSettings
     );
   }
 
 /**
- * Equivalent to `listFrameworkAudits`, but returns an iterable object.
+ * Equivalent to `listFrameworkComplianceSummaries`, but returns an iterable object.
  *
  * `for`-`await`-`of` syntax is used with the iterable to get response elements on-demand.
  * @param {Object} request
  *   The request object that will be sent.
  * @param {string} request.parent
- *   Required. The parent resource where the framework audits are listed.
- *
- *   Supported formats are the following:
- *
- *   * `organizations/{organization_id}/locations/{location}`
- *   * `folders/{folder_id}/locations/{location}`
- *   * `projects/{project_id}/locations/{location}`
+ *   Required. The parent scope for the framework compliance summary.
  * @param {number} [request.pageSize]
- *   Optional. The maximum number of framework audits to return. The service
- *   might return fewer audits than this value. If unspecified, a maximum of 10
- *   framework audits are returned. The maximum value is 50; values above 50 are
- *   limited to 50.
+ *   Optional. The requested page size. The server might return fewer items than
+ *   requested. If unspecified, the server picks an appropriate default.
  * @param {string} [request.pageToken]
- *   Optional. The `next_page_token` value that's returned from a previous list
- *   request, if any.
+ *   Optional. A token that identifies the page of results that the server
+ *   should return.
  * @param {string} [request.filter]
- *   Optional. The filters to apply to the framework audits.
- *   Supported filters are `compliance_framework`, `compliance_state`,
- *   `create_time,` and `framework_audit_name`. If the filter is invalid, an
- *   invalid argument error is returned.
- *   For syntax details, see {@link protos.https://google.aip.dev/160|AIP-160}.
+ *   Optional. The filtering results.
  * @param {object} [options]
  *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
  * @returns {Object}
  *   An iterable Object that allows {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols | async iteration }.
  *   When you iterate the returned iterable, each element will be an object representing
- *   {@link protos.google.cloud.cloudsecuritycompliance.v1.FrameworkAudit|FrameworkAudit}. The API will be called under the hood as needed, once per the page,
+ *   {@link protos.google.cloud.cloudsecuritycompliance.v1.FrameworkComplianceSummary|FrameworkComplianceSummary}. The API will be called under the hood as needed, once per the page,
  *   so you can stop the iteration when you don't need more results.
  *   Please see the {@link https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#auto-pagination | documentation }
  *   for more details and examples.
- * @example <caption>include:samples/generated/v1/audit.list_framework_audits.js</caption>
- * region_tag:cloudsecuritycompliance_v1_generated_Audit_ListFrameworkAudits_async
+ * @example <caption>include:samples/generated/v1/monitoring.list_framework_compliance_summaries.js</caption>
+ * region_tag:cloudsecuritycompliance_v1_generated_Monitoring_ListFrameworkComplianceSummaries_async
  */
-  listFrameworkAuditsAsync(
-      request?: protos.google.cloud.cloudsecuritycompliance.v1.IListFrameworkAuditsRequest,
+  listFrameworkComplianceSummariesAsync(
+      request?: protos.google.cloud.cloudsecuritycompliance.v1.IListFrameworkComplianceSummariesRequest,
       options?: CallOptions):
-    AsyncIterable<protos.google.cloud.cloudsecuritycompliance.v1.IFrameworkAudit>{
+    AsyncIterable<protos.google.cloud.cloudsecuritycompliance.v1.IFrameworkComplianceSummary>{
     request = request || {};
     options = options || {};
     options.otherArgs = options.otherArgs || {};
@@ -993,15 +808,433 @@ export class AuditClient {
     ] = this._gaxModule.routingHeader.fromParams({
       'parent': request.parent ?? '',
     });
-    const defaultCallSettings = this._defaults['listFrameworkAudits'];
+    const defaultCallSettings = this._defaults['listFrameworkComplianceSummaries'];
     const callSettings = defaultCallSettings.merge(options);
     this.initialize().catch(err => {throw err});
-    this._log.info('listFrameworkAudits iterate %j', request);
-    return this.descriptors.page.listFrameworkAudits.asyncIterate(
-      this.innerApiCalls['listFrameworkAudits'] as GaxCall,
+    this._log.info('listFrameworkComplianceSummaries iterate %j', request);
+    return this.descriptors.page.listFrameworkComplianceSummaries.asyncIterate(
+      this.innerApiCalls['listFrameworkComplianceSummaries'] as GaxCall,
       request as {},
       callSettings
-    ) as AsyncIterable<protos.google.cloud.cloudsecuritycompliance.v1.IFrameworkAudit>;
+    ) as AsyncIterable<protos.google.cloud.cloudsecuritycompliance.v1.IFrameworkComplianceSummary>;
+  }
+ /**
+ * Lists the finding summary by category for a given scope.
+ *
+ * @param {Object} request
+ *   The request object that will be sent.
+ * @param {string} request.parent
+ *   Required. The parent scope for the framework overview page.
+ * @param {number} [request.pageSize]
+ *   Optional. The requested page size. The server might return fewer items than
+ *    requested. If unspecified, the server picks an appropriate default.
+ * @param {string} [request.pageToken]
+ *   Optional. A token that identifies the page of results that the server
+ *   should return.
+ * @param {string} [request.filter]
+ *   Optional. The filtering results.
+ * @param {google.protobuf.Timestamp} [request.endTime]
+ *   Optional. The end time of the finding summary.
+ * @param {object} [options]
+ *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
+ * @returns {Promise} - The promise which resolves to an array.
+ *   The first element of the array is Array of {@link protos.google.cloud.cloudsecuritycompliance.v1.FindingSummary|FindingSummary}.
+ *   The client library will perform auto-pagination by default: it will call the API as many
+ *   times as needed and will merge results from all the pages into this array.
+ *   Note that it can affect your quota.
+ *   We recommend using `listFindingSummariesAsync()`
+ *   method described below for async iteration which you can stop as needed.
+ *   Please see the {@link https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#auto-pagination | documentation }
+ *   for more details and examples.
+ */
+  listFindingSummaries(
+      request?: protos.google.cloud.cloudsecuritycompliance.v1.IListFindingSummariesRequest,
+      options?: CallOptions):
+      Promise<[
+        protos.google.cloud.cloudsecuritycompliance.v1.IFindingSummary[],
+        protos.google.cloud.cloudsecuritycompliance.v1.IListFindingSummariesRequest|null,
+        protos.google.cloud.cloudsecuritycompliance.v1.IListFindingSummariesResponse
+      ]>;
+  listFindingSummaries(
+      request: protos.google.cloud.cloudsecuritycompliance.v1.IListFindingSummariesRequest,
+      options: CallOptions,
+      callback: PaginationCallback<
+          protos.google.cloud.cloudsecuritycompliance.v1.IListFindingSummariesRequest,
+          protos.google.cloud.cloudsecuritycompliance.v1.IListFindingSummariesResponse|null|undefined,
+          protos.google.cloud.cloudsecuritycompliance.v1.IFindingSummary>): void;
+  listFindingSummaries(
+      request: protos.google.cloud.cloudsecuritycompliance.v1.IListFindingSummariesRequest,
+      callback: PaginationCallback<
+          protos.google.cloud.cloudsecuritycompliance.v1.IListFindingSummariesRequest,
+          protos.google.cloud.cloudsecuritycompliance.v1.IListFindingSummariesResponse|null|undefined,
+          protos.google.cloud.cloudsecuritycompliance.v1.IFindingSummary>): void;
+  listFindingSummaries(
+      request?: protos.google.cloud.cloudsecuritycompliance.v1.IListFindingSummariesRequest,
+      optionsOrCallback?: CallOptions|PaginationCallback<
+          protos.google.cloud.cloudsecuritycompliance.v1.IListFindingSummariesRequest,
+          protos.google.cloud.cloudsecuritycompliance.v1.IListFindingSummariesResponse|null|undefined,
+          protos.google.cloud.cloudsecuritycompliance.v1.IFindingSummary>,
+      callback?: PaginationCallback<
+          protos.google.cloud.cloudsecuritycompliance.v1.IListFindingSummariesRequest,
+          protos.google.cloud.cloudsecuritycompliance.v1.IListFindingSummariesResponse|null|undefined,
+          protos.google.cloud.cloudsecuritycompliance.v1.IFindingSummary>):
+      Promise<[
+        protos.google.cloud.cloudsecuritycompliance.v1.IFindingSummary[],
+        protos.google.cloud.cloudsecuritycompliance.v1.IListFindingSummariesRequest|null,
+        protos.google.cloud.cloudsecuritycompliance.v1.IListFindingSummariesResponse
+      ]>|void {
+    request = request || {};
+    let options: CallOptions;
+    if (typeof optionsOrCallback === 'function' && callback === undefined) {
+      callback = optionsOrCallback;
+      options = {};
+    }
+    else {
+      options = optionsOrCallback as CallOptions;
+    }
+    options = options || {};
+    options.otherArgs = options.otherArgs || {};
+    options.otherArgs.headers = options.otherArgs.headers || {};
+    options.otherArgs.headers[
+      'x-goog-request-params'
+    ] = this._gaxModule.routingHeader.fromParams({
+      'parent': request.parent ?? '',
+    });
+    this.initialize().catch(err => {throw err});
+    const wrappedCallback: PaginationCallback<
+      protos.google.cloud.cloudsecuritycompliance.v1.IListFindingSummariesRequest,
+      protos.google.cloud.cloudsecuritycompliance.v1.IListFindingSummariesResponse|null|undefined,
+      protos.google.cloud.cloudsecuritycompliance.v1.IFindingSummary>|undefined = callback
+      ? (error, values, nextPageRequest, rawResponse) => {
+          this._log.info('listFindingSummaries values %j', values);
+          callback!(error, values, nextPageRequest, rawResponse); // We verified callback above.
+        }
+      : undefined;
+    this._log.info('listFindingSummaries request %j', request);
+    return this.innerApiCalls
+      .listFindingSummaries(request, options, wrappedCallback)
+      ?.then(([response, input, output]: [
+        protos.google.cloud.cloudsecuritycompliance.v1.IFindingSummary[],
+        protos.google.cloud.cloudsecuritycompliance.v1.IListFindingSummariesRequest|null,
+        protos.google.cloud.cloudsecuritycompliance.v1.IListFindingSummariesResponse
+      ]) => {
+        this._log.info('listFindingSummaries values %j', response);
+        return [response, input, output];
+      });
+  }
+
+/**
+ * Equivalent to `listFindingSummaries`, but returns a NodeJS Stream object.
+ * @param {Object} request
+ *   The request object that will be sent.
+ * @param {string} request.parent
+ *   Required. The parent scope for the framework overview page.
+ * @param {number} [request.pageSize]
+ *   Optional. The requested page size. The server might return fewer items than
+ *    requested. If unspecified, the server picks an appropriate default.
+ * @param {string} [request.pageToken]
+ *   Optional. A token that identifies the page of results that the server
+ *   should return.
+ * @param {string} [request.filter]
+ *   Optional. The filtering results.
+ * @param {google.protobuf.Timestamp} [request.endTime]
+ *   Optional. The end time of the finding summary.
+ * @param {object} [options]
+ *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
+ * @returns {Stream}
+ *   An object stream which emits an object representing {@link protos.google.cloud.cloudsecuritycompliance.v1.FindingSummary|FindingSummary} on 'data' event.
+ *   The client library will perform auto-pagination by default: it will call the API as many
+ *   times as needed. Note that it can affect your quota.
+ *   We recommend using `listFindingSummariesAsync()`
+ *   method described below for async iteration which you can stop as needed.
+ *   Please see the {@link https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#auto-pagination | documentation }
+ *   for more details and examples.
+ */
+  listFindingSummariesStream(
+      request?: protos.google.cloud.cloudsecuritycompliance.v1.IListFindingSummariesRequest,
+      options?: CallOptions):
+    Transform{
+    request = request || {};
+    options = options || {};
+    options.otherArgs = options.otherArgs || {};
+    options.otherArgs.headers = options.otherArgs.headers || {};
+    options.otherArgs.headers[
+      'x-goog-request-params'
+    ] = this._gaxModule.routingHeader.fromParams({
+      'parent': request.parent ?? '',
+    });
+    const defaultCallSettings = this._defaults['listFindingSummaries'];
+    const callSettings = defaultCallSettings.merge(options);
+    this.initialize().catch(err => {throw err});
+    this._log.info('listFindingSummaries stream %j', request);
+    return this.descriptors.page.listFindingSummaries.createStream(
+      this.innerApiCalls.listFindingSummaries as GaxCall,
+      request,
+      callSettings
+    );
+  }
+
+/**
+ * Equivalent to `listFindingSummaries`, but returns an iterable object.
+ *
+ * `for`-`await`-`of` syntax is used with the iterable to get response elements on-demand.
+ * @param {Object} request
+ *   The request object that will be sent.
+ * @param {string} request.parent
+ *   Required. The parent scope for the framework overview page.
+ * @param {number} [request.pageSize]
+ *   Optional. The requested page size. The server might return fewer items than
+ *    requested. If unspecified, the server picks an appropriate default.
+ * @param {string} [request.pageToken]
+ *   Optional. A token that identifies the page of results that the server
+ *   should return.
+ * @param {string} [request.filter]
+ *   Optional. The filtering results.
+ * @param {google.protobuf.Timestamp} [request.endTime]
+ *   Optional. The end time of the finding summary.
+ * @param {object} [options]
+ *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
+ * @returns {Object}
+ *   An iterable Object that allows {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols | async iteration }.
+ *   When you iterate the returned iterable, each element will be an object representing
+ *   {@link protos.google.cloud.cloudsecuritycompliance.v1.FindingSummary|FindingSummary}. The API will be called under the hood as needed, once per the page,
+ *   so you can stop the iteration when you don't need more results.
+ *   Please see the {@link https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#auto-pagination | documentation }
+ *   for more details and examples.
+ * @example <caption>include:samples/generated/v1/monitoring.list_finding_summaries.js</caption>
+ * region_tag:cloudsecuritycompliance_v1_generated_Monitoring_ListFindingSummaries_async
+ */
+  listFindingSummariesAsync(
+      request?: protos.google.cloud.cloudsecuritycompliance.v1.IListFindingSummariesRequest,
+      options?: CallOptions):
+    AsyncIterable<protos.google.cloud.cloudsecuritycompliance.v1.IFindingSummary>{
+    request = request || {};
+    options = options || {};
+    options.otherArgs = options.otherArgs || {};
+    options.otherArgs.headers = options.otherArgs.headers || {};
+    options.otherArgs.headers[
+      'x-goog-request-params'
+    ] = this._gaxModule.routingHeader.fromParams({
+      'parent': request.parent ?? '',
+    });
+    const defaultCallSettings = this._defaults['listFindingSummaries'];
+    const callSettings = defaultCallSettings.merge(options);
+    this.initialize().catch(err => {throw err});
+    this._log.info('listFindingSummaries iterate %j', request);
+    return this.descriptors.page.listFindingSummaries.asyncIterate(
+      this.innerApiCalls['listFindingSummaries'] as GaxCall,
+      request as {},
+      callSettings
+    ) as AsyncIterable<protos.google.cloud.cloudsecuritycompliance.v1.IFindingSummary>;
+  }
+ /**
+ * Lists the control compliance summary for a given scope.
+ *
+ * @param {Object} request
+ *   The request object that will be sent.
+ * @param {string} request.parent
+ *   Required. The parent scope for the framework overview page.
+ * @param {google.protobuf.Timestamp} [request.endTime]
+ *   Optional. The end time of the control compliance summary.
+ * @param {number} [request.pageSize]
+ *   Optional. The requested page size. The server might return fewer items than
+ *   requested. If unspecified, the server picks an appropriate default.
+ * @param {string} [request.pageToken]
+ *   Optional. A token that identifies the page of results that the server
+ *   should return.
+ * @param {string} [request.filter]
+ *   Optional. The filtering results.
+ * @param {object} [options]
+ *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
+ * @returns {Promise} - The promise which resolves to an array.
+ *   The first element of the array is Array of {@link protos.google.cloud.cloudsecuritycompliance.v1.ControlComplianceSummary|ControlComplianceSummary}.
+ *   The client library will perform auto-pagination by default: it will call the API as many
+ *   times as needed and will merge results from all the pages into this array.
+ *   Note that it can affect your quota.
+ *   We recommend using `listControlComplianceSummariesAsync()`
+ *   method described below for async iteration which you can stop as needed.
+ *   Please see the {@link https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#auto-pagination | documentation }
+ *   for more details and examples.
+ */
+  listControlComplianceSummaries(
+      request?: protos.google.cloud.cloudsecuritycompliance.v1.IListControlComplianceSummariesRequest,
+      options?: CallOptions):
+      Promise<[
+        protos.google.cloud.cloudsecuritycompliance.v1.IControlComplianceSummary[],
+        protos.google.cloud.cloudsecuritycompliance.v1.IListControlComplianceSummariesRequest|null,
+        protos.google.cloud.cloudsecuritycompliance.v1.IListControlComplianceSummariesResponse
+      ]>;
+  listControlComplianceSummaries(
+      request: protos.google.cloud.cloudsecuritycompliance.v1.IListControlComplianceSummariesRequest,
+      options: CallOptions,
+      callback: PaginationCallback<
+          protos.google.cloud.cloudsecuritycompliance.v1.IListControlComplianceSummariesRequest,
+          protos.google.cloud.cloudsecuritycompliance.v1.IListControlComplianceSummariesResponse|null|undefined,
+          protos.google.cloud.cloudsecuritycompliance.v1.IControlComplianceSummary>): void;
+  listControlComplianceSummaries(
+      request: protos.google.cloud.cloudsecuritycompliance.v1.IListControlComplianceSummariesRequest,
+      callback: PaginationCallback<
+          protos.google.cloud.cloudsecuritycompliance.v1.IListControlComplianceSummariesRequest,
+          protos.google.cloud.cloudsecuritycompliance.v1.IListControlComplianceSummariesResponse|null|undefined,
+          protos.google.cloud.cloudsecuritycompliance.v1.IControlComplianceSummary>): void;
+  listControlComplianceSummaries(
+      request?: protos.google.cloud.cloudsecuritycompliance.v1.IListControlComplianceSummariesRequest,
+      optionsOrCallback?: CallOptions|PaginationCallback<
+          protos.google.cloud.cloudsecuritycompliance.v1.IListControlComplianceSummariesRequest,
+          protos.google.cloud.cloudsecuritycompliance.v1.IListControlComplianceSummariesResponse|null|undefined,
+          protos.google.cloud.cloudsecuritycompliance.v1.IControlComplianceSummary>,
+      callback?: PaginationCallback<
+          protos.google.cloud.cloudsecuritycompliance.v1.IListControlComplianceSummariesRequest,
+          protos.google.cloud.cloudsecuritycompliance.v1.IListControlComplianceSummariesResponse|null|undefined,
+          protos.google.cloud.cloudsecuritycompliance.v1.IControlComplianceSummary>):
+      Promise<[
+        protos.google.cloud.cloudsecuritycompliance.v1.IControlComplianceSummary[],
+        protos.google.cloud.cloudsecuritycompliance.v1.IListControlComplianceSummariesRequest|null,
+        protos.google.cloud.cloudsecuritycompliance.v1.IListControlComplianceSummariesResponse
+      ]>|void {
+    request = request || {};
+    let options: CallOptions;
+    if (typeof optionsOrCallback === 'function' && callback === undefined) {
+      callback = optionsOrCallback;
+      options = {};
+    }
+    else {
+      options = optionsOrCallback as CallOptions;
+    }
+    options = options || {};
+    options.otherArgs = options.otherArgs || {};
+    options.otherArgs.headers = options.otherArgs.headers || {};
+    options.otherArgs.headers[
+      'x-goog-request-params'
+    ] = this._gaxModule.routingHeader.fromParams({
+      'parent': request.parent ?? '',
+    });
+    this.initialize().catch(err => {throw err});
+    const wrappedCallback: PaginationCallback<
+      protos.google.cloud.cloudsecuritycompliance.v1.IListControlComplianceSummariesRequest,
+      protos.google.cloud.cloudsecuritycompliance.v1.IListControlComplianceSummariesResponse|null|undefined,
+      protos.google.cloud.cloudsecuritycompliance.v1.IControlComplianceSummary>|undefined = callback
+      ? (error, values, nextPageRequest, rawResponse) => {
+          this._log.info('listControlComplianceSummaries values %j', values);
+          callback!(error, values, nextPageRequest, rawResponse); // We verified callback above.
+        }
+      : undefined;
+    this._log.info('listControlComplianceSummaries request %j', request);
+    return this.innerApiCalls
+      .listControlComplianceSummaries(request, options, wrappedCallback)
+      ?.then(([response, input, output]: [
+        protos.google.cloud.cloudsecuritycompliance.v1.IControlComplianceSummary[],
+        protos.google.cloud.cloudsecuritycompliance.v1.IListControlComplianceSummariesRequest|null,
+        protos.google.cloud.cloudsecuritycompliance.v1.IListControlComplianceSummariesResponse
+      ]) => {
+        this._log.info('listControlComplianceSummaries values %j', response);
+        return [response, input, output];
+      });
+  }
+
+/**
+ * Equivalent to `listControlComplianceSummaries`, but returns a NodeJS Stream object.
+ * @param {Object} request
+ *   The request object that will be sent.
+ * @param {string} request.parent
+ *   Required. The parent scope for the framework overview page.
+ * @param {google.protobuf.Timestamp} [request.endTime]
+ *   Optional. The end time of the control compliance summary.
+ * @param {number} [request.pageSize]
+ *   Optional. The requested page size. The server might return fewer items than
+ *   requested. If unspecified, the server picks an appropriate default.
+ * @param {string} [request.pageToken]
+ *   Optional. A token that identifies the page of results that the server
+ *   should return.
+ * @param {string} [request.filter]
+ *   Optional. The filtering results.
+ * @param {object} [options]
+ *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
+ * @returns {Stream}
+ *   An object stream which emits an object representing {@link protos.google.cloud.cloudsecuritycompliance.v1.ControlComplianceSummary|ControlComplianceSummary} on 'data' event.
+ *   The client library will perform auto-pagination by default: it will call the API as many
+ *   times as needed. Note that it can affect your quota.
+ *   We recommend using `listControlComplianceSummariesAsync()`
+ *   method described below for async iteration which you can stop as needed.
+ *   Please see the {@link https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#auto-pagination | documentation }
+ *   for more details and examples.
+ */
+  listControlComplianceSummariesStream(
+      request?: protos.google.cloud.cloudsecuritycompliance.v1.IListControlComplianceSummariesRequest,
+      options?: CallOptions):
+    Transform{
+    request = request || {};
+    options = options || {};
+    options.otherArgs = options.otherArgs || {};
+    options.otherArgs.headers = options.otherArgs.headers || {};
+    options.otherArgs.headers[
+      'x-goog-request-params'
+    ] = this._gaxModule.routingHeader.fromParams({
+      'parent': request.parent ?? '',
+    });
+    const defaultCallSettings = this._defaults['listControlComplianceSummaries'];
+    const callSettings = defaultCallSettings.merge(options);
+    this.initialize().catch(err => {throw err});
+    this._log.info('listControlComplianceSummaries stream %j', request);
+    return this.descriptors.page.listControlComplianceSummaries.createStream(
+      this.innerApiCalls.listControlComplianceSummaries as GaxCall,
+      request,
+      callSettings
+    );
+  }
+
+/**
+ * Equivalent to `listControlComplianceSummaries`, but returns an iterable object.
+ *
+ * `for`-`await`-`of` syntax is used with the iterable to get response elements on-demand.
+ * @param {Object} request
+ *   The request object that will be sent.
+ * @param {string} request.parent
+ *   Required. The parent scope for the framework overview page.
+ * @param {google.protobuf.Timestamp} [request.endTime]
+ *   Optional. The end time of the control compliance summary.
+ * @param {number} [request.pageSize]
+ *   Optional. The requested page size. The server might return fewer items than
+ *   requested. If unspecified, the server picks an appropriate default.
+ * @param {string} [request.pageToken]
+ *   Optional. A token that identifies the page of results that the server
+ *   should return.
+ * @param {string} [request.filter]
+ *   Optional. The filtering results.
+ * @param {object} [options]
+ *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
+ * @returns {Object}
+ *   An iterable Object that allows {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols | async iteration }.
+ *   When you iterate the returned iterable, each element will be an object representing
+ *   {@link protos.google.cloud.cloudsecuritycompliance.v1.ControlComplianceSummary|ControlComplianceSummary}. The API will be called under the hood as needed, once per the page,
+ *   so you can stop the iteration when you don't need more results.
+ *   Please see the {@link https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#auto-pagination | documentation }
+ *   for more details and examples.
+ * @example <caption>include:samples/generated/v1/monitoring.list_control_compliance_summaries.js</caption>
+ * region_tag:cloudsecuritycompliance_v1_generated_Monitoring_ListControlComplianceSummaries_async
+ */
+  listControlComplianceSummariesAsync(
+      request?: protos.google.cloud.cloudsecuritycompliance.v1.IListControlComplianceSummariesRequest,
+      options?: CallOptions):
+    AsyncIterable<protos.google.cloud.cloudsecuritycompliance.v1.IControlComplianceSummary>{
+    request = request || {};
+    options = options || {};
+    options.otherArgs = options.otherArgs || {};
+    options.otherArgs.headers = options.otherArgs.headers || {};
+    options.otherArgs.headers[
+      'x-goog-request-params'
+    ] = this._gaxModule.routingHeader.fromParams({
+      'parent': request.parent ?? '',
+    });
+    const defaultCallSettings = this._defaults['listControlComplianceSummaries'];
+    const callSettings = defaultCallSettings.merge(options);
+    this.initialize().catch(err => {throw err});
+    this._log.info('listControlComplianceSummaries iterate %j', request);
+    return this.descriptors.page.listControlComplianceSummaries.asyncIterate(
+      this.innerApiCalls['listControlComplianceSummaries'] as GaxCall,
+      request as {},
+      callSettings
+    ) as AsyncIterable<protos.google.cloud.cloudsecuritycompliance.v1.IControlComplianceSummary>;
   }
 /**
    * Gets information about a location.
@@ -1079,230 +1312,6 @@ export class AuditClient {
     options?: CallOptions
   ): AsyncIterable<LocationProtos.google.cloud.location.ILocation> {
     return this.locationsClient.listLocationsAsync(request, options);
-  }
-
-/**
-   * Gets the latest state of a long-running operation.  Clients can use this
-   * method to poll the operation result at intervals as recommended by the API
-   * service.
-   *
-   * @param {Object} request - The request object that will be sent.
-   * @param {string} request.name - The name of the operation resource.
-   * @param {Object=} options
-   *   Optional parameters. You can override the default settings for this call,
-   *   e.g, timeout, retries, paginations, etc. See {@link
-   *   https://googleapis.github.io/gax-nodejs/global.html#CallOptions | gax.CallOptions}
-   *   for the details.
-   * @param {function(?Error, ?Object)=} callback
-   *   The function which will be called with the result of the API call.
-   *
-   *   The second parameter to the callback is an object representing
-   *   {@link google.longrunning.Operation | google.longrunning.Operation}.
-   * @return {Promise} - The promise which resolves to an array.
-   *   The first element of the array is an object representing
-   * {@link google.longrunning.Operation | google.longrunning.Operation}.
-   * The promise has a method named "cancel" which cancels the ongoing API call.
-   *
-   * @example
-   * ```
-   * const client = longrunning.operationsClient();
-   * const name = '';
-   * const [response] = await client.getOperation({name});
-   * // doThingsWith(response)
-   * ```
-   */
-  getOperation(
-    request: protos.google.longrunning.GetOperationRequest,
-    optionsOrCallback?:
-      | gax.CallOptions
-      | Callback<
-          protos.google.longrunning.Operation,
-          protos.google.longrunning.GetOperationRequest,
-          {} | null | undefined
-        >,
-    callback?: Callback<
-      protos.google.longrunning.Operation,
-      protos.google.longrunning.GetOperationRequest,
-      {} | null | undefined
-    >
-  ): Promise<[protos.google.longrunning.Operation]> {
-     let options: gax.CallOptions;
-     if (typeof optionsOrCallback === 'function' && callback === undefined) {
-       callback = optionsOrCallback;
-       options = {};
-     } else {
-       options = optionsOrCallback as gax.CallOptions;
-     }
-     options = options || {};
-     options.otherArgs = options.otherArgs || {};
-     options.otherArgs.headers = options.otherArgs.headers || {};
-     options.otherArgs.headers['x-goog-request-params'] =
-       this._gaxModule.routingHeader.fromParams({
-         name: request.name ?? '',
-       });
-    return this.operationsClient.getOperation(request, options, callback);
-  }
-  /**
-   * Lists operations that match the specified filter in the request. If the
-   * server doesn't support this method, it returns `UNIMPLEMENTED`. Returns an iterable object.
-   *
-   * For-await-of syntax is used with the iterable to recursively get response element on-demand.
-   *
-   * @param {Object} request - The request object that will be sent.
-   * @param {string} request.name - The name of the operation collection.
-   * @param {string} request.filter - The standard list filter.
-   * @param {number=} request.pageSize -
-   *   The maximum number of resources contained in the underlying API
-   *   response. If page streaming is performed per-resource, this
-   *   parameter does not affect the return value. If page streaming is
-   *   performed per-page, this determines the maximum number of
-   *   resources in a page.
-   * @param {Object=} options
-   *   Optional parameters. You can override the default settings for this call,
-   *   e.g, timeout, retries, paginations, etc. See {@link
-   *   https://googleapis.github.io/gax-nodejs/global.html#CallOptions | gax.CallOptions} for the
-   *   details.
-   * @returns {Object}
-   *   An iterable Object that conforms to {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols | iteration protocols}.
-   *
-   * @example
-   * ```
-   * const client = longrunning.operationsClient();
-   * for await (const response of client.listOperationsAsync(request));
-   * // doThingsWith(response)
-   * ```
-   */
-  listOperationsAsync(
-    request: protos.google.longrunning.ListOperationsRequest,
-    options?: gax.CallOptions
-  ): AsyncIterable<protos.google.longrunning.IOperation> {
-     options = options || {};
-     options.otherArgs = options.otherArgs || {};
-     options.otherArgs.headers = options.otherArgs.headers || {};
-     options.otherArgs.headers['x-goog-request-params'] =
-       this._gaxModule.routingHeader.fromParams({
-         name: request.name ?? '',
-       });
-    return this.operationsClient.listOperationsAsync(request, options);
-  }
-  /**
-   * Starts asynchronous cancellation on a long-running operation.  The server
-   * makes a best effort to cancel the operation, but success is not
-   * guaranteed.  If the server doesn't support this method, it returns
-   * `google.rpc.Code.UNIMPLEMENTED`.  Clients can use
-   * {@link Operations.GetOperation} or
-   * other methods to check whether the cancellation succeeded or whether the
-   * operation completed despite cancellation. On successful cancellation,
-   * the operation is not deleted; instead, it becomes an operation with
-   * an {@link Operation.error} value with a {@link google.rpc.Status.code} of
-   * 1, corresponding to `Code.CANCELLED`.
-   *
-   * @param {Object} request - The request object that will be sent.
-   * @param {string} request.name - The name of the operation resource to be cancelled.
-   * @param {Object=} options
-   *   Optional parameters. You can override the default settings for this call,
-   * e.g, timeout, retries, paginations, etc. See {@link
-   * https://googleapis.github.io/gax-nodejs/global.html#CallOptions | gax.CallOptions} for the
-   * details.
-   * @param {function(?Error)=} callback
-   *   The function which will be called with the result of the API call.
-   * @return {Promise} - The promise which resolves when API call finishes.
-   *   The promise has a method named "cancel" which cancels the ongoing API
-   * call.
-   *
-   * @example
-   * ```
-   * const client = longrunning.operationsClient();
-   * await client.cancelOperation({name: ''});
-   * ```
-   */
-   cancelOperation(
-    request: protos.google.longrunning.CancelOperationRequest,
-    optionsOrCallback?:
-      | gax.CallOptions
-      | Callback<
-          protos.google.longrunning.CancelOperationRequest,
-          protos.google.protobuf.Empty,
-          {} | undefined | null
-        >,
-    callback?: Callback<
-      protos.google.longrunning.CancelOperationRequest,
-      protos.google.protobuf.Empty,
-      {} | undefined | null
-    >
-  ): Promise<protos.google.protobuf.Empty> {
-     let options: gax.CallOptions;
-     if (typeof optionsOrCallback === 'function' && callback === undefined) {
-       callback = optionsOrCallback;
-       options = {};
-     } else {
-       options = optionsOrCallback as gax.CallOptions;
-     }
-     options = options || {};
-     options.otherArgs = options.otherArgs || {};
-     options.otherArgs.headers = options.otherArgs.headers || {};
-     options.otherArgs.headers['x-goog-request-params'] =
-       this._gaxModule.routingHeader.fromParams({
-         name: request.name ?? '',
-       });
-    return this.operationsClient.cancelOperation(request, options, callback);
-  }
-
-  /**
-   * Deletes a long-running operation. This method indicates that the client is
-   * no longer interested in the operation result. It does not cancel the
-   * operation. If the server doesn't support this method, it returns
-   * `google.rpc.Code.UNIMPLEMENTED`.
-   *
-   * @param {Object} request - The request object that will be sent.
-   * @param {string} request.name - The name of the operation resource to be deleted.
-   * @param {Object=} options
-   *   Optional parameters. You can override the default settings for this call,
-   * e.g, timeout, retries, paginations, etc. See {@link
-   * https://googleapis.github.io/gax-nodejs/global.html#CallOptions | gax.CallOptions}
-   * for the details.
-   * @param {function(?Error)=} callback
-   *   The function which will be called with the result of the API call.
-   * @return {Promise} - The promise which resolves when API call finishes.
-   *   The promise has a method named "cancel" which cancels the ongoing API
-   * call.
-   *
-   * @example
-   * ```
-   * const client = longrunning.operationsClient();
-   * await client.deleteOperation({name: ''});
-   * ```
-   */
-  deleteOperation(
-    request: protos.google.longrunning.DeleteOperationRequest,
-    optionsOrCallback?:
-      | gax.CallOptions
-      | Callback<
-          protos.google.protobuf.Empty,
-          protos.google.longrunning.DeleteOperationRequest,
-          {} | null | undefined
-        >,
-    callback?: Callback<
-      protos.google.protobuf.Empty,
-      protos.google.longrunning.DeleteOperationRequest,
-      {} | null | undefined
-    >
-  ): Promise<protos.google.protobuf.Empty> {
-     let options: gax.CallOptions;
-     if (typeof optionsOrCallback === 'function' && callback === undefined) {
-       callback = optionsOrCallback;
-       options = {};
-     } else {
-       options = optionsOrCallback as gax.CallOptions;
-     }
-     options = options || {};
-     options.otherArgs = options.otherArgs || {};
-     options.otherArgs.headers = options.otherArgs.headers || {};
-     options.otherArgs.headers['x-goog-request-params'] =
-       this._gaxModule.routingHeader.fromParams({
-         name: request.name ?? '',
-       });
-    return this.operationsClient.deleteOperation(request, options, callback);
   }
 
   // --------------------
@@ -2466,13 +2475,12 @@ export class AuditClient {
    * @returns {Promise} A promise that resolves when the client is closed.
    */
   close(): Promise<void> {
-    if (this.auditStub && !this._terminated) {
-      return this.auditStub.then(stub => {
+    if (this.monitoringStub && !this._terminated) {
+      return this.monitoringStub.then(stub => {
         this._log.info('ending gRPC channel');
         this._terminated = true;
         stub.close();
         this.locationsClient.close().catch(err => {throw err});
-        void this.operationsClient.close();
       });
     }
     return Promise.resolve();

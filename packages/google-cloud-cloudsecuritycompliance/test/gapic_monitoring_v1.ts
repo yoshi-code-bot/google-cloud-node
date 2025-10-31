@@ -21,11 +21,11 @@ import * as assert from 'assert';
 import * as sinon from 'sinon';
 import {SinonStub} from 'sinon';
 import {describe, it} from 'mocha';
-import * as deploymentModule from '../src';
+import * as monitoringModule from '../src';
 
 import {PassThrough} from 'stream';
 
-import {protobuf, LROperation, operationsProtos, LocationProtos} from 'google-gax';
+import {protobuf, LocationProtos} from 'google-gax';
 
 // Dynamically loaded proto JSON is needed to get the type information
 // to fill in default values for request objects
@@ -52,22 +52,6 @@ function stubSimpleCall<ResponseType>(response?: ResponseType, error?: Error) {
 
 function stubSimpleCallWithCallback<ResponseType>(response?: ResponseType, error?: Error) {
     return error ? sinon.stub().callsArgWith(2, error) : sinon.stub().callsArgWith(2, null, response);
-}
-
-function stubLongRunningCall<ResponseType>(response?: ResponseType, callError?: Error, lroError?: Error) {
-    const innerStub = lroError ? sinon.stub().rejects(lroError) : sinon.stub().resolves([response]);
-    const mockOperation = {
-        promise: innerStub,
-    };
-    return callError ? sinon.stub().rejects(callError) : sinon.stub().resolves([mockOperation]);
-}
-
-function stubLongRunningCallWithCallback<ResponseType>(response?: ResponseType, callError?: Error, lroError?: Error) {
-    const innerStub = lroError ? sinon.stub().rejects(lroError) : sinon.stub().resolves([response]);
-    const mockOperation = {
-        promise: innerStub,
-    };
-    return callError ? sinon.stub().callsArgWith(2, callError) : sinon.stub().callsArgWith(2, null, mockOperation);
 }
 
 function stubPageStreamingCall<ResponseType>(responses?: ResponseType[], error?: Error) {
@@ -115,16 +99,16 @@ function stubAsyncIterationCall<ResponseType>(responses?: ResponseType[], error?
     return sinon.stub().returns(asyncIterable);
 }
 
-describe('v1.DeploymentClient', () => {
+describe('v1.MonitoringClient', () => {
     describe('Common methods', () => {
         it('has apiEndpoint', () => {
-            const client = new deploymentModule.v1.DeploymentClient();
+            const client = new monitoringModule.v1.MonitoringClient();
             const apiEndpoint = client.apiEndpoint;
             assert.strictEqual(apiEndpoint, 'cloudsecuritycompliance.googleapis.com');
         });
 
         it('has universeDomain', () => {
-            const client = new deploymentModule.v1.DeploymentClient();
+            const client = new monitoringModule.v1.MonitoringClient();
             const universeDomain = client.universeDomain;
             assert.strictEqual(universeDomain, "googleapis.com");
         });
@@ -132,7 +116,7 @@ describe('v1.DeploymentClient', () => {
         if (typeof process === 'object' && typeof process.emitWarning === 'function') {
             it('throws DeprecationWarning if static servicePath is used', () => {
                 const stub = sinon.stub(process, 'emitWarning');
-                const servicePath = deploymentModule.v1.DeploymentClient.servicePath;
+                const servicePath = monitoringModule.v1.MonitoringClient.servicePath;
                 assert.strictEqual(servicePath, 'cloudsecuritycompliance.googleapis.com');
                 assert(stub.called);
                 stub.restore();
@@ -140,20 +124,20 @@ describe('v1.DeploymentClient', () => {
 
             it('throws DeprecationWarning if static apiEndpoint is used', () => {
                 const stub = sinon.stub(process, 'emitWarning');
-                const apiEndpoint = deploymentModule.v1.DeploymentClient.apiEndpoint;
+                const apiEndpoint = monitoringModule.v1.MonitoringClient.apiEndpoint;
                 assert.strictEqual(apiEndpoint, 'cloudsecuritycompliance.googleapis.com');
                 assert(stub.called);
                 stub.restore();
             });
         }
         it('sets apiEndpoint according to universe domain camelCase', () => {
-            const client = new deploymentModule.v1.DeploymentClient({universeDomain: 'example.com'});
+            const client = new monitoringModule.v1.MonitoringClient({universeDomain: 'example.com'});
             const servicePath = client.apiEndpoint;
             assert.strictEqual(servicePath, 'cloudsecuritycompliance.example.com');
         });
 
         it('sets apiEndpoint according to universe domain snakeCase', () => {
-            const client = new deploymentModule.v1.DeploymentClient({universe_domain: 'example.com'});
+            const client = new monitoringModule.v1.MonitoringClient({universe_domain: 'example.com'});
             const servicePath = client.apiEndpoint;
             assert.strictEqual(servicePath, 'cloudsecuritycompliance.example.com');
         });
@@ -163,7 +147,7 @@ describe('v1.DeploymentClient', () => {
                 it('sets apiEndpoint from environment variable', () => {
                     const saved = process.env['GOOGLE_CLOUD_UNIVERSE_DOMAIN'];
                     process.env['GOOGLE_CLOUD_UNIVERSE_DOMAIN'] = 'example.com';
-                    const client = new deploymentModule.v1.DeploymentClient();
+                    const client = new monitoringModule.v1.MonitoringClient();
                     const servicePath = client.apiEndpoint;
                     assert.strictEqual(servicePath, 'cloudsecuritycompliance.example.com');
                     if (saved) {
@@ -176,7 +160,7 @@ describe('v1.DeploymentClient', () => {
                 it('value configured in code has priority over environment variable', () => {
                     const saved = process.env['GOOGLE_CLOUD_UNIVERSE_DOMAIN'];
                     process.env['GOOGLE_CLOUD_UNIVERSE_DOMAIN'] = 'example.com';
-                    const client = new deploymentModule.v1.DeploymentClient({universeDomain: 'configured.example.com'});
+                    const client = new monitoringModule.v1.MonitoringClient({universeDomain: 'configured.example.com'});
                     const servicePath = client.apiEndpoint;
                     assert.strictEqual(servicePath, 'cloudsecuritycompliance.configured.example.com');
                     if (saved) {
@@ -188,55 +172,55 @@ describe('v1.DeploymentClient', () => {
             });
         }
         it('does not allow setting both universeDomain and universe_domain', () => {
-            assert.throws(() => { new deploymentModule.v1.DeploymentClient({universe_domain: 'example.com', universeDomain: 'example.net'}); });
+            assert.throws(() => { new monitoringModule.v1.MonitoringClient({universe_domain: 'example.com', universeDomain: 'example.net'}); });
         });
 
         it('has port', () => {
-            const port = deploymentModule.v1.DeploymentClient.port;
+            const port = monitoringModule.v1.MonitoringClient.port;
             assert(port);
             assert(typeof port === 'number');
         });
 
         it('should create a client with no option', () => {
-            const client = new deploymentModule.v1.DeploymentClient();
+            const client = new monitoringModule.v1.MonitoringClient();
             assert(client);
         });
 
         it('should create a client with gRPC fallback', () => {
-            const client = new deploymentModule.v1.DeploymentClient({
+            const client = new monitoringModule.v1.MonitoringClient({
                 fallback: true,
             });
             assert(client);
         });
 
         it('has initialize method and supports deferred initialization', async () => {
-            const client = new deploymentModule.v1.DeploymentClient({
+            const client = new monitoringModule.v1.MonitoringClient({
               credentials: {client_email: 'bogus', private_key: 'bogus'},
               projectId: 'bogus',
             });
-            assert.strictEqual(client.deploymentStub, undefined);
+            assert.strictEqual(client.monitoringStub, undefined);
             await client.initialize();
-            assert(client.deploymentStub);
+            assert(client.monitoringStub);
         });
 
         it('has close method for the initialized client', done => {
-            const client = new deploymentModule.v1.DeploymentClient({
+            const client = new monitoringModule.v1.MonitoringClient({
               credentials: {client_email: 'bogus', private_key: 'bogus'},
               projectId: 'bogus',
             });
             client.initialize().catch(err => {throw err});
-            assert(client.deploymentStub);
+            assert(client.monitoringStub);
             client.close().then(() => {
                 done();
             }).catch(err => {throw err});
         });
 
         it('has close method for the non-initialized client', done => {
-            const client = new deploymentModule.v1.DeploymentClient({
+            const client = new monitoringModule.v1.MonitoringClient({
               credentials: {client_email: 'bogus', private_key: 'bogus'},
               projectId: 'bogus',
             });
-            assert.strictEqual(client.deploymentStub, undefined);
+            assert.strictEqual(client.monitoringStub, undefined);
             client.close().then(() => {
                 done();
             }).catch(err => {throw err});
@@ -244,7 +228,7 @@ describe('v1.DeploymentClient', () => {
 
         it('has getProjectId method', async () => {
             const fakeProjectId = 'fake-project-id';
-            const client = new deploymentModule.v1.DeploymentClient({
+            const client = new monitoringModule.v1.MonitoringClient({
               credentials: {client_email: 'bogus', private_key: 'bogus'},
               projectId: 'bogus',
             });
@@ -256,7 +240,7 @@ describe('v1.DeploymentClient', () => {
 
         it('has getProjectId method with callback', async () => {
             const fakeProjectId = 'fake-project-id';
-            const client = new deploymentModule.v1.DeploymentClient({
+            const client = new monitoringModule.v1.MonitoringClient({
               credentials: {client_email: 'bogus', private_key: 'bogus'},
               projectId: 'bogus',
             });
@@ -275,55 +259,55 @@ describe('v1.DeploymentClient', () => {
         });
     });
 
-    describe('getFrameworkDeployment', () => {
-        it('invokes getFrameworkDeployment without error', async () => {
-            const client = new deploymentModule.v1.DeploymentClient({
+    describe('fetchFrameworkComplianceReport', () => {
+        it('invokes fetchFrameworkComplianceReport without error', async () => {
+            const client = new monitoringModule.v1.MonitoringClient({
               credentials: {client_email: 'bogus', private_key: 'bogus'},
               projectId: 'bogus',
             });
             await client.initialize();
             const request = generateSampleMessage(
-              new protos.google.cloud.cloudsecuritycompliance.v1.GetFrameworkDeploymentRequest()
+              new protos.google.cloud.cloudsecuritycompliance.v1.FetchFrameworkComplianceReportRequest()
             );
             const defaultValue1 =
-              getTypeDefaultValue('.google.cloud.cloudsecuritycompliance.v1.GetFrameworkDeploymentRequest', ['name']);
+              getTypeDefaultValue('.google.cloud.cloudsecuritycompliance.v1.FetchFrameworkComplianceReportRequest', ['name']);
             request.name = defaultValue1;
             const expectedHeaderRequestParams = `name=${defaultValue1 ?? '' }`;
             const expectedResponse = generateSampleMessage(
-              new protos.google.cloud.cloudsecuritycompliance.v1.FrameworkDeployment()
+              new protos.google.cloud.cloudsecuritycompliance.v1.FrameworkComplianceReport()
             );
-            client.innerApiCalls.getFrameworkDeployment = stubSimpleCall(expectedResponse);
-            const [response] = await client.getFrameworkDeployment(request);
+            client.innerApiCalls.fetchFrameworkComplianceReport = stubSimpleCall(expectedResponse);
+            const [response] = await client.fetchFrameworkComplianceReport(request);
             assert.deepStrictEqual(response, expectedResponse);
-            const actualRequest = (client.innerApiCalls.getFrameworkDeployment as SinonStub)
+            const actualRequest = (client.innerApiCalls.fetchFrameworkComplianceReport as SinonStub)
                 .getCall(0).args[0];
             assert.deepStrictEqual(actualRequest, request);
-            const actualHeaderRequestParams = (client.innerApiCalls.getFrameworkDeployment as SinonStub)
+            const actualHeaderRequestParams = (client.innerApiCalls.fetchFrameworkComplianceReport as SinonStub)
                 .getCall(0).args[1].otherArgs.headers['x-goog-request-params'];
             assert(actualHeaderRequestParams.includes(expectedHeaderRequestParams));
         });
 
-        it('invokes getFrameworkDeployment without error using callback', async () => {
-            const client = new deploymentModule.v1.DeploymentClient({
+        it('invokes fetchFrameworkComplianceReport without error using callback', async () => {
+            const client = new monitoringModule.v1.MonitoringClient({
               credentials: {client_email: 'bogus', private_key: 'bogus'},
               projectId: 'bogus',
             });
             await client.initialize();
             const request = generateSampleMessage(
-              new protos.google.cloud.cloudsecuritycompliance.v1.GetFrameworkDeploymentRequest()
+              new protos.google.cloud.cloudsecuritycompliance.v1.FetchFrameworkComplianceReportRequest()
             );
             const defaultValue1 =
-              getTypeDefaultValue('.google.cloud.cloudsecuritycompliance.v1.GetFrameworkDeploymentRequest', ['name']);
+              getTypeDefaultValue('.google.cloud.cloudsecuritycompliance.v1.FetchFrameworkComplianceReportRequest', ['name']);
             request.name = defaultValue1;
             const expectedHeaderRequestParams = `name=${defaultValue1 ?? '' }`;
             const expectedResponse = generateSampleMessage(
-              new protos.google.cloud.cloudsecuritycompliance.v1.FrameworkDeployment()
+              new protos.google.cloud.cloudsecuritycompliance.v1.FrameworkComplianceReport()
             );
-            client.innerApiCalls.getFrameworkDeployment = stubSimpleCallWithCallback(expectedResponse);
+            client.innerApiCalls.fetchFrameworkComplianceReport = stubSimpleCallWithCallback(expectedResponse);
             const promise = new Promise((resolve, reject) => {
-                 client.getFrameworkDeployment(
+                 client.fetchFrameworkComplianceReport(
                     request,
-                    (err?: Error|null, result?: protos.google.cloud.cloudsecuritycompliance.v1.IFrameworkDeployment|null) => {
+                    (err?: Error|null, result?: protos.google.cloud.cloudsecuritycompliance.v1.IFrameworkComplianceReport|null) => {
                         if (err) {
                             reject(err);
                         } else {
@@ -333,105 +317,105 @@ describe('v1.DeploymentClient', () => {
             });
             const response = await promise;
             assert.deepStrictEqual(response, expectedResponse);
-            const actualRequest = (client.innerApiCalls.getFrameworkDeployment as SinonStub)
+            const actualRequest = (client.innerApiCalls.fetchFrameworkComplianceReport as SinonStub)
                 .getCall(0).args[0];
             assert.deepStrictEqual(actualRequest, request);
-            const actualHeaderRequestParams = (client.innerApiCalls.getFrameworkDeployment as SinonStub)
+            const actualHeaderRequestParams = (client.innerApiCalls.fetchFrameworkComplianceReport as SinonStub)
                 .getCall(0).args[1].otherArgs.headers['x-goog-request-params'];
             assert(actualHeaderRequestParams.includes(expectedHeaderRequestParams));
         });
 
-        it('invokes getFrameworkDeployment with error', async () => {
-            const client = new deploymentModule.v1.DeploymentClient({
+        it('invokes fetchFrameworkComplianceReport with error', async () => {
+            const client = new monitoringModule.v1.MonitoringClient({
               credentials: {client_email: 'bogus', private_key: 'bogus'},
               projectId: 'bogus',
             });
             await client.initialize();
             const request = generateSampleMessage(
-              new protos.google.cloud.cloudsecuritycompliance.v1.GetFrameworkDeploymentRequest()
+              new protos.google.cloud.cloudsecuritycompliance.v1.FetchFrameworkComplianceReportRequest()
             );
             const defaultValue1 =
-              getTypeDefaultValue('.google.cloud.cloudsecuritycompliance.v1.GetFrameworkDeploymentRequest', ['name']);
+              getTypeDefaultValue('.google.cloud.cloudsecuritycompliance.v1.FetchFrameworkComplianceReportRequest', ['name']);
             request.name = defaultValue1;
             const expectedHeaderRequestParams = `name=${defaultValue1 ?? '' }`;
             const expectedError = new Error('expected');
-            client.innerApiCalls.getFrameworkDeployment = stubSimpleCall(undefined, expectedError);
-            await assert.rejects(client.getFrameworkDeployment(request), expectedError);
-            const actualRequest = (client.innerApiCalls.getFrameworkDeployment as SinonStub)
+            client.innerApiCalls.fetchFrameworkComplianceReport = stubSimpleCall(undefined, expectedError);
+            await assert.rejects(client.fetchFrameworkComplianceReport(request), expectedError);
+            const actualRequest = (client.innerApiCalls.fetchFrameworkComplianceReport as SinonStub)
                 .getCall(0).args[0];
             assert.deepStrictEqual(actualRequest, request);
-            const actualHeaderRequestParams = (client.innerApiCalls.getFrameworkDeployment as SinonStub)
+            const actualHeaderRequestParams = (client.innerApiCalls.fetchFrameworkComplianceReport as SinonStub)
                 .getCall(0).args[1].otherArgs.headers['x-goog-request-params'];
             assert(actualHeaderRequestParams.includes(expectedHeaderRequestParams));
         });
 
-        it('invokes getFrameworkDeployment with closed client', async () => {
-            const client = new deploymentModule.v1.DeploymentClient({
+        it('invokes fetchFrameworkComplianceReport with closed client', async () => {
+            const client = new monitoringModule.v1.MonitoringClient({
               credentials: {client_email: 'bogus', private_key: 'bogus'},
               projectId: 'bogus',
             });
             await client.initialize();
             const request = generateSampleMessage(
-              new protos.google.cloud.cloudsecuritycompliance.v1.GetFrameworkDeploymentRequest()
+              new protos.google.cloud.cloudsecuritycompliance.v1.FetchFrameworkComplianceReportRequest()
             );
             const defaultValue1 =
-              getTypeDefaultValue('.google.cloud.cloudsecuritycompliance.v1.GetFrameworkDeploymentRequest', ['name']);
+              getTypeDefaultValue('.google.cloud.cloudsecuritycompliance.v1.FetchFrameworkComplianceReportRequest', ['name']);
             request.name = defaultValue1;
             const expectedError = new Error('The client has already been closed.');
             client.close().catch(err => {throw err});
-            await assert.rejects(client.getFrameworkDeployment(request), expectedError);
+            await assert.rejects(client.fetchFrameworkComplianceReport(request), expectedError);
         });
     });
 
-    describe('getCloudControlDeployment', () => {
-        it('invokes getCloudControlDeployment without error', async () => {
-            const client = new deploymentModule.v1.DeploymentClient({
+    describe('aggregateFrameworkComplianceReport', () => {
+        it('invokes aggregateFrameworkComplianceReport without error', async () => {
+            const client = new monitoringModule.v1.MonitoringClient({
               credentials: {client_email: 'bogus', private_key: 'bogus'},
               projectId: 'bogus',
             });
             await client.initialize();
             const request = generateSampleMessage(
-              new protos.google.cloud.cloudsecuritycompliance.v1.GetCloudControlDeploymentRequest()
+              new protos.google.cloud.cloudsecuritycompliance.v1.AggregateFrameworkComplianceReportRequest()
             );
             const defaultValue1 =
-              getTypeDefaultValue('.google.cloud.cloudsecuritycompliance.v1.GetCloudControlDeploymentRequest', ['name']);
+              getTypeDefaultValue('.google.cloud.cloudsecuritycompliance.v1.AggregateFrameworkComplianceReportRequest', ['name']);
             request.name = defaultValue1;
             const expectedHeaderRequestParams = `name=${defaultValue1 ?? '' }`;
             const expectedResponse = generateSampleMessage(
-              new protos.google.cloud.cloudsecuritycompliance.v1.CloudControlDeployment()
+              new protos.google.cloud.cloudsecuritycompliance.v1.AggregateFrameworkComplianceReportResponse()
             );
-            client.innerApiCalls.getCloudControlDeployment = stubSimpleCall(expectedResponse);
-            const [response] = await client.getCloudControlDeployment(request);
+            client.innerApiCalls.aggregateFrameworkComplianceReport = stubSimpleCall(expectedResponse);
+            const [response] = await client.aggregateFrameworkComplianceReport(request);
             assert.deepStrictEqual(response, expectedResponse);
-            const actualRequest = (client.innerApiCalls.getCloudControlDeployment as SinonStub)
+            const actualRequest = (client.innerApiCalls.aggregateFrameworkComplianceReport as SinonStub)
                 .getCall(0).args[0];
             assert.deepStrictEqual(actualRequest, request);
-            const actualHeaderRequestParams = (client.innerApiCalls.getCloudControlDeployment as SinonStub)
+            const actualHeaderRequestParams = (client.innerApiCalls.aggregateFrameworkComplianceReport as SinonStub)
                 .getCall(0).args[1].otherArgs.headers['x-goog-request-params'];
             assert(actualHeaderRequestParams.includes(expectedHeaderRequestParams));
         });
 
-        it('invokes getCloudControlDeployment without error using callback', async () => {
-            const client = new deploymentModule.v1.DeploymentClient({
+        it('invokes aggregateFrameworkComplianceReport without error using callback', async () => {
+            const client = new monitoringModule.v1.MonitoringClient({
               credentials: {client_email: 'bogus', private_key: 'bogus'},
               projectId: 'bogus',
             });
             await client.initialize();
             const request = generateSampleMessage(
-              new protos.google.cloud.cloudsecuritycompliance.v1.GetCloudControlDeploymentRequest()
+              new protos.google.cloud.cloudsecuritycompliance.v1.AggregateFrameworkComplianceReportRequest()
             );
             const defaultValue1 =
-              getTypeDefaultValue('.google.cloud.cloudsecuritycompliance.v1.GetCloudControlDeploymentRequest', ['name']);
+              getTypeDefaultValue('.google.cloud.cloudsecuritycompliance.v1.AggregateFrameworkComplianceReportRequest', ['name']);
             request.name = defaultValue1;
             const expectedHeaderRequestParams = `name=${defaultValue1 ?? '' }`;
             const expectedResponse = generateSampleMessage(
-              new protos.google.cloud.cloudsecuritycompliance.v1.CloudControlDeployment()
+              new protos.google.cloud.cloudsecuritycompliance.v1.AggregateFrameworkComplianceReportResponse()
             );
-            client.innerApiCalls.getCloudControlDeployment = stubSimpleCallWithCallback(expectedResponse);
+            client.innerApiCalls.aggregateFrameworkComplianceReport = stubSimpleCallWithCallback(expectedResponse);
             const promise = new Promise((resolve, reject) => {
-                 client.getCloudControlDeployment(
+                 client.aggregateFrameworkComplianceReport(
                     request,
-                    (err?: Error|null, result?: protos.google.cloud.cloudsecuritycompliance.v1.ICloudControlDeployment|null) => {
+                    (err?: Error|null, result?: protos.google.cloud.cloudsecuritycompliance.v1.IAggregateFrameworkComplianceReportResponse|null) => {
                         if (err) {
                             reject(err);
                         } else {
@@ -441,415 +425,107 @@ describe('v1.DeploymentClient', () => {
             });
             const response = await promise;
             assert.deepStrictEqual(response, expectedResponse);
-            const actualRequest = (client.innerApiCalls.getCloudControlDeployment as SinonStub)
+            const actualRequest = (client.innerApiCalls.aggregateFrameworkComplianceReport as SinonStub)
                 .getCall(0).args[0];
             assert.deepStrictEqual(actualRequest, request);
-            const actualHeaderRequestParams = (client.innerApiCalls.getCloudControlDeployment as SinonStub)
+            const actualHeaderRequestParams = (client.innerApiCalls.aggregateFrameworkComplianceReport as SinonStub)
                 .getCall(0).args[1].otherArgs.headers['x-goog-request-params'];
             assert(actualHeaderRequestParams.includes(expectedHeaderRequestParams));
         });
 
-        it('invokes getCloudControlDeployment with error', async () => {
-            const client = new deploymentModule.v1.DeploymentClient({
+        it('invokes aggregateFrameworkComplianceReport with error', async () => {
+            const client = new monitoringModule.v1.MonitoringClient({
               credentials: {client_email: 'bogus', private_key: 'bogus'},
               projectId: 'bogus',
             });
             await client.initialize();
             const request = generateSampleMessage(
-              new protos.google.cloud.cloudsecuritycompliance.v1.GetCloudControlDeploymentRequest()
+              new protos.google.cloud.cloudsecuritycompliance.v1.AggregateFrameworkComplianceReportRequest()
             );
             const defaultValue1 =
-              getTypeDefaultValue('.google.cloud.cloudsecuritycompliance.v1.GetCloudControlDeploymentRequest', ['name']);
+              getTypeDefaultValue('.google.cloud.cloudsecuritycompliance.v1.AggregateFrameworkComplianceReportRequest', ['name']);
             request.name = defaultValue1;
             const expectedHeaderRequestParams = `name=${defaultValue1 ?? '' }`;
             const expectedError = new Error('expected');
-            client.innerApiCalls.getCloudControlDeployment = stubSimpleCall(undefined, expectedError);
-            await assert.rejects(client.getCloudControlDeployment(request), expectedError);
-            const actualRequest = (client.innerApiCalls.getCloudControlDeployment as SinonStub)
+            client.innerApiCalls.aggregateFrameworkComplianceReport = stubSimpleCall(undefined, expectedError);
+            await assert.rejects(client.aggregateFrameworkComplianceReport(request), expectedError);
+            const actualRequest = (client.innerApiCalls.aggregateFrameworkComplianceReport as SinonStub)
                 .getCall(0).args[0];
             assert.deepStrictEqual(actualRequest, request);
-            const actualHeaderRequestParams = (client.innerApiCalls.getCloudControlDeployment as SinonStub)
+            const actualHeaderRequestParams = (client.innerApiCalls.aggregateFrameworkComplianceReport as SinonStub)
                 .getCall(0).args[1].otherArgs.headers['x-goog-request-params'];
             assert(actualHeaderRequestParams.includes(expectedHeaderRequestParams));
         });
 
-        it('invokes getCloudControlDeployment with closed client', async () => {
-            const client = new deploymentModule.v1.DeploymentClient({
+        it('invokes aggregateFrameworkComplianceReport with closed client', async () => {
+            const client = new monitoringModule.v1.MonitoringClient({
               credentials: {client_email: 'bogus', private_key: 'bogus'},
               projectId: 'bogus',
             });
             await client.initialize();
             const request = generateSampleMessage(
-              new protos.google.cloud.cloudsecuritycompliance.v1.GetCloudControlDeploymentRequest()
+              new protos.google.cloud.cloudsecuritycompliance.v1.AggregateFrameworkComplianceReportRequest()
             );
             const defaultValue1 =
-              getTypeDefaultValue('.google.cloud.cloudsecuritycompliance.v1.GetCloudControlDeploymentRequest', ['name']);
+              getTypeDefaultValue('.google.cloud.cloudsecuritycompliance.v1.AggregateFrameworkComplianceReportRequest', ['name']);
             request.name = defaultValue1;
             const expectedError = new Error('The client has already been closed.');
             client.close().catch(err => {throw err});
-            await assert.rejects(client.getCloudControlDeployment(request), expectedError);
+            await assert.rejects(client.aggregateFrameworkComplianceReport(request), expectedError);
         });
     });
 
-    describe('createFrameworkDeployment', () => {
-        it('invokes createFrameworkDeployment without error', async () => {
-            const client = new deploymentModule.v1.DeploymentClient({
-              credentials: {client_email: 'bogus', private_key: 'bogus'},
-              projectId: 'bogus',
-            });
-            await client.initialize();
-            const request = generateSampleMessage(
-              new protos.google.cloud.cloudsecuritycompliance.v1.CreateFrameworkDeploymentRequest()
-            );
-            const defaultValue1 =
-              getTypeDefaultValue('.google.cloud.cloudsecuritycompliance.v1.CreateFrameworkDeploymentRequest', ['parent']);
-            request.parent = defaultValue1;
-            const expectedHeaderRequestParams = `parent=${defaultValue1 ?? '' }`;
-            const expectedResponse = generateSampleMessage(
-              new protos.google.longrunning.Operation()
-            );
-            client.innerApiCalls.createFrameworkDeployment = stubLongRunningCall(expectedResponse);
-            const [operation] = await client.createFrameworkDeployment(request);
-            const [response] = await operation.promise();
-            assert.deepStrictEqual(response, expectedResponse);
-            const actualRequest = (client.innerApiCalls.createFrameworkDeployment as SinonStub)
-                .getCall(0).args[0];
-            assert.deepStrictEqual(actualRequest, request);
-            const actualHeaderRequestParams = (client.innerApiCalls.createFrameworkDeployment as SinonStub)
-                .getCall(0).args[1].otherArgs.headers['x-goog-request-params'];
-            assert(actualHeaderRequestParams.includes(expectedHeaderRequestParams));
-        });
-
-        it('invokes createFrameworkDeployment without error using callback', async () => {
-            const client = new deploymentModule.v1.DeploymentClient({
-              credentials: {client_email: 'bogus', private_key: 'bogus'},
-              projectId: 'bogus',
-            });
-            await client.initialize();
-            const request = generateSampleMessage(
-              new protos.google.cloud.cloudsecuritycompliance.v1.CreateFrameworkDeploymentRequest()
-            );
-            const defaultValue1 =
-              getTypeDefaultValue('.google.cloud.cloudsecuritycompliance.v1.CreateFrameworkDeploymentRequest', ['parent']);
-            request.parent = defaultValue1;
-            const expectedHeaderRequestParams = `parent=${defaultValue1 ?? '' }`;
-            const expectedResponse = generateSampleMessage(
-              new protos.google.longrunning.Operation()
-            );
-            client.innerApiCalls.createFrameworkDeployment = stubLongRunningCallWithCallback(expectedResponse);
-            const promise = new Promise((resolve, reject) => {
-                 client.createFrameworkDeployment(
-                    request,
-                    (err?: Error|null,
-                     result?: LROperation<protos.google.cloud.cloudsecuritycompliance.v1.IFrameworkDeployment, protos.google.cloud.cloudsecuritycompliance.v1.IOperationMetadata>|null
-                    ) => {
-                        if (err) {
-                            reject(err);
-                        } else {
-                            resolve(result);
-                        }
-                    });
-            });
-            const operation = await promise as LROperation<protos.google.cloud.cloudsecuritycompliance.v1.IFrameworkDeployment, protos.google.cloud.cloudsecuritycompliance.v1.IOperationMetadata>;
-            const [response] = await operation.promise();
-            assert.deepStrictEqual(response, expectedResponse);
-            const actualRequest = (client.innerApiCalls.createFrameworkDeployment as SinonStub)
-                .getCall(0).args[0];
-            assert.deepStrictEqual(actualRequest, request);
-            const actualHeaderRequestParams = (client.innerApiCalls.createFrameworkDeployment as SinonStub)
-                .getCall(0).args[1].otherArgs.headers['x-goog-request-params'];
-            assert(actualHeaderRequestParams.includes(expectedHeaderRequestParams));
-        });
-
-        it('invokes createFrameworkDeployment with call error', async () => {
-            const client = new deploymentModule.v1.DeploymentClient({
-              credentials: {client_email: 'bogus', private_key: 'bogus'},
-              projectId: 'bogus',
-            });
-            await client.initialize();
-            const request = generateSampleMessage(
-              new protos.google.cloud.cloudsecuritycompliance.v1.CreateFrameworkDeploymentRequest()
-            );
-            const defaultValue1 =
-              getTypeDefaultValue('.google.cloud.cloudsecuritycompliance.v1.CreateFrameworkDeploymentRequest', ['parent']);
-            request.parent = defaultValue1;
-            const expectedHeaderRequestParams = `parent=${defaultValue1 ?? '' }`;
-            const expectedError = new Error('expected');
-            client.innerApiCalls.createFrameworkDeployment = stubLongRunningCall(undefined, expectedError);
-            await assert.rejects(client.createFrameworkDeployment(request), expectedError);
-            const actualRequest = (client.innerApiCalls.createFrameworkDeployment as SinonStub)
-                .getCall(0).args[0];
-            assert.deepStrictEqual(actualRequest, request);
-            const actualHeaderRequestParams = (client.innerApiCalls.createFrameworkDeployment as SinonStub)
-                .getCall(0).args[1].otherArgs.headers['x-goog-request-params'];
-            assert(actualHeaderRequestParams.includes(expectedHeaderRequestParams));
-        });
-
-        it('invokes createFrameworkDeployment with LRO error', async () => {
-            const client = new deploymentModule.v1.DeploymentClient({
-              credentials: {client_email: 'bogus', private_key: 'bogus'},
-              projectId: 'bogus',
-            });
-            await client.initialize();
-            const request = generateSampleMessage(
-              new protos.google.cloud.cloudsecuritycompliance.v1.CreateFrameworkDeploymentRequest()
-            );
-            const defaultValue1 =
-              getTypeDefaultValue('.google.cloud.cloudsecuritycompliance.v1.CreateFrameworkDeploymentRequest', ['parent']);
-            request.parent = defaultValue1;
-            const expectedHeaderRequestParams = `parent=${defaultValue1 ?? '' }`;
-            const expectedError = new Error('expected');
-            client.innerApiCalls.createFrameworkDeployment = stubLongRunningCall(undefined, undefined, expectedError);
-            const [operation] = await client.createFrameworkDeployment(request);
-            await assert.rejects(operation.promise(), expectedError);
-            const actualRequest = (client.innerApiCalls.createFrameworkDeployment as SinonStub)
-                .getCall(0).args[0];
-            assert.deepStrictEqual(actualRequest, request);
-            const actualHeaderRequestParams = (client.innerApiCalls.createFrameworkDeployment as SinonStub)
-                .getCall(0).args[1].otherArgs.headers['x-goog-request-params'];
-            assert(actualHeaderRequestParams.includes(expectedHeaderRequestParams));
-        });
-
-        it('invokes checkCreateFrameworkDeploymentProgress without error', async () => {
-            const client = new deploymentModule.v1.DeploymentClient({
-              credentials: {client_email: 'bogus', private_key: 'bogus'},
-              projectId: 'bogus',
-            });
-            await client.initialize();
-            const expectedResponse = generateSampleMessage(
-              new operationsProtos.google.longrunning.Operation()
-            );
-            expectedResponse.name = 'test';
-            expectedResponse.response = {type_url: 'url', value: Buffer.from('')};
-            expectedResponse.metadata = {type_url: 'url', value: Buffer.from('')}
-
-            client.operationsClient.getOperation = stubSimpleCall(expectedResponse);
-            const decodedOperation = await client.checkCreateFrameworkDeploymentProgress(expectedResponse.name);
-            assert.deepStrictEqual(decodedOperation.name, expectedResponse.name);
-            assert(decodedOperation.metadata);
-            assert((client.operationsClient.getOperation as SinonStub).getCall(0));
-        });
-
-        it('invokes checkCreateFrameworkDeploymentProgress with error', async () => {
-            const client = new deploymentModule.v1.DeploymentClient({
-              credentials: {client_email: 'bogus', private_key: 'bogus'},
-              projectId: 'bogus',
-            });
-            await client.initialize();
-            const expectedError = new Error('expected');
-
-            client.operationsClient.getOperation = stubSimpleCall(undefined, expectedError);
-            await assert.rejects(client.checkCreateFrameworkDeploymentProgress(''), expectedError);
-            assert((client.operationsClient.getOperation as SinonStub)
-                .getCall(0));
-        });
-    });
-
-    describe('deleteFrameworkDeployment', () => {
-        it('invokes deleteFrameworkDeployment without error', async () => {
-            const client = new deploymentModule.v1.DeploymentClient({
-              credentials: {client_email: 'bogus', private_key: 'bogus'},
-              projectId: 'bogus',
-            });
-            await client.initialize();
-            const request = generateSampleMessage(
-              new protos.google.cloud.cloudsecuritycompliance.v1.DeleteFrameworkDeploymentRequest()
-            );
-            const defaultValue1 =
-              getTypeDefaultValue('.google.cloud.cloudsecuritycompliance.v1.DeleteFrameworkDeploymentRequest', ['name']);
-            request.name = defaultValue1;
-            const expectedHeaderRequestParams = `name=${defaultValue1 ?? '' }`;
-            const expectedResponse = generateSampleMessage(
-              new protos.google.longrunning.Operation()
-            );
-            client.innerApiCalls.deleteFrameworkDeployment = stubLongRunningCall(expectedResponse);
-            const [operation] = await client.deleteFrameworkDeployment(request);
-            const [response] = await operation.promise();
-            assert.deepStrictEqual(response, expectedResponse);
-            const actualRequest = (client.innerApiCalls.deleteFrameworkDeployment as SinonStub)
-                .getCall(0).args[0];
-            assert.deepStrictEqual(actualRequest, request);
-            const actualHeaderRequestParams = (client.innerApiCalls.deleteFrameworkDeployment as SinonStub)
-                .getCall(0).args[1].otherArgs.headers['x-goog-request-params'];
-            assert(actualHeaderRequestParams.includes(expectedHeaderRequestParams));
-        });
-
-        it('invokes deleteFrameworkDeployment without error using callback', async () => {
-            const client = new deploymentModule.v1.DeploymentClient({
-              credentials: {client_email: 'bogus', private_key: 'bogus'},
-              projectId: 'bogus',
-            });
-            await client.initialize();
-            const request = generateSampleMessage(
-              new protos.google.cloud.cloudsecuritycompliance.v1.DeleteFrameworkDeploymentRequest()
-            );
-            const defaultValue1 =
-              getTypeDefaultValue('.google.cloud.cloudsecuritycompliance.v1.DeleteFrameworkDeploymentRequest', ['name']);
-            request.name = defaultValue1;
-            const expectedHeaderRequestParams = `name=${defaultValue1 ?? '' }`;
-            const expectedResponse = generateSampleMessage(
-              new protos.google.longrunning.Operation()
-            );
-            client.innerApiCalls.deleteFrameworkDeployment = stubLongRunningCallWithCallback(expectedResponse);
-            const promise = new Promise((resolve, reject) => {
-                 client.deleteFrameworkDeployment(
-                    request,
-                    (err?: Error|null,
-                     result?: LROperation<protos.google.protobuf.IEmpty, protos.google.cloud.cloudsecuritycompliance.v1.IOperationMetadata>|null
-                    ) => {
-                        if (err) {
-                            reject(err);
-                        } else {
-                            resolve(result);
-                        }
-                    });
-            });
-            const operation = await promise as LROperation<protos.google.protobuf.IEmpty, protos.google.cloud.cloudsecuritycompliance.v1.IOperationMetadata>;
-            const [response] = await operation.promise();
-            assert.deepStrictEqual(response, expectedResponse);
-            const actualRequest = (client.innerApiCalls.deleteFrameworkDeployment as SinonStub)
-                .getCall(0).args[0];
-            assert.deepStrictEqual(actualRequest, request);
-            const actualHeaderRequestParams = (client.innerApiCalls.deleteFrameworkDeployment as SinonStub)
-                .getCall(0).args[1].otherArgs.headers['x-goog-request-params'];
-            assert(actualHeaderRequestParams.includes(expectedHeaderRequestParams));
-        });
-
-        it('invokes deleteFrameworkDeployment with call error', async () => {
-            const client = new deploymentModule.v1.DeploymentClient({
-              credentials: {client_email: 'bogus', private_key: 'bogus'},
-              projectId: 'bogus',
-            });
-            await client.initialize();
-            const request = generateSampleMessage(
-              new protos.google.cloud.cloudsecuritycompliance.v1.DeleteFrameworkDeploymentRequest()
-            );
-            const defaultValue1 =
-              getTypeDefaultValue('.google.cloud.cloudsecuritycompliance.v1.DeleteFrameworkDeploymentRequest', ['name']);
-            request.name = defaultValue1;
-            const expectedHeaderRequestParams = `name=${defaultValue1 ?? '' }`;
-            const expectedError = new Error('expected');
-            client.innerApiCalls.deleteFrameworkDeployment = stubLongRunningCall(undefined, expectedError);
-            await assert.rejects(client.deleteFrameworkDeployment(request), expectedError);
-            const actualRequest = (client.innerApiCalls.deleteFrameworkDeployment as SinonStub)
-                .getCall(0).args[0];
-            assert.deepStrictEqual(actualRequest, request);
-            const actualHeaderRequestParams = (client.innerApiCalls.deleteFrameworkDeployment as SinonStub)
-                .getCall(0).args[1].otherArgs.headers['x-goog-request-params'];
-            assert(actualHeaderRequestParams.includes(expectedHeaderRequestParams));
-        });
-
-        it('invokes deleteFrameworkDeployment with LRO error', async () => {
-            const client = new deploymentModule.v1.DeploymentClient({
-              credentials: {client_email: 'bogus', private_key: 'bogus'},
-              projectId: 'bogus',
-            });
-            await client.initialize();
-            const request = generateSampleMessage(
-              new protos.google.cloud.cloudsecuritycompliance.v1.DeleteFrameworkDeploymentRequest()
-            );
-            const defaultValue1 =
-              getTypeDefaultValue('.google.cloud.cloudsecuritycompliance.v1.DeleteFrameworkDeploymentRequest', ['name']);
-            request.name = defaultValue1;
-            const expectedHeaderRequestParams = `name=${defaultValue1 ?? '' }`;
-            const expectedError = new Error('expected');
-            client.innerApiCalls.deleteFrameworkDeployment = stubLongRunningCall(undefined, undefined, expectedError);
-            const [operation] = await client.deleteFrameworkDeployment(request);
-            await assert.rejects(operation.promise(), expectedError);
-            const actualRequest = (client.innerApiCalls.deleteFrameworkDeployment as SinonStub)
-                .getCall(0).args[0];
-            assert.deepStrictEqual(actualRequest, request);
-            const actualHeaderRequestParams = (client.innerApiCalls.deleteFrameworkDeployment as SinonStub)
-                .getCall(0).args[1].otherArgs.headers['x-goog-request-params'];
-            assert(actualHeaderRequestParams.includes(expectedHeaderRequestParams));
-        });
-
-        it('invokes checkDeleteFrameworkDeploymentProgress without error', async () => {
-            const client = new deploymentModule.v1.DeploymentClient({
-              credentials: {client_email: 'bogus', private_key: 'bogus'},
-              projectId: 'bogus',
-            });
-            await client.initialize();
-            const expectedResponse = generateSampleMessage(
-              new operationsProtos.google.longrunning.Operation()
-            );
-            expectedResponse.name = 'test';
-            expectedResponse.response = {type_url: 'url', value: Buffer.from('')};
-            expectedResponse.metadata = {type_url: 'url', value: Buffer.from('')}
-
-            client.operationsClient.getOperation = stubSimpleCall(expectedResponse);
-            const decodedOperation = await client.checkDeleteFrameworkDeploymentProgress(expectedResponse.name);
-            assert.deepStrictEqual(decodedOperation.name, expectedResponse.name);
-            assert(decodedOperation.metadata);
-            assert((client.operationsClient.getOperation as SinonStub).getCall(0));
-        });
-
-        it('invokes checkDeleteFrameworkDeploymentProgress with error', async () => {
-            const client = new deploymentModule.v1.DeploymentClient({
-              credentials: {client_email: 'bogus', private_key: 'bogus'},
-              projectId: 'bogus',
-            });
-            await client.initialize();
-            const expectedError = new Error('expected');
-
-            client.operationsClient.getOperation = stubSimpleCall(undefined, expectedError);
-            await assert.rejects(client.checkDeleteFrameworkDeploymentProgress(''), expectedError);
-            assert((client.operationsClient.getOperation as SinonStub)
-                .getCall(0));
-        });
-    });
-
-    describe('listFrameworkDeployments', () => {
-        it('invokes listFrameworkDeployments without error', async () => {
-            const client = new deploymentModule.v1.DeploymentClient({
+    describe('listFrameworkComplianceSummaries', () => {
+        it('invokes listFrameworkComplianceSummaries without error', async () => {
+            const client = new monitoringModule.v1.MonitoringClient({
                 credentials: {client_email: 'bogus', private_key: 'bogus'},
                 projectId: 'bogus',
             });
             await client.initialize();
             const request = generateSampleMessage(
-              new protos.google.cloud.cloudsecuritycompliance.v1.ListFrameworkDeploymentsRequest()
+              new protos.google.cloud.cloudsecuritycompliance.v1.ListFrameworkComplianceSummariesRequest()
             );
             const defaultValue1 =
-              getTypeDefaultValue('.google.cloud.cloudsecuritycompliance.v1.ListFrameworkDeploymentsRequest', ['parent']);
+              getTypeDefaultValue('.google.cloud.cloudsecuritycompliance.v1.ListFrameworkComplianceSummariesRequest', ['parent']);
             request.parent = defaultValue1;
             const expectedHeaderRequestParams = `parent=${defaultValue1 ?? '' }`;const expectedResponse = [
-              generateSampleMessage(new protos.google.cloud.cloudsecuritycompliance.v1.FrameworkDeployment()),
-              generateSampleMessage(new protos.google.cloud.cloudsecuritycompliance.v1.FrameworkDeployment()),
-              generateSampleMessage(new protos.google.cloud.cloudsecuritycompliance.v1.FrameworkDeployment()),
+              generateSampleMessage(new protos.google.cloud.cloudsecuritycompliance.v1.FrameworkComplianceSummary()),
+              generateSampleMessage(new protos.google.cloud.cloudsecuritycompliance.v1.FrameworkComplianceSummary()),
+              generateSampleMessage(new protos.google.cloud.cloudsecuritycompliance.v1.FrameworkComplianceSummary()),
             ];
-            client.innerApiCalls.listFrameworkDeployments = stubSimpleCall(expectedResponse);
-            const [response] = await client.listFrameworkDeployments(request);
+            client.innerApiCalls.listFrameworkComplianceSummaries = stubSimpleCall(expectedResponse);
+            const [response] = await client.listFrameworkComplianceSummaries(request);
             assert.deepStrictEqual(response, expectedResponse);
-            const actualRequest = (client.innerApiCalls.listFrameworkDeployments as SinonStub)
+            const actualRequest = (client.innerApiCalls.listFrameworkComplianceSummaries as SinonStub)
                 .getCall(0).args[0];
             assert.deepStrictEqual(actualRequest, request);
-            const actualHeaderRequestParams = (client.innerApiCalls.listFrameworkDeployments as SinonStub)
+            const actualHeaderRequestParams = (client.innerApiCalls.listFrameworkComplianceSummaries as SinonStub)
                 .getCall(0).args[1].otherArgs.headers['x-goog-request-params'];
             assert(actualHeaderRequestParams.includes(expectedHeaderRequestParams));
         });
 
-        it('invokes listFrameworkDeployments without error using callback', async () => {
-            const client = new deploymentModule.v1.DeploymentClient({
+        it('invokes listFrameworkComplianceSummaries without error using callback', async () => {
+            const client = new monitoringModule.v1.MonitoringClient({
                 credentials: {client_email: 'bogus', private_key: 'bogus'},
                 projectId: 'bogus',
             });
             await client.initialize();
             const request = generateSampleMessage(
-              new protos.google.cloud.cloudsecuritycompliance.v1.ListFrameworkDeploymentsRequest()
+              new protos.google.cloud.cloudsecuritycompliance.v1.ListFrameworkComplianceSummariesRequest()
             );
             const defaultValue1 =
-              getTypeDefaultValue('.google.cloud.cloudsecuritycompliance.v1.ListFrameworkDeploymentsRequest', ['parent']);
+              getTypeDefaultValue('.google.cloud.cloudsecuritycompliance.v1.ListFrameworkComplianceSummariesRequest', ['parent']);
             request.parent = defaultValue1;
             const expectedHeaderRequestParams = `parent=${defaultValue1 ?? '' }`;const expectedResponse = [
-              generateSampleMessage(new protos.google.cloud.cloudsecuritycompliance.v1.FrameworkDeployment()),
-              generateSampleMessage(new protos.google.cloud.cloudsecuritycompliance.v1.FrameworkDeployment()),
-              generateSampleMessage(new protos.google.cloud.cloudsecuritycompliance.v1.FrameworkDeployment()),
+              generateSampleMessage(new protos.google.cloud.cloudsecuritycompliance.v1.FrameworkComplianceSummary()),
+              generateSampleMessage(new protos.google.cloud.cloudsecuritycompliance.v1.FrameworkComplianceSummary()),
+              generateSampleMessage(new protos.google.cloud.cloudsecuritycompliance.v1.FrameworkComplianceSummary()),
             ];
-            client.innerApiCalls.listFrameworkDeployments = stubSimpleCallWithCallback(expectedResponse);
+            client.innerApiCalls.listFrameworkComplianceSummaries = stubSimpleCallWithCallback(expectedResponse);
             const promise = new Promise((resolve, reject) => {
-                 client.listFrameworkDeployments(
+                 client.listFrameworkComplianceSummaries(
                     request,
-                    (err?: Error|null, result?: protos.google.cloud.cloudsecuritycompliance.v1.IFrameworkDeployment[]|null) => {
+                    (err?: Error|null, result?: protos.google.cloud.cloudsecuritycompliance.v1.IFrameworkComplianceSummary[]|null) => {
                         if (err) {
                             reject(err);
                         } else {
@@ -859,61 +535,61 @@ describe('v1.DeploymentClient', () => {
             });
             const response = await promise;
             assert.deepStrictEqual(response, expectedResponse);
-            const actualRequest = (client.innerApiCalls.listFrameworkDeployments as SinonStub)
+            const actualRequest = (client.innerApiCalls.listFrameworkComplianceSummaries as SinonStub)
                 .getCall(0).args[0];
             assert.deepStrictEqual(actualRequest, request);
-            const actualHeaderRequestParams = (client.innerApiCalls.listFrameworkDeployments as SinonStub)
+            const actualHeaderRequestParams = (client.innerApiCalls.listFrameworkComplianceSummaries as SinonStub)
                 .getCall(0).args[1].otherArgs.headers['x-goog-request-params'];
             assert(actualHeaderRequestParams.includes(expectedHeaderRequestParams));
         });
 
-        it('invokes listFrameworkDeployments with error', async () => {
-            const client = new deploymentModule.v1.DeploymentClient({
+        it('invokes listFrameworkComplianceSummaries with error', async () => {
+            const client = new monitoringModule.v1.MonitoringClient({
                 credentials: {client_email: 'bogus', private_key: 'bogus'},
                 projectId: 'bogus',
             });
             await client.initialize();
             const request = generateSampleMessage(
-              new protos.google.cloud.cloudsecuritycompliance.v1.ListFrameworkDeploymentsRequest()
+              new protos.google.cloud.cloudsecuritycompliance.v1.ListFrameworkComplianceSummariesRequest()
             );
             const defaultValue1 =
-              getTypeDefaultValue('.google.cloud.cloudsecuritycompliance.v1.ListFrameworkDeploymentsRequest', ['parent']);
+              getTypeDefaultValue('.google.cloud.cloudsecuritycompliance.v1.ListFrameworkComplianceSummariesRequest', ['parent']);
             request.parent = defaultValue1;
             const expectedHeaderRequestParams = `parent=${defaultValue1 ?? '' }`;
             const expectedError = new Error('expected');
-            client.innerApiCalls.listFrameworkDeployments = stubSimpleCall(undefined, expectedError);
-            await assert.rejects(client.listFrameworkDeployments(request), expectedError);
-            const actualRequest = (client.innerApiCalls.listFrameworkDeployments as SinonStub)
+            client.innerApiCalls.listFrameworkComplianceSummaries = stubSimpleCall(undefined, expectedError);
+            await assert.rejects(client.listFrameworkComplianceSummaries(request), expectedError);
+            const actualRequest = (client.innerApiCalls.listFrameworkComplianceSummaries as SinonStub)
                 .getCall(0).args[0];
             assert.deepStrictEqual(actualRequest, request);
-            const actualHeaderRequestParams = (client.innerApiCalls.listFrameworkDeployments as SinonStub)
+            const actualHeaderRequestParams = (client.innerApiCalls.listFrameworkComplianceSummaries as SinonStub)
                 .getCall(0).args[1].otherArgs.headers['x-goog-request-params'];
             assert(actualHeaderRequestParams.includes(expectedHeaderRequestParams));
         });
 
-        it('invokes listFrameworkDeploymentsStream without error', async () => {
-            const client = new deploymentModule.v1.DeploymentClient({
+        it('invokes listFrameworkComplianceSummariesStream without error', async () => {
+            const client = new monitoringModule.v1.MonitoringClient({
                 credentials: {client_email: 'bogus', private_key: 'bogus'},
                 projectId: 'bogus',
             });
             await client.initialize();
             const request = generateSampleMessage(
-              new protos.google.cloud.cloudsecuritycompliance.v1.ListFrameworkDeploymentsRequest()
+              new protos.google.cloud.cloudsecuritycompliance.v1.ListFrameworkComplianceSummariesRequest()
             );
             const defaultValue1 =
-              getTypeDefaultValue('.google.cloud.cloudsecuritycompliance.v1.ListFrameworkDeploymentsRequest', ['parent']);
+              getTypeDefaultValue('.google.cloud.cloudsecuritycompliance.v1.ListFrameworkComplianceSummariesRequest', ['parent']);
             request.parent = defaultValue1;
             const expectedHeaderRequestParams = `parent=${defaultValue1 ?? '' }`;
             const expectedResponse = [
-              generateSampleMessage(new protos.google.cloud.cloudsecuritycompliance.v1.FrameworkDeployment()),
-              generateSampleMessage(new protos.google.cloud.cloudsecuritycompliance.v1.FrameworkDeployment()),
-              generateSampleMessage(new protos.google.cloud.cloudsecuritycompliance.v1.FrameworkDeployment()),
+              generateSampleMessage(new protos.google.cloud.cloudsecuritycompliance.v1.FrameworkComplianceSummary()),
+              generateSampleMessage(new protos.google.cloud.cloudsecuritycompliance.v1.FrameworkComplianceSummary()),
+              generateSampleMessage(new protos.google.cloud.cloudsecuritycompliance.v1.FrameworkComplianceSummary()),
             ];
-            client.descriptors.page.listFrameworkDeployments.createStream = stubPageStreamingCall(expectedResponse);
-            const stream = client.listFrameworkDeploymentsStream(request);
+            client.descriptors.page.listFrameworkComplianceSummaries.createStream = stubPageStreamingCall(expectedResponse);
+            const stream = client.listFrameworkComplianceSummariesStream(request);
             const promise = new Promise((resolve, reject) => {
-                const responses: protos.google.cloud.cloudsecuritycompliance.v1.FrameworkDeployment[] = [];
-                stream.on('data', (response: protos.google.cloud.cloudsecuritycompliance.v1.FrameworkDeployment) => {
+                const responses: protos.google.cloud.cloudsecuritycompliance.v1.FrameworkComplianceSummary[] = [];
+                stream.on('data', (response: protos.google.cloud.cloudsecuritycompliance.v1.FrameworkComplianceSummary) => {
                     responses.push(response);
                 });
                 stream.on('end', () => {
@@ -925,35 +601,35 @@ describe('v1.DeploymentClient', () => {
             });
             const responses = await promise;
             assert.deepStrictEqual(responses, expectedResponse);
-            assert((client.descriptors.page.listFrameworkDeployments.createStream as SinonStub)
-                .getCall(0).calledWith(client.innerApiCalls.listFrameworkDeployments, request));
+            assert((client.descriptors.page.listFrameworkComplianceSummaries.createStream as SinonStub)
+                .getCall(0).calledWith(client.innerApiCalls.listFrameworkComplianceSummaries, request));
             assert(
-                (client.descriptors.page.listFrameworkDeployments.createStream as SinonStub)
+                (client.descriptors.page.listFrameworkComplianceSummaries.createStream as SinonStub)
                     .getCall(0).args[2].otherArgs.headers['x-goog-request-params'].includes(
                         expectedHeaderRequestParams
                     )
             );
         });
 
-        it('invokes listFrameworkDeploymentsStream with error', async () => {
-            const client = new deploymentModule.v1.DeploymentClient({
+        it('invokes listFrameworkComplianceSummariesStream with error', async () => {
+            const client = new monitoringModule.v1.MonitoringClient({
                 credentials: {client_email: 'bogus', private_key: 'bogus'},
                 projectId: 'bogus',
             });
             await client.initialize();
             const request = generateSampleMessage(
-              new protos.google.cloud.cloudsecuritycompliance.v1.ListFrameworkDeploymentsRequest()
+              new protos.google.cloud.cloudsecuritycompliance.v1.ListFrameworkComplianceSummariesRequest()
             );
             const defaultValue1 =
-              getTypeDefaultValue('.google.cloud.cloudsecuritycompliance.v1.ListFrameworkDeploymentsRequest', ['parent']);
+              getTypeDefaultValue('.google.cloud.cloudsecuritycompliance.v1.ListFrameworkComplianceSummariesRequest', ['parent']);
             request.parent = defaultValue1;
             const expectedHeaderRequestParams = `parent=${defaultValue1 ?? '' }`;
             const expectedError = new Error('expected');
-            client.descriptors.page.listFrameworkDeployments.createStream = stubPageStreamingCall(undefined, expectedError);
-            const stream = client.listFrameworkDeploymentsStream(request);
+            client.descriptors.page.listFrameworkComplianceSummaries.createStream = stubPageStreamingCall(undefined, expectedError);
+            const stream = client.listFrameworkComplianceSummariesStream(request);
             const promise = new Promise((resolve, reject) => {
-                const responses: protos.google.cloud.cloudsecuritycompliance.v1.FrameworkDeployment[] = [];
-                stream.on('data', (response: protos.google.cloud.cloudsecuritycompliance.v1.FrameworkDeployment) => {
+                const responses: protos.google.cloud.cloudsecuritycompliance.v1.FrameworkComplianceSummary[] = [];
+                stream.on('data', (response: protos.google.cloud.cloudsecuritycompliance.v1.FrameworkComplianceSummary) => {
                     responses.push(response);
                 });
                 stream.on('end', () => {
@@ -964,79 +640,79 @@ describe('v1.DeploymentClient', () => {
                 });
             });
             await assert.rejects(promise, expectedError);
-            assert((client.descriptors.page.listFrameworkDeployments.createStream as SinonStub)
-                .getCall(0).calledWith(client.innerApiCalls.listFrameworkDeployments, request));
+            assert((client.descriptors.page.listFrameworkComplianceSummaries.createStream as SinonStub)
+                .getCall(0).calledWith(client.innerApiCalls.listFrameworkComplianceSummaries, request));
             assert(
-                (client.descriptors.page.listFrameworkDeployments.createStream as SinonStub)
+                (client.descriptors.page.listFrameworkComplianceSummaries.createStream as SinonStub)
                     .getCall(0).args[2].otherArgs.headers['x-goog-request-params'].includes(
                          expectedHeaderRequestParams
                     ) 
             );
         });
 
-        it('uses async iteration with listFrameworkDeployments without error', async () => {
-            const client = new deploymentModule.v1.DeploymentClient({
+        it('uses async iteration with listFrameworkComplianceSummaries without error', async () => {
+            const client = new monitoringModule.v1.MonitoringClient({
               credentials: {client_email: 'bogus', private_key: 'bogus'},
               projectId: 'bogus',
             });
             await client.initialize();
             const request = generateSampleMessage(
-              new protos.google.cloud.cloudsecuritycompliance.v1.ListFrameworkDeploymentsRequest()
+              new protos.google.cloud.cloudsecuritycompliance.v1.ListFrameworkComplianceSummariesRequest()
             );
             const defaultValue1 =
-              getTypeDefaultValue('.google.cloud.cloudsecuritycompliance.v1.ListFrameworkDeploymentsRequest', ['parent']);
+              getTypeDefaultValue('.google.cloud.cloudsecuritycompliance.v1.ListFrameworkComplianceSummariesRequest', ['parent']);
             request.parent = defaultValue1;
             const expectedHeaderRequestParams = `parent=${defaultValue1 ?? '' }`;
             const expectedResponse = [
-              generateSampleMessage(new protos.google.cloud.cloudsecuritycompliance.v1.FrameworkDeployment()),
-              generateSampleMessage(new protos.google.cloud.cloudsecuritycompliance.v1.FrameworkDeployment()),
-              generateSampleMessage(new protos.google.cloud.cloudsecuritycompliance.v1.FrameworkDeployment()),
+              generateSampleMessage(new protos.google.cloud.cloudsecuritycompliance.v1.FrameworkComplianceSummary()),
+              generateSampleMessage(new protos.google.cloud.cloudsecuritycompliance.v1.FrameworkComplianceSummary()),
+              generateSampleMessage(new protos.google.cloud.cloudsecuritycompliance.v1.FrameworkComplianceSummary()),
             ];
-            client.descriptors.page.listFrameworkDeployments.asyncIterate = stubAsyncIterationCall(expectedResponse);
-            const responses: protos.google.cloud.cloudsecuritycompliance.v1.IFrameworkDeployment[] = [];
-            const iterable = client.listFrameworkDeploymentsAsync(request);
+            client.descriptors.page.listFrameworkComplianceSummaries.asyncIterate = stubAsyncIterationCall(expectedResponse);
+            const responses: protos.google.cloud.cloudsecuritycompliance.v1.IFrameworkComplianceSummary[] = [];
+            const iterable = client.listFrameworkComplianceSummariesAsync(request);
             for await (const resource of iterable) {
                 responses.push(resource!);
             }
             assert.deepStrictEqual(responses, expectedResponse);
             assert.deepStrictEqual(
-                (client.descriptors.page.listFrameworkDeployments.asyncIterate as SinonStub)
+                (client.descriptors.page.listFrameworkComplianceSummaries.asyncIterate as SinonStub)
                     .getCall(0).args[1], request);
             assert(
-                (client.descriptors.page.listFrameworkDeployments.asyncIterate as SinonStub)
+                (client.descriptors.page.listFrameworkComplianceSummaries.asyncIterate as SinonStub)
                     .getCall(0).args[2].otherArgs.headers['x-goog-request-params'].includes(
                         expectedHeaderRequestParams
                     )
             );
         });
 
-        it('uses async iteration with listFrameworkDeployments with error', async () => {
-            const client = new deploymentModule.v1.DeploymentClient({
+        it('uses async iteration with listFrameworkComplianceSummaries with error', async () => {
+            const client = new monitoringModule.v1.MonitoringClient({
                 credentials: {client_email: 'bogus', private_key: 'bogus'},
                 projectId: 'bogus',
             });
             await client.initialize();
             const request = generateSampleMessage(
-              new protos.google.cloud.cloudsecuritycompliance.v1.ListFrameworkDeploymentsRequest()
+              new protos.google.cloud.cloudsecuritycompliance.v1.ListFrameworkComplianceSummariesRequest()
             );
             const defaultValue1 =
-              getTypeDefaultValue('.google.cloud.cloudsecuritycompliance.v1.ListFrameworkDeploymentsRequest', ['parent']);
+              getTypeDefaultValue('.google.cloud.cloudsecuritycompliance.v1.ListFrameworkComplianceSummariesRequest', ['parent']);
             request.parent = defaultValue1;
             const expectedHeaderRequestParams = `parent=${defaultValue1 ?? '' }`;
             const expectedError = new Error('expected');
-            client.descriptors.page.listFrameworkDeployments.asyncIterate = stubAsyncIterationCall(undefined, expectedError);
-            const iterable = client.listFrameworkDeploymentsAsync(request);
+            client.descriptors.page.listFrameworkComplianceSummaries.asyncIterate = stubAsyncIterationCall(undefined, expectedError);
+            const iterable = client.listFrameworkComplianceSummariesAsync(request);
             await assert.rejects(async () => {
-                const responses: protos.google.cloud.cloudsecuritycompliance.v1.IFrameworkDeployment[] = [];
+                const responses: protos.google.cloud.cloudsecuritycompliance.v1.IFrameworkComplianceSummary[] = [];
                 for await (const resource of iterable) {
                     responses.push(resource!);
                 }
             });
             assert.deepStrictEqual(
-                (client.descriptors.page.listFrameworkDeployments.asyncIterate as SinonStub)
+                (client.descriptors.page.listFrameworkComplianceSummaries.asyncIterate as SinonStub)
                     .getCall(0).args[1], request);
             assert(
-                (client.descriptors.page.listFrameworkDeployments.asyncIterate as SinonStub)
+                (client.descriptors.page.listFrameworkComplianceSummaries.asyncIterate as SinonStub)
                     .getCall(0).args[2].otherArgs.headers['x-goog-request-params'].includes(
                         expectedHeaderRequestParams
                     )
@@ -1044,57 +720,57 @@ describe('v1.DeploymentClient', () => {
         });
     });
 
-    describe('listCloudControlDeployments', () => {
-        it('invokes listCloudControlDeployments without error', async () => {
-            const client = new deploymentModule.v1.DeploymentClient({
+    describe('listFindingSummaries', () => {
+        it('invokes listFindingSummaries without error', async () => {
+            const client = new monitoringModule.v1.MonitoringClient({
                 credentials: {client_email: 'bogus', private_key: 'bogus'},
                 projectId: 'bogus',
             });
             await client.initialize();
             const request = generateSampleMessage(
-              new protos.google.cloud.cloudsecuritycompliance.v1.ListCloudControlDeploymentsRequest()
+              new protos.google.cloud.cloudsecuritycompliance.v1.ListFindingSummariesRequest()
             );
             const defaultValue1 =
-              getTypeDefaultValue('.google.cloud.cloudsecuritycompliance.v1.ListCloudControlDeploymentsRequest', ['parent']);
+              getTypeDefaultValue('.google.cloud.cloudsecuritycompliance.v1.ListFindingSummariesRequest', ['parent']);
             request.parent = defaultValue1;
             const expectedHeaderRequestParams = `parent=${defaultValue1 ?? '' }`;const expectedResponse = [
-              generateSampleMessage(new protos.google.cloud.cloudsecuritycompliance.v1.CloudControlDeployment()),
-              generateSampleMessage(new protos.google.cloud.cloudsecuritycompliance.v1.CloudControlDeployment()),
-              generateSampleMessage(new protos.google.cloud.cloudsecuritycompliance.v1.CloudControlDeployment()),
+              generateSampleMessage(new protos.google.cloud.cloudsecuritycompliance.v1.FindingSummary()),
+              generateSampleMessage(new protos.google.cloud.cloudsecuritycompliance.v1.FindingSummary()),
+              generateSampleMessage(new protos.google.cloud.cloudsecuritycompliance.v1.FindingSummary()),
             ];
-            client.innerApiCalls.listCloudControlDeployments = stubSimpleCall(expectedResponse);
-            const [response] = await client.listCloudControlDeployments(request);
+            client.innerApiCalls.listFindingSummaries = stubSimpleCall(expectedResponse);
+            const [response] = await client.listFindingSummaries(request);
             assert.deepStrictEqual(response, expectedResponse);
-            const actualRequest = (client.innerApiCalls.listCloudControlDeployments as SinonStub)
+            const actualRequest = (client.innerApiCalls.listFindingSummaries as SinonStub)
                 .getCall(0).args[0];
             assert.deepStrictEqual(actualRequest, request);
-            const actualHeaderRequestParams = (client.innerApiCalls.listCloudControlDeployments as SinonStub)
+            const actualHeaderRequestParams = (client.innerApiCalls.listFindingSummaries as SinonStub)
                 .getCall(0).args[1].otherArgs.headers['x-goog-request-params'];
             assert(actualHeaderRequestParams.includes(expectedHeaderRequestParams));
         });
 
-        it('invokes listCloudControlDeployments without error using callback', async () => {
-            const client = new deploymentModule.v1.DeploymentClient({
+        it('invokes listFindingSummaries without error using callback', async () => {
+            const client = new monitoringModule.v1.MonitoringClient({
                 credentials: {client_email: 'bogus', private_key: 'bogus'},
                 projectId: 'bogus',
             });
             await client.initialize();
             const request = generateSampleMessage(
-              new protos.google.cloud.cloudsecuritycompliance.v1.ListCloudControlDeploymentsRequest()
+              new protos.google.cloud.cloudsecuritycompliance.v1.ListFindingSummariesRequest()
             );
             const defaultValue1 =
-              getTypeDefaultValue('.google.cloud.cloudsecuritycompliance.v1.ListCloudControlDeploymentsRequest', ['parent']);
+              getTypeDefaultValue('.google.cloud.cloudsecuritycompliance.v1.ListFindingSummariesRequest', ['parent']);
             request.parent = defaultValue1;
             const expectedHeaderRequestParams = `parent=${defaultValue1 ?? '' }`;const expectedResponse = [
-              generateSampleMessage(new protos.google.cloud.cloudsecuritycompliance.v1.CloudControlDeployment()),
-              generateSampleMessage(new protos.google.cloud.cloudsecuritycompliance.v1.CloudControlDeployment()),
-              generateSampleMessage(new protos.google.cloud.cloudsecuritycompliance.v1.CloudControlDeployment()),
+              generateSampleMessage(new protos.google.cloud.cloudsecuritycompliance.v1.FindingSummary()),
+              generateSampleMessage(new protos.google.cloud.cloudsecuritycompliance.v1.FindingSummary()),
+              generateSampleMessage(new protos.google.cloud.cloudsecuritycompliance.v1.FindingSummary()),
             ];
-            client.innerApiCalls.listCloudControlDeployments = stubSimpleCallWithCallback(expectedResponse);
+            client.innerApiCalls.listFindingSummaries = stubSimpleCallWithCallback(expectedResponse);
             const promise = new Promise((resolve, reject) => {
-                 client.listCloudControlDeployments(
+                 client.listFindingSummaries(
                     request,
-                    (err?: Error|null, result?: protos.google.cloud.cloudsecuritycompliance.v1.ICloudControlDeployment[]|null) => {
+                    (err?: Error|null, result?: protos.google.cloud.cloudsecuritycompliance.v1.IFindingSummary[]|null) => {
                         if (err) {
                             reject(err);
                         } else {
@@ -1104,61 +780,61 @@ describe('v1.DeploymentClient', () => {
             });
             const response = await promise;
             assert.deepStrictEqual(response, expectedResponse);
-            const actualRequest = (client.innerApiCalls.listCloudControlDeployments as SinonStub)
+            const actualRequest = (client.innerApiCalls.listFindingSummaries as SinonStub)
                 .getCall(0).args[0];
             assert.deepStrictEqual(actualRequest, request);
-            const actualHeaderRequestParams = (client.innerApiCalls.listCloudControlDeployments as SinonStub)
+            const actualHeaderRequestParams = (client.innerApiCalls.listFindingSummaries as SinonStub)
                 .getCall(0).args[1].otherArgs.headers['x-goog-request-params'];
             assert(actualHeaderRequestParams.includes(expectedHeaderRequestParams));
         });
 
-        it('invokes listCloudControlDeployments with error', async () => {
-            const client = new deploymentModule.v1.DeploymentClient({
+        it('invokes listFindingSummaries with error', async () => {
+            const client = new monitoringModule.v1.MonitoringClient({
                 credentials: {client_email: 'bogus', private_key: 'bogus'},
                 projectId: 'bogus',
             });
             await client.initialize();
             const request = generateSampleMessage(
-              new protos.google.cloud.cloudsecuritycompliance.v1.ListCloudControlDeploymentsRequest()
+              new protos.google.cloud.cloudsecuritycompliance.v1.ListFindingSummariesRequest()
             );
             const defaultValue1 =
-              getTypeDefaultValue('.google.cloud.cloudsecuritycompliance.v1.ListCloudControlDeploymentsRequest', ['parent']);
+              getTypeDefaultValue('.google.cloud.cloudsecuritycompliance.v1.ListFindingSummariesRequest', ['parent']);
             request.parent = defaultValue1;
             const expectedHeaderRequestParams = `parent=${defaultValue1 ?? '' }`;
             const expectedError = new Error('expected');
-            client.innerApiCalls.listCloudControlDeployments = stubSimpleCall(undefined, expectedError);
-            await assert.rejects(client.listCloudControlDeployments(request), expectedError);
-            const actualRequest = (client.innerApiCalls.listCloudControlDeployments as SinonStub)
+            client.innerApiCalls.listFindingSummaries = stubSimpleCall(undefined, expectedError);
+            await assert.rejects(client.listFindingSummaries(request), expectedError);
+            const actualRequest = (client.innerApiCalls.listFindingSummaries as SinonStub)
                 .getCall(0).args[0];
             assert.deepStrictEqual(actualRequest, request);
-            const actualHeaderRequestParams = (client.innerApiCalls.listCloudControlDeployments as SinonStub)
+            const actualHeaderRequestParams = (client.innerApiCalls.listFindingSummaries as SinonStub)
                 .getCall(0).args[1].otherArgs.headers['x-goog-request-params'];
             assert(actualHeaderRequestParams.includes(expectedHeaderRequestParams));
         });
 
-        it('invokes listCloudControlDeploymentsStream without error', async () => {
-            const client = new deploymentModule.v1.DeploymentClient({
+        it('invokes listFindingSummariesStream without error', async () => {
+            const client = new monitoringModule.v1.MonitoringClient({
                 credentials: {client_email: 'bogus', private_key: 'bogus'},
                 projectId: 'bogus',
             });
             await client.initialize();
             const request = generateSampleMessage(
-              new protos.google.cloud.cloudsecuritycompliance.v1.ListCloudControlDeploymentsRequest()
+              new protos.google.cloud.cloudsecuritycompliance.v1.ListFindingSummariesRequest()
             );
             const defaultValue1 =
-              getTypeDefaultValue('.google.cloud.cloudsecuritycompliance.v1.ListCloudControlDeploymentsRequest', ['parent']);
+              getTypeDefaultValue('.google.cloud.cloudsecuritycompliance.v1.ListFindingSummariesRequest', ['parent']);
             request.parent = defaultValue1;
             const expectedHeaderRequestParams = `parent=${defaultValue1 ?? '' }`;
             const expectedResponse = [
-              generateSampleMessage(new protos.google.cloud.cloudsecuritycompliance.v1.CloudControlDeployment()),
-              generateSampleMessage(new protos.google.cloud.cloudsecuritycompliance.v1.CloudControlDeployment()),
-              generateSampleMessage(new protos.google.cloud.cloudsecuritycompliance.v1.CloudControlDeployment()),
+              generateSampleMessage(new protos.google.cloud.cloudsecuritycompliance.v1.FindingSummary()),
+              generateSampleMessage(new protos.google.cloud.cloudsecuritycompliance.v1.FindingSummary()),
+              generateSampleMessage(new protos.google.cloud.cloudsecuritycompliance.v1.FindingSummary()),
             ];
-            client.descriptors.page.listCloudControlDeployments.createStream = stubPageStreamingCall(expectedResponse);
-            const stream = client.listCloudControlDeploymentsStream(request);
+            client.descriptors.page.listFindingSummaries.createStream = stubPageStreamingCall(expectedResponse);
+            const stream = client.listFindingSummariesStream(request);
             const promise = new Promise((resolve, reject) => {
-                const responses: protos.google.cloud.cloudsecuritycompliance.v1.CloudControlDeployment[] = [];
-                stream.on('data', (response: protos.google.cloud.cloudsecuritycompliance.v1.CloudControlDeployment) => {
+                const responses: protos.google.cloud.cloudsecuritycompliance.v1.FindingSummary[] = [];
+                stream.on('data', (response: protos.google.cloud.cloudsecuritycompliance.v1.FindingSummary) => {
                     responses.push(response);
                 });
                 stream.on('end', () => {
@@ -1170,35 +846,35 @@ describe('v1.DeploymentClient', () => {
             });
             const responses = await promise;
             assert.deepStrictEqual(responses, expectedResponse);
-            assert((client.descriptors.page.listCloudControlDeployments.createStream as SinonStub)
-                .getCall(0).calledWith(client.innerApiCalls.listCloudControlDeployments, request));
+            assert((client.descriptors.page.listFindingSummaries.createStream as SinonStub)
+                .getCall(0).calledWith(client.innerApiCalls.listFindingSummaries, request));
             assert(
-                (client.descriptors.page.listCloudControlDeployments.createStream as SinonStub)
+                (client.descriptors.page.listFindingSummaries.createStream as SinonStub)
                     .getCall(0).args[2].otherArgs.headers['x-goog-request-params'].includes(
                         expectedHeaderRequestParams
                     )
             );
         });
 
-        it('invokes listCloudControlDeploymentsStream with error', async () => {
-            const client = new deploymentModule.v1.DeploymentClient({
+        it('invokes listFindingSummariesStream with error', async () => {
+            const client = new monitoringModule.v1.MonitoringClient({
                 credentials: {client_email: 'bogus', private_key: 'bogus'},
                 projectId: 'bogus',
             });
             await client.initialize();
             const request = generateSampleMessage(
-              new protos.google.cloud.cloudsecuritycompliance.v1.ListCloudControlDeploymentsRequest()
+              new protos.google.cloud.cloudsecuritycompliance.v1.ListFindingSummariesRequest()
             );
             const defaultValue1 =
-              getTypeDefaultValue('.google.cloud.cloudsecuritycompliance.v1.ListCloudControlDeploymentsRequest', ['parent']);
+              getTypeDefaultValue('.google.cloud.cloudsecuritycompliance.v1.ListFindingSummariesRequest', ['parent']);
             request.parent = defaultValue1;
             const expectedHeaderRequestParams = `parent=${defaultValue1 ?? '' }`;
             const expectedError = new Error('expected');
-            client.descriptors.page.listCloudControlDeployments.createStream = stubPageStreamingCall(undefined, expectedError);
-            const stream = client.listCloudControlDeploymentsStream(request);
+            client.descriptors.page.listFindingSummaries.createStream = stubPageStreamingCall(undefined, expectedError);
+            const stream = client.listFindingSummariesStream(request);
             const promise = new Promise((resolve, reject) => {
-                const responses: protos.google.cloud.cloudsecuritycompliance.v1.CloudControlDeployment[] = [];
-                stream.on('data', (response: protos.google.cloud.cloudsecuritycompliance.v1.CloudControlDeployment) => {
+                const responses: protos.google.cloud.cloudsecuritycompliance.v1.FindingSummary[] = [];
+                stream.on('data', (response: protos.google.cloud.cloudsecuritycompliance.v1.FindingSummary) => {
                     responses.push(response);
                 });
                 stream.on('end', () => {
@@ -1209,79 +885,324 @@ describe('v1.DeploymentClient', () => {
                 });
             });
             await assert.rejects(promise, expectedError);
-            assert((client.descriptors.page.listCloudControlDeployments.createStream as SinonStub)
-                .getCall(0).calledWith(client.innerApiCalls.listCloudControlDeployments, request));
+            assert((client.descriptors.page.listFindingSummaries.createStream as SinonStub)
+                .getCall(0).calledWith(client.innerApiCalls.listFindingSummaries, request));
             assert(
-                (client.descriptors.page.listCloudControlDeployments.createStream as SinonStub)
+                (client.descriptors.page.listFindingSummaries.createStream as SinonStub)
                     .getCall(0).args[2].otherArgs.headers['x-goog-request-params'].includes(
                          expectedHeaderRequestParams
                     ) 
             );
         });
 
-        it('uses async iteration with listCloudControlDeployments without error', async () => {
-            const client = new deploymentModule.v1.DeploymentClient({
+        it('uses async iteration with listFindingSummaries without error', async () => {
+            const client = new monitoringModule.v1.MonitoringClient({
               credentials: {client_email: 'bogus', private_key: 'bogus'},
               projectId: 'bogus',
             });
             await client.initialize();
             const request = generateSampleMessage(
-              new protos.google.cloud.cloudsecuritycompliance.v1.ListCloudControlDeploymentsRequest()
+              new protos.google.cloud.cloudsecuritycompliance.v1.ListFindingSummariesRequest()
             );
             const defaultValue1 =
-              getTypeDefaultValue('.google.cloud.cloudsecuritycompliance.v1.ListCloudControlDeploymentsRequest', ['parent']);
+              getTypeDefaultValue('.google.cloud.cloudsecuritycompliance.v1.ListFindingSummariesRequest', ['parent']);
             request.parent = defaultValue1;
             const expectedHeaderRequestParams = `parent=${defaultValue1 ?? '' }`;
             const expectedResponse = [
-              generateSampleMessage(new protos.google.cloud.cloudsecuritycompliance.v1.CloudControlDeployment()),
-              generateSampleMessage(new protos.google.cloud.cloudsecuritycompliance.v1.CloudControlDeployment()),
-              generateSampleMessage(new protos.google.cloud.cloudsecuritycompliance.v1.CloudControlDeployment()),
+              generateSampleMessage(new protos.google.cloud.cloudsecuritycompliance.v1.FindingSummary()),
+              generateSampleMessage(new protos.google.cloud.cloudsecuritycompliance.v1.FindingSummary()),
+              generateSampleMessage(new protos.google.cloud.cloudsecuritycompliance.v1.FindingSummary()),
             ];
-            client.descriptors.page.listCloudControlDeployments.asyncIterate = stubAsyncIterationCall(expectedResponse);
-            const responses: protos.google.cloud.cloudsecuritycompliance.v1.ICloudControlDeployment[] = [];
-            const iterable = client.listCloudControlDeploymentsAsync(request);
+            client.descriptors.page.listFindingSummaries.asyncIterate = stubAsyncIterationCall(expectedResponse);
+            const responses: protos.google.cloud.cloudsecuritycompliance.v1.IFindingSummary[] = [];
+            const iterable = client.listFindingSummariesAsync(request);
             for await (const resource of iterable) {
                 responses.push(resource!);
             }
             assert.deepStrictEqual(responses, expectedResponse);
             assert.deepStrictEqual(
-                (client.descriptors.page.listCloudControlDeployments.asyncIterate as SinonStub)
+                (client.descriptors.page.listFindingSummaries.asyncIterate as SinonStub)
                     .getCall(0).args[1], request);
             assert(
-                (client.descriptors.page.listCloudControlDeployments.asyncIterate as SinonStub)
+                (client.descriptors.page.listFindingSummaries.asyncIterate as SinonStub)
                     .getCall(0).args[2].otherArgs.headers['x-goog-request-params'].includes(
                         expectedHeaderRequestParams
                     )
             );
         });
 
-        it('uses async iteration with listCloudControlDeployments with error', async () => {
-            const client = new deploymentModule.v1.DeploymentClient({
+        it('uses async iteration with listFindingSummaries with error', async () => {
+            const client = new monitoringModule.v1.MonitoringClient({
                 credentials: {client_email: 'bogus', private_key: 'bogus'},
                 projectId: 'bogus',
             });
             await client.initialize();
             const request = generateSampleMessage(
-              new protos.google.cloud.cloudsecuritycompliance.v1.ListCloudControlDeploymentsRequest()
+              new protos.google.cloud.cloudsecuritycompliance.v1.ListFindingSummariesRequest()
             );
             const defaultValue1 =
-              getTypeDefaultValue('.google.cloud.cloudsecuritycompliance.v1.ListCloudControlDeploymentsRequest', ['parent']);
+              getTypeDefaultValue('.google.cloud.cloudsecuritycompliance.v1.ListFindingSummariesRequest', ['parent']);
             request.parent = defaultValue1;
             const expectedHeaderRequestParams = `parent=${defaultValue1 ?? '' }`;
             const expectedError = new Error('expected');
-            client.descriptors.page.listCloudControlDeployments.asyncIterate = stubAsyncIterationCall(undefined, expectedError);
-            const iterable = client.listCloudControlDeploymentsAsync(request);
+            client.descriptors.page.listFindingSummaries.asyncIterate = stubAsyncIterationCall(undefined, expectedError);
+            const iterable = client.listFindingSummariesAsync(request);
             await assert.rejects(async () => {
-                const responses: protos.google.cloud.cloudsecuritycompliance.v1.ICloudControlDeployment[] = [];
+                const responses: protos.google.cloud.cloudsecuritycompliance.v1.IFindingSummary[] = [];
                 for await (const resource of iterable) {
                     responses.push(resource!);
                 }
             });
             assert.deepStrictEqual(
-                (client.descriptors.page.listCloudControlDeployments.asyncIterate as SinonStub)
+                (client.descriptors.page.listFindingSummaries.asyncIterate as SinonStub)
                     .getCall(0).args[1], request);
             assert(
-                (client.descriptors.page.listCloudControlDeployments.asyncIterate as SinonStub)
+                (client.descriptors.page.listFindingSummaries.asyncIterate as SinonStub)
+                    .getCall(0).args[2].otherArgs.headers['x-goog-request-params'].includes(
+                        expectedHeaderRequestParams
+                    )
+            );
+        });
+    });
+
+    describe('listControlComplianceSummaries', () => {
+        it('invokes listControlComplianceSummaries without error', async () => {
+            const client = new monitoringModule.v1.MonitoringClient({
+                credentials: {client_email: 'bogus', private_key: 'bogus'},
+                projectId: 'bogus',
+            });
+            await client.initialize();
+            const request = generateSampleMessage(
+              new protos.google.cloud.cloudsecuritycompliance.v1.ListControlComplianceSummariesRequest()
+            );
+            const defaultValue1 =
+              getTypeDefaultValue('.google.cloud.cloudsecuritycompliance.v1.ListControlComplianceSummariesRequest', ['parent']);
+            request.parent = defaultValue1;
+            const expectedHeaderRequestParams = `parent=${defaultValue1 ?? '' }`;const expectedResponse = [
+              generateSampleMessage(new protos.google.cloud.cloudsecuritycompliance.v1.ControlComplianceSummary()),
+              generateSampleMessage(new protos.google.cloud.cloudsecuritycompliance.v1.ControlComplianceSummary()),
+              generateSampleMessage(new protos.google.cloud.cloudsecuritycompliance.v1.ControlComplianceSummary()),
+            ];
+            client.innerApiCalls.listControlComplianceSummaries = stubSimpleCall(expectedResponse);
+            const [response] = await client.listControlComplianceSummaries(request);
+            assert.deepStrictEqual(response, expectedResponse);
+            const actualRequest = (client.innerApiCalls.listControlComplianceSummaries as SinonStub)
+                .getCall(0).args[0];
+            assert.deepStrictEqual(actualRequest, request);
+            const actualHeaderRequestParams = (client.innerApiCalls.listControlComplianceSummaries as SinonStub)
+                .getCall(0).args[1].otherArgs.headers['x-goog-request-params'];
+            assert(actualHeaderRequestParams.includes(expectedHeaderRequestParams));
+        });
+
+        it('invokes listControlComplianceSummaries without error using callback', async () => {
+            const client = new monitoringModule.v1.MonitoringClient({
+                credentials: {client_email: 'bogus', private_key: 'bogus'},
+                projectId: 'bogus',
+            });
+            await client.initialize();
+            const request = generateSampleMessage(
+              new protos.google.cloud.cloudsecuritycompliance.v1.ListControlComplianceSummariesRequest()
+            );
+            const defaultValue1 =
+              getTypeDefaultValue('.google.cloud.cloudsecuritycompliance.v1.ListControlComplianceSummariesRequest', ['parent']);
+            request.parent = defaultValue1;
+            const expectedHeaderRequestParams = `parent=${defaultValue1 ?? '' }`;const expectedResponse = [
+              generateSampleMessage(new protos.google.cloud.cloudsecuritycompliance.v1.ControlComplianceSummary()),
+              generateSampleMessage(new protos.google.cloud.cloudsecuritycompliance.v1.ControlComplianceSummary()),
+              generateSampleMessage(new protos.google.cloud.cloudsecuritycompliance.v1.ControlComplianceSummary()),
+            ];
+            client.innerApiCalls.listControlComplianceSummaries = stubSimpleCallWithCallback(expectedResponse);
+            const promise = new Promise((resolve, reject) => {
+                 client.listControlComplianceSummaries(
+                    request,
+                    (err?: Error|null, result?: protos.google.cloud.cloudsecuritycompliance.v1.IControlComplianceSummary[]|null) => {
+                        if (err) {
+                            reject(err);
+                        } else {
+                            resolve(result);
+                        }
+                    });
+            });
+            const response = await promise;
+            assert.deepStrictEqual(response, expectedResponse);
+            const actualRequest = (client.innerApiCalls.listControlComplianceSummaries as SinonStub)
+                .getCall(0).args[0];
+            assert.deepStrictEqual(actualRequest, request);
+            const actualHeaderRequestParams = (client.innerApiCalls.listControlComplianceSummaries as SinonStub)
+                .getCall(0).args[1].otherArgs.headers['x-goog-request-params'];
+            assert(actualHeaderRequestParams.includes(expectedHeaderRequestParams));
+        });
+
+        it('invokes listControlComplianceSummaries with error', async () => {
+            const client = new monitoringModule.v1.MonitoringClient({
+                credentials: {client_email: 'bogus', private_key: 'bogus'},
+                projectId: 'bogus',
+            });
+            await client.initialize();
+            const request = generateSampleMessage(
+              new protos.google.cloud.cloudsecuritycompliance.v1.ListControlComplianceSummariesRequest()
+            );
+            const defaultValue1 =
+              getTypeDefaultValue('.google.cloud.cloudsecuritycompliance.v1.ListControlComplianceSummariesRequest', ['parent']);
+            request.parent = defaultValue1;
+            const expectedHeaderRequestParams = `parent=${defaultValue1 ?? '' }`;
+            const expectedError = new Error('expected');
+            client.innerApiCalls.listControlComplianceSummaries = stubSimpleCall(undefined, expectedError);
+            await assert.rejects(client.listControlComplianceSummaries(request), expectedError);
+            const actualRequest = (client.innerApiCalls.listControlComplianceSummaries as SinonStub)
+                .getCall(0).args[0];
+            assert.deepStrictEqual(actualRequest, request);
+            const actualHeaderRequestParams = (client.innerApiCalls.listControlComplianceSummaries as SinonStub)
+                .getCall(0).args[1].otherArgs.headers['x-goog-request-params'];
+            assert(actualHeaderRequestParams.includes(expectedHeaderRequestParams));
+        });
+
+        it('invokes listControlComplianceSummariesStream without error', async () => {
+            const client = new monitoringModule.v1.MonitoringClient({
+                credentials: {client_email: 'bogus', private_key: 'bogus'},
+                projectId: 'bogus',
+            });
+            await client.initialize();
+            const request = generateSampleMessage(
+              new protos.google.cloud.cloudsecuritycompliance.v1.ListControlComplianceSummariesRequest()
+            );
+            const defaultValue1 =
+              getTypeDefaultValue('.google.cloud.cloudsecuritycompliance.v1.ListControlComplianceSummariesRequest', ['parent']);
+            request.parent = defaultValue1;
+            const expectedHeaderRequestParams = `parent=${defaultValue1 ?? '' }`;
+            const expectedResponse = [
+              generateSampleMessage(new protos.google.cloud.cloudsecuritycompliance.v1.ControlComplianceSummary()),
+              generateSampleMessage(new protos.google.cloud.cloudsecuritycompliance.v1.ControlComplianceSummary()),
+              generateSampleMessage(new protos.google.cloud.cloudsecuritycompliance.v1.ControlComplianceSummary()),
+            ];
+            client.descriptors.page.listControlComplianceSummaries.createStream = stubPageStreamingCall(expectedResponse);
+            const stream = client.listControlComplianceSummariesStream(request);
+            const promise = new Promise((resolve, reject) => {
+                const responses: protos.google.cloud.cloudsecuritycompliance.v1.ControlComplianceSummary[] = [];
+                stream.on('data', (response: protos.google.cloud.cloudsecuritycompliance.v1.ControlComplianceSummary) => {
+                    responses.push(response);
+                });
+                stream.on('end', () => {
+                    resolve(responses);
+                });
+                stream.on('error', (err: Error) => {
+                    reject(err);
+                });
+            });
+            const responses = await promise;
+            assert.deepStrictEqual(responses, expectedResponse);
+            assert((client.descriptors.page.listControlComplianceSummaries.createStream as SinonStub)
+                .getCall(0).calledWith(client.innerApiCalls.listControlComplianceSummaries, request));
+            assert(
+                (client.descriptors.page.listControlComplianceSummaries.createStream as SinonStub)
+                    .getCall(0).args[2].otherArgs.headers['x-goog-request-params'].includes(
+                        expectedHeaderRequestParams
+                    )
+            );
+        });
+
+        it('invokes listControlComplianceSummariesStream with error', async () => {
+            const client = new monitoringModule.v1.MonitoringClient({
+                credentials: {client_email: 'bogus', private_key: 'bogus'},
+                projectId: 'bogus',
+            });
+            await client.initialize();
+            const request = generateSampleMessage(
+              new protos.google.cloud.cloudsecuritycompliance.v1.ListControlComplianceSummariesRequest()
+            );
+            const defaultValue1 =
+              getTypeDefaultValue('.google.cloud.cloudsecuritycompliance.v1.ListControlComplianceSummariesRequest', ['parent']);
+            request.parent = defaultValue1;
+            const expectedHeaderRequestParams = `parent=${defaultValue1 ?? '' }`;
+            const expectedError = new Error('expected');
+            client.descriptors.page.listControlComplianceSummaries.createStream = stubPageStreamingCall(undefined, expectedError);
+            const stream = client.listControlComplianceSummariesStream(request);
+            const promise = new Promise((resolve, reject) => {
+                const responses: protos.google.cloud.cloudsecuritycompliance.v1.ControlComplianceSummary[] = [];
+                stream.on('data', (response: protos.google.cloud.cloudsecuritycompliance.v1.ControlComplianceSummary) => {
+                    responses.push(response);
+                });
+                stream.on('end', () => {
+                    resolve(responses);
+                });
+                stream.on('error', (err: Error) => {
+                    reject(err);
+                });
+            });
+            await assert.rejects(promise, expectedError);
+            assert((client.descriptors.page.listControlComplianceSummaries.createStream as SinonStub)
+                .getCall(0).calledWith(client.innerApiCalls.listControlComplianceSummaries, request));
+            assert(
+                (client.descriptors.page.listControlComplianceSummaries.createStream as SinonStub)
+                    .getCall(0).args[2].otherArgs.headers['x-goog-request-params'].includes(
+                         expectedHeaderRequestParams
+                    ) 
+            );
+        });
+
+        it('uses async iteration with listControlComplianceSummaries without error', async () => {
+            const client = new monitoringModule.v1.MonitoringClient({
+              credentials: {client_email: 'bogus', private_key: 'bogus'},
+              projectId: 'bogus',
+            });
+            await client.initialize();
+            const request = generateSampleMessage(
+              new protos.google.cloud.cloudsecuritycompliance.v1.ListControlComplianceSummariesRequest()
+            );
+            const defaultValue1 =
+              getTypeDefaultValue('.google.cloud.cloudsecuritycompliance.v1.ListControlComplianceSummariesRequest', ['parent']);
+            request.parent = defaultValue1;
+            const expectedHeaderRequestParams = `parent=${defaultValue1 ?? '' }`;
+            const expectedResponse = [
+              generateSampleMessage(new protos.google.cloud.cloudsecuritycompliance.v1.ControlComplianceSummary()),
+              generateSampleMessage(new protos.google.cloud.cloudsecuritycompliance.v1.ControlComplianceSummary()),
+              generateSampleMessage(new protos.google.cloud.cloudsecuritycompliance.v1.ControlComplianceSummary()),
+            ];
+            client.descriptors.page.listControlComplianceSummaries.asyncIterate = stubAsyncIterationCall(expectedResponse);
+            const responses: protos.google.cloud.cloudsecuritycompliance.v1.IControlComplianceSummary[] = [];
+            const iterable = client.listControlComplianceSummariesAsync(request);
+            for await (const resource of iterable) {
+                responses.push(resource!);
+            }
+            assert.deepStrictEqual(responses, expectedResponse);
+            assert.deepStrictEqual(
+                (client.descriptors.page.listControlComplianceSummaries.asyncIterate as SinonStub)
+                    .getCall(0).args[1], request);
+            assert(
+                (client.descriptors.page.listControlComplianceSummaries.asyncIterate as SinonStub)
+                    .getCall(0).args[2].otherArgs.headers['x-goog-request-params'].includes(
+                        expectedHeaderRequestParams
+                    )
+            );
+        });
+
+        it('uses async iteration with listControlComplianceSummaries with error', async () => {
+            const client = new monitoringModule.v1.MonitoringClient({
+                credentials: {client_email: 'bogus', private_key: 'bogus'},
+                projectId: 'bogus',
+            });
+            await client.initialize();
+            const request = generateSampleMessage(
+              new protos.google.cloud.cloudsecuritycompliance.v1.ListControlComplianceSummariesRequest()
+            );
+            const defaultValue1 =
+              getTypeDefaultValue('.google.cloud.cloudsecuritycompliance.v1.ListControlComplianceSummariesRequest', ['parent']);
+            request.parent = defaultValue1;
+            const expectedHeaderRequestParams = `parent=${defaultValue1 ?? '' }`;
+            const expectedError = new Error('expected');
+            client.descriptors.page.listControlComplianceSummaries.asyncIterate = stubAsyncIterationCall(undefined, expectedError);
+            const iterable = client.listControlComplianceSummariesAsync(request);
+            await assert.rejects(async () => {
+                const responses: protos.google.cloud.cloudsecuritycompliance.v1.IControlComplianceSummary[] = [];
+                for await (const resource of iterable) {
+                    responses.push(resource!);
+                }
+            });
+            assert.deepStrictEqual(
+                (client.descriptors.page.listControlComplianceSummaries.asyncIterate as SinonStub)
+                    .getCall(0).args[1], request);
+            assert(
+                (client.descriptors.page.listControlComplianceSummaries.asyncIterate as SinonStub)
                     .getCall(0).args[2].otherArgs.headers['x-goog-request-params'].includes(
                         expectedHeaderRequestParams
                     )
@@ -1290,7 +1211,7 @@ describe('v1.DeploymentClient', () => {
     });
     describe('getLocation', () => {
         it('invokes getLocation without error', async () => {
-            const client = new deploymentModule.v1.DeploymentClient({
+            const client = new monitoringModule.v1.MonitoringClient({
               credentials: {client_email: 'bogus', private_key: 'bogus'},
               projectId: 'bogus',
             });
@@ -1317,7 +1238,7 @@ describe('v1.DeploymentClient', () => {
                 .getCall(0).calledWith(request, expectedOptions, undefined));
         });
         it('invokes getLocation without error using callback', async () => {
-            const client = new deploymentModule.v1.DeploymentClient({
+            const client = new monitoringModule.v1.MonitoringClient({
               credentials: {client_email: 'bogus', private_key: 'bogus'},
               projectId: 'bogus',
             });
@@ -1359,7 +1280,7 @@ describe('v1.DeploymentClient', () => {
                 .getCall(0));
         });
         it('invokes getLocation with error', async () => {
-            const client = new deploymentModule.v1.DeploymentClient({
+            const client = new monitoringModule.v1.MonitoringClient({
               credentials: {client_email: 'bogus', private_key: 'bogus'},
               projectId: 'bogus',
             });
@@ -1385,7 +1306,7 @@ describe('v1.DeploymentClient', () => {
     });
     describe('listLocationsAsync', () => {
         it('uses async iteration with listLocations without error', async () => {
-            const client = new deploymentModule.v1.DeploymentClient({
+            const client = new monitoringModule.v1.MonitoringClient({
               credentials: {client_email: 'bogus', private_key: 'bogus'},
               projectId: 'bogus',
             });
@@ -1424,7 +1345,7 @@ describe('v1.DeploymentClient', () => {
             );
         });
         it('uses async iteration with listLocations with error', async () => {
-            const client = new deploymentModule.v1.DeploymentClient({
+            const client = new monitoringModule.v1.MonitoringClient({
                 credentials: {client_email: 'bogus', private_key: 'bogus'},
                 projectId: 'bogus',
             });
@@ -1454,261 +1375,6 @@ describe('v1.DeploymentClient', () => {
             );
         });
     });
-    describe('getOperation', () => {
-        it('invokes getOperation without error', async () => {
-            const client = new deploymentModule.v1.DeploymentClient({
-              credentials: {client_email: 'bogus', private_key: 'bogus'},
-              projectId: 'bogus',
-            });
-            await client.initialize();
-            const request = generateSampleMessage(
-              new operationsProtos.google.longrunning.GetOperationRequest()
-            );
-            const expectedResponse = generateSampleMessage(
-                new operationsProtos.google.longrunning.Operation()
-            );
-            client.operationsClient.getOperation = stubSimpleCall(expectedResponse);
-            const response = await client.getOperation(request);
-            assert.deepStrictEqual(response, [expectedResponse]);
-            assert((client.operationsClient.getOperation as SinonStub)
-                .getCall(0).calledWith(request)
-            );
-        });
-        it('invokes getOperation without error using callback', async () => {
-            const client = new deploymentModule.v1.DeploymentClient({
-              credentials: {client_email: 'bogus', private_key: 'bogus'},
-              projectId: 'bogus',
-            });
-            const request = generateSampleMessage(
-              new operationsProtos.google.longrunning.GetOperationRequest()
-            );
-            const expectedResponse = generateSampleMessage(
-                new operationsProtos.google.longrunning.Operation()
-            );
-            client.operationsClient.getOperation = sinon.stub().callsArgWith(2, null, expectedResponse);
-            const promise = new Promise((resolve, reject) => {
-                 client.operationsClient.getOperation(
-                    request,
-                    undefined,
-                    (
-                        err?: Error | null,
-                        result?: operationsProtos.google.longrunning.Operation | null
-                    ) => {
-                        if (err) {
-                            reject(err);
-                        } else {
-                            resolve(result);
-                        }
-                    }).catch(err => {throw err});
-            });
-            const response = await promise;
-            assert.deepStrictEqual(response, expectedResponse);
-            assert((client.operationsClient.getOperation as SinonStub)
-                .getCall(0));
-        });
-        it('invokes getOperation with error', async () => {
-            const client = new deploymentModule.v1.DeploymentClient({
-              credentials: {client_email: 'bogus', private_key: 'bogus'},
-              projectId: 'bogus',
-            });
-            const request = generateSampleMessage(
-              new operationsProtos.google.longrunning.GetOperationRequest()
-            );
-            const expectedError = new Error('expected');
-            client.operationsClient.getOperation = stubSimpleCall(undefined, expectedError);
-            await assert.rejects(async () => {await client.getOperation(request)}, expectedError);
-            assert((client.operationsClient.getOperation as SinonStub)
-                .getCall(0).calledWith(request));
-        });
-    });
-    describe('cancelOperation', () => {
-        it('invokes cancelOperation without error', async () => {
-            const client = new deploymentModule.v1.DeploymentClient({
-              credentials: {client_email: 'bogus', private_key: 'bogus'},
-              projectId: 'bogus',
-            });
-            await client.initialize();
-            const request = generateSampleMessage(
-              new operationsProtos.google.longrunning.CancelOperationRequest()
-            );
-            const expectedResponse = generateSampleMessage(
-                new protos.google.protobuf.Empty()
-            );
-            client.operationsClient.cancelOperation = stubSimpleCall(expectedResponse);
-            const response = await client.cancelOperation(request);
-            assert.deepStrictEqual(response, [expectedResponse]);
-            assert((client.operationsClient.cancelOperation as SinonStub)
-                .getCall(0).calledWith(request)
-            );
-        });
-        it('invokes cancelOperation without error using callback', async () => {
-            const client = new deploymentModule.v1.DeploymentClient({
-              credentials: {client_email: 'bogus', private_key: 'bogus'},
-              projectId: 'bogus',
-            });
-            const request = generateSampleMessage(
-              new operationsProtos.google.longrunning.CancelOperationRequest()
-            );
-            const expectedResponse = generateSampleMessage(
-                new protos.google.protobuf.Empty()
-            );
-            client.operationsClient.cancelOperation = sinon.stub().callsArgWith(2, null, expectedResponse);
-            const promise = new Promise((resolve, reject) => {
-                 client.operationsClient.cancelOperation(
-                    request,
-                    undefined,
-                    (
-                        err?: Error | null,
-                        result?: protos.google.protobuf.Empty | null
-                    ) => {
-                        if (err) {
-                            reject(err);
-                        } else {
-                            resolve(result);
-                        }
-                    }).catch(err => {throw err});
-            });
-            const response = await promise;
-            assert.deepStrictEqual(response, expectedResponse);
-            assert((client.operationsClient.cancelOperation as SinonStub)
-                .getCall(0));
-        });
-        it('invokes cancelOperation with error', async () => {
-            const client = new deploymentModule.v1.DeploymentClient({
-              credentials: {client_email: 'bogus', private_key: 'bogus'},
-              projectId: 'bogus',
-            });
-            const request = generateSampleMessage(
-              new operationsProtos.google.longrunning.CancelOperationRequest()
-            );
-            const expectedError = new Error('expected');
-            client.operationsClient.cancelOperation = stubSimpleCall(undefined, expectedError);
-            await assert.rejects(async () => {await client.cancelOperation(request)}, expectedError);
-            assert((client.operationsClient.cancelOperation as SinonStub)
-                .getCall(0).calledWith(request));
-        });
-    });
-    describe('deleteOperation', () => {
-        it('invokes deleteOperation without error', async () => {
-            const client = new deploymentModule.v1.DeploymentClient({
-              credentials: {client_email: 'bogus', private_key: 'bogus'},
-              projectId: 'bogus',
-            });
-            await client.initialize();
-            const request = generateSampleMessage(
-              new operationsProtos.google.longrunning.DeleteOperationRequest()
-            );
-            const expectedResponse = generateSampleMessage(
-                new protos.google.protobuf.Empty()
-            );
-            client.operationsClient.deleteOperation = stubSimpleCall(expectedResponse);
-            const response = await client.deleteOperation(request);
-            assert.deepStrictEqual(response, [expectedResponse]);
-            assert((client.operationsClient.deleteOperation as SinonStub)
-                .getCall(0).calledWith(request)
-            );
-        });
-        it('invokes deleteOperation without error using callback', async () => {
-            const client = new deploymentModule.v1.DeploymentClient({
-              credentials: {client_email: 'bogus', private_key: 'bogus'},
-              projectId: 'bogus',
-            });
-            const request = generateSampleMessage(
-              new operationsProtos.google.longrunning.DeleteOperationRequest()
-            );
-            const expectedResponse = generateSampleMessage(
-                new protos.google.protobuf.Empty()
-            );
-            client.operationsClient.deleteOperation = sinon.stub().callsArgWith(2, null, expectedResponse);
-            const promise = new Promise((resolve, reject) => {
-                 client.operationsClient.deleteOperation(
-                    request,
-                    undefined,
-                    (
-                        err?: Error | null,
-                        result?: protos.google.protobuf.Empty | null
-                    ) => {
-                        if (err) {
-                            reject(err);
-                        } else {
-                            resolve(result);
-                        }
-                    }).catch(err => {throw err});
-            });
-            const response = await promise;
-            assert.deepStrictEqual(response, expectedResponse);
-            assert((client.operationsClient.deleteOperation as SinonStub)
-                .getCall(0));
-        });
-        it('invokes deleteOperation with error', async () => {
-            const client = new deploymentModule.v1.DeploymentClient({
-              credentials: {client_email: 'bogus', private_key: 'bogus'},
-              projectId: 'bogus',
-            });
-            const request = generateSampleMessage(
-              new operationsProtos.google.longrunning.DeleteOperationRequest()
-            );
-            const expectedError = new Error('expected');
-            client.operationsClient.deleteOperation = stubSimpleCall(undefined, expectedError);
-            await assert.rejects(async () => {await client.deleteOperation(request)}, expectedError);
-            assert((client.operationsClient.deleteOperation as SinonStub)
-                .getCall(0).calledWith(request));
-        });
-    });
-    describe('listOperationsAsync', () => {
-        it('uses async iteration with listOperations without error', async () => {
-            const client = new deploymentModule.v1.DeploymentClient({
-              credentials: {client_email: 'bogus', private_key: 'bogus'},
-              projectId: 'bogus',
-            });
-            const request = generateSampleMessage(
-              new operationsProtos.google.longrunning.ListOperationsRequest()
-            );
-            const expectedResponse = [
-                generateSampleMessage(
-                    new operationsProtos.google.longrunning.ListOperationsResponse()
-                ),
-                generateSampleMessage(
-                    new operationsProtos.google.longrunning.ListOperationsResponse()
-                ),
-                generateSampleMessage(
-                    new operationsProtos.google.longrunning.ListOperationsResponse()
-                ),
-            ];
-            client.operationsClient.descriptor.listOperations.asyncIterate = stubAsyncIterationCall(expectedResponse);
-            const responses: operationsProtos.google.longrunning.IOperation[] = [];
-            const iterable = client.operationsClient.listOperationsAsync(request);
-            for await (const resource of iterable) {
-                responses.push(resource!);
-            }
-            assert.deepStrictEqual(responses, expectedResponse);
-            assert.deepStrictEqual(
-                (client.operationsClient.descriptor.listOperations.asyncIterate as SinonStub)
-                    .getCall(0).args[1], request);
-        });
-        it('uses async iteration with listOperations with error', async () => {
-            const client = new deploymentModule.v1.DeploymentClient({
-                credentials: {client_email: 'bogus', private_key: 'bogus'},
-                projectId: 'bogus',
-            });
-            await client.initialize();
-            const request = generateSampleMessage(
-              new operationsProtos.google.longrunning.ListOperationsRequest()
-            );
-            const expectedError = new Error('expected');
-            client.operationsClient.descriptor.listOperations.asyncIterate = stubAsyncIterationCall(undefined, expectedError);
-            const iterable = client.operationsClient.listOperationsAsync(request);
-            await assert.rejects(async () => {
-                const responses: operationsProtos.google.longrunning.IOperation[] = [];
-                for await (const resource of iterable) {
-                    responses.push(resource!);
-                }
-            });
-            assert.deepStrictEqual(
-                (client.operationsClient.descriptor.listOperations.asyncIterate as SinonStub)
-                    .getCall(0).args[1], request);
-        });
-    });
 
     describe('Path templates', () => {
 
@@ -1719,7 +1385,7 @@ describe('v1.DeploymentClient', () => {
                 location: "locationValue",
                 cloud_control: "cloudControlValue",
             };
-            const client = new deploymentModule.v1.DeploymentClient({
+            const client = new monitoringModule.v1.MonitoringClient({
                 credentials: {client_email: 'bogus', private_key: 'bogus'},
                 projectId: 'bogus',
             });
@@ -1765,7 +1431,7 @@ describe('v1.DeploymentClient', () => {
                 location: "locationValue",
                 cloud_control_deployment: "cloudControlDeploymentValue",
             };
-            const client = new deploymentModule.v1.DeploymentClient({
+            const client = new monitoringModule.v1.MonitoringClient({
                 credentials: {client_email: 'bogus', private_key: 'bogus'},
                 projectId: 'bogus',
             });
@@ -1811,7 +1477,7 @@ describe('v1.DeploymentClient', () => {
                 location: "locationValue",
                 finding_summary: "findingSummaryValue",
             };
-            const client = new deploymentModule.v1.DeploymentClient({
+            const client = new monitoringModule.v1.MonitoringClient({
                 credentials: {client_email: 'bogus', private_key: 'bogus'},
                 projectId: 'bogus',
             });
@@ -1858,7 +1524,7 @@ describe('v1.DeploymentClient', () => {
                 framework_compliance_report: "frameworkComplianceReportValue",
                 control_compliance_summary: "controlComplianceSummaryValue",
             };
-            const client = new deploymentModule.v1.DeploymentClient({
+            const client = new monitoringModule.v1.MonitoringClient({
                 credentials: {client_email: 'bogus', private_key: 'bogus'},
                 projectId: 'bogus',
             });
@@ -1911,7 +1577,7 @@ describe('v1.DeploymentClient', () => {
                 location: "locationValue",
                 framework_compliance_report: "frameworkComplianceReportValue",
             };
-            const client = new deploymentModule.v1.DeploymentClient({
+            const client = new monitoringModule.v1.MonitoringClient({
                 credentials: {client_email: 'bogus', private_key: 'bogus'},
                 projectId: 'bogus',
             });
@@ -1957,7 +1623,7 @@ describe('v1.DeploymentClient', () => {
                 location: "locationValue",
                 framework_compliance_summary: "frameworkComplianceSummaryValue",
             };
-            const client = new deploymentModule.v1.DeploymentClient({
+            const client = new monitoringModule.v1.MonitoringClient({
                 credentials: {client_email: 'bogus', private_key: 'bogus'},
                 projectId: 'bogus',
             });
@@ -2003,7 +1669,7 @@ describe('v1.DeploymentClient', () => {
                 location: "locationValue",
                 framework: "frameworkValue",
             };
-            const client = new deploymentModule.v1.DeploymentClient({
+            const client = new monitoringModule.v1.MonitoringClient({
                 credentials: {client_email: 'bogus', private_key: 'bogus'},
                 projectId: 'bogus',
             });
@@ -2049,7 +1715,7 @@ describe('v1.DeploymentClient', () => {
                 location: "locationValue",
                 framework_deployment: "frameworkDeploymentValue",
             };
-            const client = new deploymentModule.v1.DeploymentClient({
+            const client = new monitoringModule.v1.MonitoringClient({
                 credentials: {client_email: 'bogus', private_key: 'bogus'},
                 projectId: 'bogus',
             });
@@ -2088,70 +1754,40 @@ describe('v1.DeploymentClient', () => {
             });
         });
 
-        describe('organization', async () => {
-            const fakePath = "/rendered/path/organization";
+        describe('location', async () => {
+            const fakePath = "/rendered/path/location";
             const expectedParameters = {
-                organization: "organizationValue",
-            };
-            const client = new deploymentModule.v1.DeploymentClient({
-                credentials: {client_email: 'bogus', private_key: 'bogus'},
-                projectId: 'bogus',
-            });
-            await client.initialize();
-            client.pathTemplates.organizationPathTemplate.render =
-                sinon.stub().returns(fakePath);
-            client.pathTemplates.organizationPathTemplate.match =
-                sinon.stub().returns(expectedParameters);
-
-            it('organizationPath', () => {
-                const result = client.organizationPath("organizationValue");
-                assert.strictEqual(result, fakePath);
-                assert((client.pathTemplates.organizationPathTemplate.render as SinonStub)
-                    .getCall(-1).calledWith(expectedParameters));
-            });
-
-            it('matchOrganizationFromOrganizationName', () => {
-                const result = client.matchOrganizationFromOrganizationName(fakePath);
-                assert.strictEqual(result, "organizationValue");
-                assert((client.pathTemplates.organizationPathTemplate.match as SinonStub)
-                    .getCall(-1).calledWith(fakePath));
-            });
-        });
-
-        describe('organizationLocation', async () => {
-            const fakePath = "/rendered/path/organizationLocation";
-            const expectedParameters = {
-                organization: "organizationValue",
+                project: "projectValue",
                 location: "locationValue",
             };
-            const client = new deploymentModule.v1.DeploymentClient({
+            const client = new monitoringModule.v1.MonitoringClient({
                 credentials: {client_email: 'bogus', private_key: 'bogus'},
                 projectId: 'bogus',
             });
             await client.initialize();
-            client.pathTemplates.organizationLocationPathTemplate.render =
+            client.pathTemplates.locationPathTemplate.render =
                 sinon.stub().returns(fakePath);
-            client.pathTemplates.organizationLocationPathTemplate.match =
+            client.pathTemplates.locationPathTemplate.match =
                 sinon.stub().returns(expectedParameters);
 
-            it('organizationLocationPath', () => {
-                const result = client.organizationLocationPath("organizationValue", "locationValue");
+            it('locationPath', () => {
+                const result = client.locationPath("projectValue", "locationValue");
                 assert.strictEqual(result, fakePath);
-                assert((client.pathTemplates.organizationLocationPathTemplate.render as SinonStub)
+                assert((client.pathTemplates.locationPathTemplate.render as SinonStub)
                     .getCall(-1).calledWith(expectedParameters));
             });
 
-            it('matchOrganizationFromOrganizationLocationName', () => {
-                const result = client.matchOrganizationFromOrganizationLocationName(fakePath);
-                assert.strictEqual(result, "organizationValue");
-                assert((client.pathTemplates.organizationLocationPathTemplate.match as SinonStub)
+            it('matchProjectFromLocationName', () => {
+                const result = client.matchProjectFromLocationName(fakePath);
+                assert.strictEqual(result, "projectValue");
+                assert((client.pathTemplates.locationPathTemplate.match as SinonStub)
                     .getCall(-1).calledWith(fakePath));
             });
 
-            it('matchLocationFromOrganizationLocationName', () => {
-                const result = client.matchLocationFromOrganizationLocationName(fakePath);
+            it('matchLocationFromLocationName', () => {
+                const result = client.matchLocationFromLocationName(fakePath);
                 assert.strictEqual(result, "locationValue");
-                assert((client.pathTemplates.organizationLocationPathTemplate.match as SinonStub)
+                assert((client.pathTemplates.locationPathTemplate.match as SinonStub)
                     .getCall(-1).calledWith(fakePath));
             });
         });
@@ -2162,7 +1798,7 @@ describe('v1.DeploymentClient', () => {
                 organization: "organizationValue",
                 location: "locationValue",
             };
-            const client = new deploymentModule.v1.DeploymentClient({
+            const client = new monitoringModule.v1.MonitoringClient({
                 credentials: {client_email: 'bogus', private_key: 'bogus'},
                 projectId: 'bogus',
             });
@@ -2201,7 +1837,7 @@ describe('v1.DeploymentClient', () => {
                 location: "locationValue",
                 finding_summary: "findingSummaryValue",
             };
-            const client = new deploymentModule.v1.DeploymentClient({
+            const client = new monitoringModule.v1.MonitoringClient({
                 credentials: {client_email: 'bogus', private_key: 'bogus'},
                 projectId: 'bogus',
             });
@@ -2247,7 +1883,7 @@ describe('v1.DeploymentClient', () => {
                 location: "locationValue",
                 generate_framework_audit_scope_report_response: "generateFrameworkAuditScopeReportResponseValue",
             };
-            const client = new deploymentModule.v1.DeploymentClient({
+            const client = new monitoringModule.v1.MonitoringClient({
                 credentials: {client_email: 'bogus', private_key: 'bogus'},
                 projectId: 'bogus',
             });
@@ -2293,7 +1929,7 @@ describe('v1.DeploymentClient', () => {
                 location: "locationValue",
                 framework_audit: "frameworkAuditValue",
             };
-            const client = new deploymentModule.v1.DeploymentClient({
+            const client = new monitoringModule.v1.MonitoringClient({
                 credentials: {client_email: 'bogus', private_key: 'bogus'},
                 projectId: 'bogus',
             });
@@ -2340,7 +1976,7 @@ describe('v1.DeploymentClient', () => {
                 framework_compliance_report: "frameworkComplianceReportValue",
                 control_compliance_summary: "controlComplianceSummaryValue",
             };
-            const client = new deploymentModule.v1.DeploymentClient({
+            const client = new monitoringModule.v1.MonitoringClient({
                 credentials: {client_email: 'bogus', private_key: 'bogus'},
                 projectId: 'bogus',
             });
@@ -2393,7 +2029,7 @@ describe('v1.DeploymentClient', () => {
                 location: "locationValue",
                 framework_compliance_report: "frameworkComplianceReportValue",
             };
-            const client = new deploymentModule.v1.DeploymentClient({
+            const client = new monitoringModule.v1.MonitoringClient({
                 credentials: {client_email: 'bogus', private_key: 'bogus'},
                 projectId: 'bogus',
             });
@@ -2439,7 +2075,7 @@ describe('v1.DeploymentClient', () => {
                 location: "locationValue",
                 framework_compliance_summary: "frameworkComplianceSummaryValue",
             };
-            const client = new deploymentModule.v1.DeploymentClient({
+            const client = new monitoringModule.v1.MonitoringClient({
                 credentials: {client_email: 'bogus', private_key: 'bogus'},
                 projectId: 'bogus',
             });
@@ -2478,13 +2114,43 @@ describe('v1.DeploymentClient', () => {
             });
         });
 
+        describe('project', async () => {
+            const fakePath = "/rendered/path/project";
+            const expectedParameters = {
+                project: "projectValue",
+            };
+            const client = new monitoringModule.v1.MonitoringClient({
+                credentials: {client_email: 'bogus', private_key: 'bogus'},
+                projectId: 'bogus',
+            });
+            await client.initialize();
+            client.pathTemplates.projectPathTemplate.render =
+                sinon.stub().returns(fakePath);
+            client.pathTemplates.projectPathTemplate.match =
+                sinon.stub().returns(expectedParameters);
+
+            it('projectPath', () => {
+                const result = client.projectPath("projectValue");
+                assert.strictEqual(result, fakePath);
+                assert((client.pathTemplates.projectPathTemplate.render as SinonStub)
+                    .getCall(-1).calledWith(expectedParameters));
+            });
+
+            it('matchProjectFromProjectName', () => {
+                const result = client.matchProjectFromProjectName(fakePath);
+                assert.strictEqual(result, "projectValue");
+                assert((client.pathTemplates.projectPathTemplate.match as SinonStub)
+                    .getCall(-1).calledWith(fakePath));
+            });
+        });
+
         describe('projectLocationCmEnrollment', async () => {
             const fakePath = "/rendered/path/projectLocationCmEnrollment";
             const expectedParameters = {
                 project: "projectValue",
                 location: "locationValue",
             };
-            const client = new deploymentModule.v1.DeploymentClient({
+            const client = new monitoringModule.v1.MonitoringClient({
                 credentials: {client_email: 'bogus', private_key: 'bogus'},
                 projectId: 'bogus',
             });
@@ -2523,7 +2189,7 @@ describe('v1.DeploymentClient', () => {
                 location: "locationValue",
                 finding_summary: "findingSummaryValue",
             };
-            const client = new deploymentModule.v1.DeploymentClient({
+            const client = new monitoringModule.v1.MonitoringClient({
                 credentials: {client_email: 'bogus', private_key: 'bogus'},
                 projectId: 'bogus',
             });
@@ -2569,7 +2235,7 @@ describe('v1.DeploymentClient', () => {
                 location: "locationValue",
                 generate_framework_audit_scope_report_response: "generateFrameworkAuditScopeReportResponseValue",
             };
-            const client = new deploymentModule.v1.DeploymentClient({
+            const client = new monitoringModule.v1.MonitoringClient({
                 credentials: {client_email: 'bogus', private_key: 'bogus'},
                 projectId: 'bogus',
             });
@@ -2615,7 +2281,7 @@ describe('v1.DeploymentClient', () => {
                 location: "locationValue",
                 framework_audit: "frameworkAuditValue",
             };
-            const client = new deploymentModule.v1.DeploymentClient({
+            const client = new monitoringModule.v1.MonitoringClient({
                 credentials: {client_email: 'bogus', private_key: 'bogus'},
                 projectId: 'bogus',
             });
@@ -2662,7 +2328,7 @@ describe('v1.DeploymentClient', () => {
                 framework_compliance_report: "frameworkComplianceReportValue",
                 control_compliance_summary: "controlComplianceSummaryValue",
             };
-            const client = new deploymentModule.v1.DeploymentClient({
+            const client = new monitoringModule.v1.MonitoringClient({
                 credentials: {client_email: 'bogus', private_key: 'bogus'},
                 projectId: 'bogus',
             });
@@ -2715,7 +2381,7 @@ describe('v1.DeploymentClient', () => {
                 location: "locationValue",
                 framework_compliance_report: "frameworkComplianceReportValue",
             };
-            const client = new deploymentModule.v1.DeploymentClient({
+            const client = new monitoringModule.v1.MonitoringClient({
                 credentials: {client_email: 'bogus', private_key: 'bogus'},
                 projectId: 'bogus',
             });
@@ -2761,7 +2427,7 @@ describe('v1.DeploymentClient', () => {
                 location: "locationValue",
                 framework_compliance_summary: "frameworkComplianceSummaryValue",
             };
-            const client = new deploymentModule.v1.DeploymentClient({
+            const client = new monitoringModule.v1.MonitoringClient({
                 credentials: {client_email: 'bogus', private_key: 'bogus'},
                 projectId: 'bogus',
             });
