@@ -21,7 +21,7 @@ import * as assert from 'assert';
 import * as sinon from 'sinon';
 import {SinonStub} from 'sinon';
 import {describe, it} from 'mocha';
-import * as quotaserviceModule from '../src';
+import * as accountlimitsserviceModule from '../src';
 
 import {PassThrough} from 'stream';
 
@@ -99,16 +99,16 @@ function stubAsyncIterationCall<ResponseType>(responses?: ResponseType[], error?
     return sinon.stub().returns(asyncIterable);
 }
 
-describe('v1.QuotaServiceClient', () => {
+describe('v1.AccountLimitsServiceClient', () => {
     describe('Common methods', () => {
         it('has apiEndpoint', () => {
-            const client = new quotaserviceModule.v1.QuotaServiceClient();
+            const client = new accountlimitsserviceModule.v1.AccountLimitsServiceClient();
             const apiEndpoint = client.apiEndpoint;
             assert.strictEqual(apiEndpoint, 'merchantapi.googleapis.com');
         });
 
         it('has universeDomain', () => {
-            const client = new quotaserviceModule.v1.QuotaServiceClient();
+            const client = new accountlimitsserviceModule.v1.AccountLimitsServiceClient();
             const universeDomain = client.universeDomain;
             assert.strictEqual(universeDomain, "googleapis.com");
         });
@@ -116,7 +116,7 @@ describe('v1.QuotaServiceClient', () => {
         if (typeof process === 'object' && typeof process.emitWarning === 'function') {
             it('throws DeprecationWarning if static servicePath is used', () => {
                 const stub = sinon.stub(process, 'emitWarning');
-                const servicePath = quotaserviceModule.v1.QuotaServiceClient.servicePath;
+                const servicePath = accountlimitsserviceModule.v1.AccountLimitsServiceClient.servicePath;
                 assert.strictEqual(servicePath, 'merchantapi.googleapis.com');
                 assert(stub.called);
                 stub.restore();
@@ -124,20 +124,20 @@ describe('v1.QuotaServiceClient', () => {
 
             it('throws DeprecationWarning if static apiEndpoint is used', () => {
                 const stub = sinon.stub(process, 'emitWarning');
-                const apiEndpoint = quotaserviceModule.v1.QuotaServiceClient.apiEndpoint;
+                const apiEndpoint = accountlimitsserviceModule.v1.AccountLimitsServiceClient.apiEndpoint;
                 assert.strictEqual(apiEndpoint, 'merchantapi.googleapis.com');
                 assert(stub.called);
                 stub.restore();
             });
         }
         it('sets apiEndpoint according to universe domain camelCase', () => {
-            const client = new quotaserviceModule.v1.QuotaServiceClient({universeDomain: 'example.com'});
+            const client = new accountlimitsserviceModule.v1.AccountLimitsServiceClient({universeDomain: 'example.com'});
             const servicePath = client.apiEndpoint;
             assert.strictEqual(servicePath, 'merchantapi.example.com');
         });
 
         it('sets apiEndpoint according to universe domain snakeCase', () => {
-            const client = new quotaserviceModule.v1.QuotaServiceClient({universe_domain: 'example.com'});
+            const client = new accountlimitsserviceModule.v1.AccountLimitsServiceClient({universe_domain: 'example.com'});
             const servicePath = client.apiEndpoint;
             assert.strictEqual(servicePath, 'merchantapi.example.com');
         });
@@ -147,7 +147,7 @@ describe('v1.QuotaServiceClient', () => {
                 it('sets apiEndpoint from environment variable', () => {
                     const saved = process.env['GOOGLE_CLOUD_UNIVERSE_DOMAIN'];
                     process.env['GOOGLE_CLOUD_UNIVERSE_DOMAIN'] = 'example.com';
-                    const client = new quotaserviceModule.v1.QuotaServiceClient();
+                    const client = new accountlimitsserviceModule.v1.AccountLimitsServiceClient();
                     const servicePath = client.apiEndpoint;
                     assert.strictEqual(servicePath, 'merchantapi.example.com');
                     if (saved) {
@@ -160,7 +160,7 @@ describe('v1.QuotaServiceClient', () => {
                 it('value configured in code has priority over environment variable', () => {
                     const saved = process.env['GOOGLE_CLOUD_UNIVERSE_DOMAIN'];
                     process.env['GOOGLE_CLOUD_UNIVERSE_DOMAIN'] = 'example.com';
-                    const client = new quotaserviceModule.v1.QuotaServiceClient({universeDomain: 'configured.example.com'});
+                    const client = new accountlimitsserviceModule.v1.AccountLimitsServiceClient({universeDomain: 'configured.example.com'});
                     const servicePath = client.apiEndpoint;
                     assert.strictEqual(servicePath, 'merchantapi.configured.example.com');
                     if (saved) {
@@ -172,55 +172,55 @@ describe('v1.QuotaServiceClient', () => {
             });
         }
         it('does not allow setting both universeDomain and universe_domain', () => {
-            assert.throws(() => { new quotaserviceModule.v1.QuotaServiceClient({universe_domain: 'example.com', universeDomain: 'example.net'}); });
+            assert.throws(() => { new accountlimitsserviceModule.v1.AccountLimitsServiceClient({universe_domain: 'example.com', universeDomain: 'example.net'}); });
         });
 
         it('has port', () => {
-            const port = quotaserviceModule.v1.QuotaServiceClient.port;
+            const port = accountlimitsserviceModule.v1.AccountLimitsServiceClient.port;
             assert(port);
             assert(typeof port === 'number');
         });
 
         it('should create a client with no option', () => {
-            const client = new quotaserviceModule.v1.QuotaServiceClient();
+            const client = new accountlimitsserviceModule.v1.AccountLimitsServiceClient();
             assert(client);
         });
 
         it('should create a client with gRPC fallback', () => {
-            const client = new quotaserviceModule.v1.QuotaServiceClient({
+            const client = new accountlimitsserviceModule.v1.AccountLimitsServiceClient({
                 fallback: true,
             });
             assert(client);
         });
 
         it('has initialize method and supports deferred initialization', async () => {
-            const client = new quotaserviceModule.v1.QuotaServiceClient({
+            const client = new accountlimitsserviceModule.v1.AccountLimitsServiceClient({
               credentials: {client_email: 'bogus', private_key: 'bogus'},
               projectId: 'bogus',
             });
-            assert.strictEqual(client.quotaServiceStub, undefined);
+            assert.strictEqual(client.accountLimitsServiceStub, undefined);
             await client.initialize();
-            assert(client.quotaServiceStub);
+            assert(client.accountLimitsServiceStub);
         });
 
         it('has close method for the initialized client', done => {
-            const client = new quotaserviceModule.v1.QuotaServiceClient({
+            const client = new accountlimitsserviceModule.v1.AccountLimitsServiceClient({
               credentials: {client_email: 'bogus', private_key: 'bogus'},
               projectId: 'bogus',
             });
             client.initialize().catch(err => {throw err});
-            assert(client.quotaServiceStub);
+            assert(client.accountLimitsServiceStub);
             client.close().then(() => {
                 done();
             }).catch(err => {throw err});
         });
 
         it('has close method for the non-initialized client', done => {
-            const client = new quotaserviceModule.v1.QuotaServiceClient({
+            const client = new accountlimitsserviceModule.v1.AccountLimitsServiceClient({
               credentials: {client_email: 'bogus', private_key: 'bogus'},
               projectId: 'bogus',
             });
-            assert.strictEqual(client.quotaServiceStub, undefined);
+            assert.strictEqual(client.accountLimitsServiceStub, undefined);
             client.close().then(() => {
                 done();
             }).catch(err => {throw err});
@@ -228,7 +228,7 @@ describe('v1.QuotaServiceClient', () => {
 
         it('has getProjectId method', async () => {
             const fakeProjectId = 'fake-project-id';
-            const client = new quotaserviceModule.v1.QuotaServiceClient({
+            const client = new accountlimitsserviceModule.v1.AccountLimitsServiceClient({
               credentials: {client_email: 'bogus', private_key: 'bogus'},
               projectId: 'bogus',
             });
@@ -240,7 +240,7 @@ describe('v1.QuotaServiceClient', () => {
 
         it('has getProjectId method with callback', async () => {
             const fakeProjectId = 'fake-project-id';
-            const client = new quotaserviceModule.v1.QuotaServiceClient({
+            const client = new accountlimitsserviceModule.v1.AccountLimitsServiceClient({
               credentials: {client_email: 'bogus', private_key: 'bogus'},
               projectId: 'bogus',
             });
@@ -259,57 +259,55 @@ describe('v1.QuotaServiceClient', () => {
         });
     });
 
-    describe('listQuotaGroups', () => {
-        it('invokes listQuotaGroups without error', async () => {
-            const client = new quotaserviceModule.v1.QuotaServiceClient({
-                credentials: {client_email: 'bogus', private_key: 'bogus'},
-                projectId: 'bogus',
+    describe('getAccountLimit', () => {
+        it('invokes getAccountLimit without error', async () => {
+            const client = new accountlimitsserviceModule.v1.AccountLimitsServiceClient({
+              credentials: {client_email: 'bogus', private_key: 'bogus'},
+              projectId: 'bogus',
             });
             await client.initialize();
             const request = generateSampleMessage(
-              new protos.google.shopping.merchant.quota.v1.ListQuotaGroupsRequest()
+              new protos.google.shopping.merchant.quota.v1.GetAccountLimitRequest()
             );
             const defaultValue1 =
-              getTypeDefaultValue('.google.shopping.merchant.quota.v1.ListQuotaGroupsRequest', ['parent']);
-            request.parent = defaultValue1;
-            const expectedHeaderRequestParams = `parent=${defaultValue1 ?? '' }`;const expectedResponse = [
-              generateSampleMessage(new protos.google.shopping.merchant.quota.v1.QuotaGroup()),
-              generateSampleMessage(new protos.google.shopping.merchant.quota.v1.QuotaGroup()),
-              generateSampleMessage(new protos.google.shopping.merchant.quota.v1.QuotaGroup()),
-            ];
-            client.innerApiCalls.listQuotaGroups = stubSimpleCall(expectedResponse);
-            const [response] = await client.listQuotaGroups(request);
+              getTypeDefaultValue('.google.shopping.merchant.quota.v1.GetAccountLimitRequest', ['name']);
+            request.name = defaultValue1;
+            const expectedHeaderRequestParams = `name=${defaultValue1 ?? '' }`;
+            const expectedResponse = generateSampleMessage(
+              new protos.google.shopping.merchant.quota.v1.AccountLimit()
+            );
+            client.innerApiCalls.getAccountLimit = stubSimpleCall(expectedResponse);
+            const [response] = await client.getAccountLimit(request);
             assert.deepStrictEqual(response, expectedResponse);
-            const actualRequest = (client.innerApiCalls.listQuotaGroups as SinonStub)
+            const actualRequest = (client.innerApiCalls.getAccountLimit as SinonStub)
                 .getCall(0).args[0];
             assert.deepStrictEqual(actualRequest, request);
-            const actualHeaderRequestParams = (client.innerApiCalls.listQuotaGroups as SinonStub)
+            const actualHeaderRequestParams = (client.innerApiCalls.getAccountLimit as SinonStub)
                 .getCall(0).args[1].otherArgs.headers['x-goog-request-params'];
             assert(actualHeaderRequestParams.includes(expectedHeaderRequestParams));
         });
 
-        it('invokes listQuotaGroups without error using callback', async () => {
-            const client = new quotaserviceModule.v1.QuotaServiceClient({
-                credentials: {client_email: 'bogus', private_key: 'bogus'},
-                projectId: 'bogus',
+        it('invokes getAccountLimit without error using callback', async () => {
+            const client = new accountlimitsserviceModule.v1.AccountLimitsServiceClient({
+              credentials: {client_email: 'bogus', private_key: 'bogus'},
+              projectId: 'bogus',
             });
             await client.initialize();
             const request = generateSampleMessage(
-              new protos.google.shopping.merchant.quota.v1.ListQuotaGroupsRequest()
+              new protos.google.shopping.merchant.quota.v1.GetAccountLimitRequest()
             );
             const defaultValue1 =
-              getTypeDefaultValue('.google.shopping.merchant.quota.v1.ListQuotaGroupsRequest', ['parent']);
-            request.parent = defaultValue1;
-            const expectedHeaderRequestParams = `parent=${defaultValue1 ?? '' }`;const expectedResponse = [
-              generateSampleMessage(new protos.google.shopping.merchant.quota.v1.QuotaGroup()),
-              generateSampleMessage(new protos.google.shopping.merchant.quota.v1.QuotaGroup()),
-              generateSampleMessage(new protos.google.shopping.merchant.quota.v1.QuotaGroup()),
-            ];
-            client.innerApiCalls.listQuotaGroups = stubSimpleCallWithCallback(expectedResponse);
+              getTypeDefaultValue('.google.shopping.merchant.quota.v1.GetAccountLimitRequest', ['name']);
+            request.name = defaultValue1;
+            const expectedHeaderRequestParams = `name=${defaultValue1 ?? '' }`;
+            const expectedResponse = generateSampleMessage(
+              new protos.google.shopping.merchant.quota.v1.AccountLimit()
+            );
+            client.innerApiCalls.getAccountLimit = stubSimpleCallWithCallback(expectedResponse);
             const promise = new Promise((resolve, reject) => {
-                 client.listQuotaGroups(
+                 client.getAccountLimit(
                     request,
-                    (err?: Error|null, result?: protos.google.shopping.merchant.quota.v1.IQuotaGroup[]|null) => {
+                    (err?: Error|null, result?: protos.google.shopping.merchant.quota.v1.IAccountLimit|null) => {
                         if (err) {
                             reject(err);
                         } else {
@@ -319,61 +317,171 @@ describe('v1.QuotaServiceClient', () => {
             });
             const response = await promise;
             assert.deepStrictEqual(response, expectedResponse);
-            const actualRequest = (client.innerApiCalls.listQuotaGroups as SinonStub)
+            const actualRequest = (client.innerApiCalls.getAccountLimit as SinonStub)
                 .getCall(0).args[0];
             assert.deepStrictEqual(actualRequest, request);
-            const actualHeaderRequestParams = (client.innerApiCalls.listQuotaGroups as SinonStub)
+            const actualHeaderRequestParams = (client.innerApiCalls.getAccountLimit as SinonStub)
                 .getCall(0).args[1].otherArgs.headers['x-goog-request-params'];
             assert(actualHeaderRequestParams.includes(expectedHeaderRequestParams));
         });
 
-        it('invokes listQuotaGroups with error', async () => {
-            const client = new quotaserviceModule.v1.QuotaServiceClient({
+        it('invokes getAccountLimit with error', async () => {
+            const client = new accountlimitsserviceModule.v1.AccountLimitsServiceClient({
+              credentials: {client_email: 'bogus', private_key: 'bogus'},
+              projectId: 'bogus',
+            });
+            await client.initialize();
+            const request = generateSampleMessage(
+              new protos.google.shopping.merchant.quota.v1.GetAccountLimitRequest()
+            );
+            const defaultValue1 =
+              getTypeDefaultValue('.google.shopping.merchant.quota.v1.GetAccountLimitRequest', ['name']);
+            request.name = defaultValue1;
+            const expectedHeaderRequestParams = `name=${defaultValue1 ?? '' }`;
+            const expectedError = new Error('expected');
+            client.innerApiCalls.getAccountLimit = stubSimpleCall(undefined, expectedError);
+            await assert.rejects(client.getAccountLimit(request), expectedError);
+            const actualRequest = (client.innerApiCalls.getAccountLimit as SinonStub)
+                .getCall(0).args[0];
+            assert.deepStrictEqual(actualRequest, request);
+            const actualHeaderRequestParams = (client.innerApiCalls.getAccountLimit as SinonStub)
+                .getCall(0).args[1].otherArgs.headers['x-goog-request-params'];
+            assert(actualHeaderRequestParams.includes(expectedHeaderRequestParams));
+        });
+
+        it('invokes getAccountLimit with closed client', async () => {
+            const client = new accountlimitsserviceModule.v1.AccountLimitsServiceClient({
+              credentials: {client_email: 'bogus', private_key: 'bogus'},
+              projectId: 'bogus',
+            });
+            await client.initialize();
+            const request = generateSampleMessage(
+              new protos.google.shopping.merchant.quota.v1.GetAccountLimitRequest()
+            );
+            const defaultValue1 =
+              getTypeDefaultValue('.google.shopping.merchant.quota.v1.GetAccountLimitRequest', ['name']);
+            request.name = defaultValue1;
+            const expectedError = new Error('The client has already been closed.');
+            client.close().catch(err => {throw err});
+            await assert.rejects(client.getAccountLimit(request), expectedError);
+        });
+    });
+
+    describe('listAccountLimits', () => {
+        it('invokes listAccountLimits without error', async () => {
+            const client = new accountlimitsserviceModule.v1.AccountLimitsServiceClient({
                 credentials: {client_email: 'bogus', private_key: 'bogus'},
                 projectId: 'bogus',
             });
             await client.initialize();
             const request = generateSampleMessage(
-              new protos.google.shopping.merchant.quota.v1.ListQuotaGroupsRequest()
+              new protos.google.shopping.merchant.quota.v1.ListAccountLimitsRequest()
             );
             const defaultValue1 =
-              getTypeDefaultValue('.google.shopping.merchant.quota.v1.ListQuotaGroupsRequest', ['parent']);
+              getTypeDefaultValue('.google.shopping.merchant.quota.v1.ListAccountLimitsRequest', ['parent']);
+            request.parent = defaultValue1;
+            const expectedHeaderRequestParams = `parent=${defaultValue1 ?? '' }`;const expectedResponse = [
+              generateSampleMessage(new protos.google.shopping.merchant.quota.v1.AccountLimit()),
+              generateSampleMessage(new protos.google.shopping.merchant.quota.v1.AccountLimit()),
+              generateSampleMessage(new protos.google.shopping.merchant.quota.v1.AccountLimit()),
+            ];
+            client.innerApiCalls.listAccountLimits = stubSimpleCall(expectedResponse);
+            const [response] = await client.listAccountLimits(request);
+            assert.deepStrictEqual(response, expectedResponse);
+            const actualRequest = (client.innerApiCalls.listAccountLimits as SinonStub)
+                .getCall(0).args[0];
+            assert.deepStrictEqual(actualRequest, request);
+            const actualHeaderRequestParams = (client.innerApiCalls.listAccountLimits as SinonStub)
+                .getCall(0).args[1].otherArgs.headers['x-goog-request-params'];
+            assert(actualHeaderRequestParams.includes(expectedHeaderRequestParams));
+        });
+
+        it('invokes listAccountLimits without error using callback', async () => {
+            const client = new accountlimitsserviceModule.v1.AccountLimitsServiceClient({
+                credentials: {client_email: 'bogus', private_key: 'bogus'},
+                projectId: 'bogus',
+            });
+            await client.initialize();
+            const request = generateSampleMessage(
+              new protos.google.shopping.merchant.quota.v1.ListAccountLimitsRequest()
+            );
+            const defaultValue1 =
+              getTypeDefaultValue('.google.shopping.merchant.quota.v1.ListAccountLimitsRequest', ['parent']);
+            request.parent = defaultValue1;
+            const expectedHeaderRequestParams = `parent=${defaultValue1 ?? '' }`;const expectedResponse = [
+              generateSampleMessage(new protos.google.shopping.merchant.quota.v1.AccountLimit()),
+              generateSampleMessage(new protos.google.shopping.merchant.quota.v1.AccountLimit()),
+              generateSampleMessage(new protos.google.shopping.merchant.quota.v1.AccountLimit()),
+            ];
+            client.innerApiCalls.listAccountLimits = stubSimpleCallWithCallback(expectedResponse);
+            const promise = new Promise((resolve, reject) => {
+                 client.listAccountLimits(
+                    request,
+                    (err?: Error|null, result?: protos.google.shopping.merchant.quota.v1.IAccountLimit[]|null) => {
+                        if (err) {
+                            reject(err);
+                        } else {
+                            resolve(result);
+                        }
+                    });
+            });
+            const response = await promise;
+            assert.deepStrictEqual(response, expectedResponse);
+            const actualRequest = (client.innerApiCalls.listAccountLimits as SinonStub)
+                .getCall(0).args[0];
+            assert.deepStrictEqual(actualRequest, request);
+            const actualHeaderRequestParams = (client.innerApiCalls.listAccountLimits as SinonStub)
+                .getCall(0).args[1].otherArgs.headers['x-goog-request-params'];
+            assert(actualHeaderRequestParams.includes(expectedHeaderRequestParams));
+        });
+
+        it('invokes listAccountLimits with error', async () => {
+            const client = new accountlimitsserviceModule.v1.AccountLimitsServiceClient({
+                credentials: {client_email: 'bogus', private_key: 'bogus'},
+                projectId: 'bogus',
+            });
+            await client.initialize();
+            const request = generateSampleMessage(
+              new protos.google.shopping.merchant.quota.v1.ListAccountLimitsRequest()
+            );
+            const defaultValue1 =
+              getTypeDefaultValue('.google.shopping.merchant.quota.v1.ListAccountLimitsRequest', ['parent']);
             request.parent = defaultValue1;
             const expectedHeaderRequestParams = `parent=${defaultValue1 ?? '' }`;
             const expectedError = new Error('expected');
-            client.innerApiCalls.listQuotaGroups = stubSimpleCall(undefined, expectedError);
-            await assert.rejects(client.listQuotaGroups(request), expectedError);
-            const actualRequest = (client.innerApiCalls.listQuotaGroups as SinonStub)
+            client.innerApiCalls.listAccountLimits = stubSimpleCall(undefined, expectedError);
+            await assert.rejects(client.listAccountLimits(request), expectedError);
+            const actualRequest = (client.innerApiCalls.listAccountLimits as SinonStub)
                 .getCall(0).args[0];
             assert.deepStrictEqual(actualRequest, request);
-            const actualHeaderRequestParams = (client.innerApiCalls.listQuotaGroups as SinonStub)
+            const actualHeaderRequestParams = (client.innerApiCalls.listAccountLimits as SinonStub)
                 .getCall(0).args[1].otherArgs.headers['x-goog-request-params'];
             assert(actualHeaderRequestParams.includes(expectedHeaderRequestParams));
         });
 
-        it('invokes listQuotaGroupsStream without error', async () => {
-            const client = new quotaserviceModule.v1.QuotaServiceClient({
+        it('invokes listAccountLimitsStream without error', async () => {
+            const client = new accountlimitsserviceModule.v1.AccountLimitsServiceClient({
                 credentials: {client_email: 'bogus', private_key: 'bogus'},
                 projectId: 'bogus',
             });
             await client.initialize();
             const request = generateSampleMessage(
-              new protos.google.shopping.merchant.quota.v1.ListQuotaGroupsRequest()
+              new protos.google.shopping.merchant.quota.v1.ListAccountLimitsRequest()
             );
             const defaultValue1 =
-              getTypeDefaultValue('.google.shopping.merchant.quota.v1.ListQuotaGroupsRequest', ['parent']);
+              getTypeDefaultValue('.google.shopping.merchant.quota.v1.ListAccountLimitsRequest', ['parent']);
             request.parent = defaultValue1;
             const expectedHeaderRequestParams = `parent=${defaultValue1 ?? '' }`;
             const expectedResponse = [
-              generateSampleMessage(new protos.google.shopping.merchant.quota.v1.QuotaGroup()),
-              generateSampleMessage(new protos.google.shopping.merchant.quota.v1.QuotaGroup()),
-              generateSampleMessage(new protos.google.shopping.merchant.quota.v1.QuotaGroup()),
+              generateSampleMessage(new protos.google.shopping.merchant.quota.v1.AccountLimit()),
+              generateSampleMessage(new protos.google.shopping.merchant.quota.v1.AccountLimit()),
+              generateSampleMessage(new protos.google.shopping.merchant.quota.v1.AccountLimit()),
             ];
-            client.descriptors.page.listQuotaGroups.createStream = stubPageStreamingCall(expectedResponse);
-            const stream = client.listQuotaGroupsStream(request);
+            client.descriptors.page.listAccountLimits.createStream = stubPageStreamingCall(expectedResponse);
+            const stream = client.listAccountLimitsStream(request);
             const promise = new Promise((resolve, reject) => {
-                const responses: protos.google.shopping.merchant.quota.v1.QuotaGroup[] = [];
-                stream.on('data', (response: protos.google.shopping.merchant.quota.v1.QuotaGroup) => {
+                const responses: protos.google.shopping.merchant.quota.v1.AccountLimit[] = [];
+                stream.on('data', (response: protos.google.shopping.merchant.quota.v1.AccountLimit) => {
                     responses.push(response);
                 });
                 stream.on('end', () => {
@@ -385,35 +493,35 @@ describe('v1.QuotaServiceClient', () => {
             });
             const responses = await promise;
             assert.deepStrictEqual(responses, expectedResponse);
-            assert((client.descriptors.page.listQuotaGroups.createStream as SinonStub)
-                .getCall(0).calledWith(client.innerApiCalls.listQuotaGroups, request));
+            assert((client.descriptors.page.listAccountLimits.createStream as SinonStub)
+                .getCall(0).calledWith(client.innerApiCalls.listAccountLimits, request));
             assert(
-                (client.descriptors.page.listQuotaGroups.createStream as SinonStub)
+                (client.descriptors.page.listAccountLimits.createStream as SinonStub)
                     .getCall(0).args[2].otherArgs.headers['x-goog-request-params'].includes(
                         expectedHeaderRequestParams
                     )
             );
         });
 
-        it('invokes listQuotaGroupsStream with error', async () => {
-            const client = new quotaserviceModule.v1.QuotaServiceClient({
+        it('invokes listAccountLimitsStream with error', async () => {
+            const client = new accountlimitsserviceModule.v1.AccountLimitsServiceClient({
                 credentials: {client_email: 'bogus', private_key: 'bogus'},
                 projectId: 'bogus',
             });
             await client.initialize();
             const request = generateSampleMessage(
-              new protos.google.shopping.merchant.quota.v1.ListQuotaGroupsRequest()
+              new protos.google.shopping.merchant.quota.v1.ListAccountLimitsRequest()
             );
             const defaultValue1 =
-              getTypeDefaultValue('.google.shopping.merchant.quota.v1.ListQuotaGroupsRequest', ['parent']);
+              getTypeDefaultValue('.google.shopping.merchant.quota.v1.ListAccountLimitsRequest', ['parent']);
             request.parent = defaultValue1;
             const expectedHeaderRequestParams = `parent=${defaultValue1 ?? '' }`;
             const expectedError = new Error('expected');
-            client.descriptors.page.listQuotaGroups.createStream = stubPageStreamingCall(undefined, expectedError);
-            const stream = client.listQuotaGroupsStream(request);
+            client.descriptors.page.listAccountLimits.createStream = stubPageStreamingCall(undefined, expectedError);
+            const stream = client.listAccountLimitsStream(request);
             const promise = new Promise((resolve, reject) => {
-                const responses: protos.google.shopping.merchant.quota.v1.QuotaGroup[] = [];
-                stream.on('data', (response: protos.google.shopping.merchant.quota.v1.QuotaGroup) => {
+                const responses: protos.google.shopping.merchant.quota.v1.AccountLimit[] = [];
+                stream.on('data', (response: protos.google.shopping.merchant.quota.v1.AccountLimit) => {
                     responses.push(response);
                 });
                 stream.on('end', () => {
@@ -424,79 +532,79 @@ describe('v1.QuotaServiceClient', () => {
                 });
             });
             await assert.rejects(promise, expectedError);
-            assert((client.descriptors.page.listQuotaGroups.createStream as SinonStub)
-                .getCall(0).calledWith(client.innerApiCalls.listQuotaGroups, request));
+            assert((client.descriptors.page.listAccountLimits.createStream as SinonStub)
+                .getCall(0).calledWith(client.innerApiCalls.listAccountLimits, request));
             assert(
-                (client.descriptors.page.listQuotaGroups.createStream as SinonStub)
+                (client.descriptors.page.listAccountLimits.createStream as SinonStub)
                     .getCall(0).args[2].otherArgs.headers['x-goog-request-params'].includes(
                          expectedHeaderRequestParams
                     ) 
             );
         });
 
-        it('uses async iteration with listQuotaGroups without error', async () => {
-            const client = new quotaserviceModule.v1.QuotaServiceClient({
+        it('uses async iteration with listAccountLimits without error', async () => {
+            const client = new accountlimitsserviceModule.v1.AccountLimitsServiceClient({
               credentials: {client_email: 'bogus', private_key: 'bogus'},
               projectId: 'bogus',
             });
             await client.initialize();
             const request = generateSampleMessage(
-              new protos.google.shopping.merchant.quota.v1.ListQuotaGroupsRequest()
+              new protos.google.shopping.merchant.quota.v1.ListAccountLimitsRequest()
             );
             const defaultValue1 =
-              getTypeDefaultValue('.google.shopping.merchant.quota.v1.ListQuotaGroupsRequest', ['parent']);
+              getTypeDefaultValue('.google.shopping.merchant.quota.v1.ListAccountLimitsRequest', ['parent']);
             request.parent = defaultValue1;
             const expectedHeaderRequestParams = `parent=${defaultValue1 ?? '' }`;
             const expectedResponse = [
-              generateSampleMessage(new protos.google.shopping.merchant.quota.v1.QuotaGroup()),
-              generateSampleMessage(new protos.google.shopping.merchant.quota.v1.QuotaGroup()),
-              generateSampleMessage(new protos.google.shopping.merchant.quota.v1.QuotaGroup()),
+              generateSampleMessage(new protos.google.shopping.merchant.quota.v1.AccountLimit()),
+              generateSampleMessage(new protos.google.shopping.merchant.quota.v1.AccountLimit()),
+              generateSampleMessage(new protos.google.shopping.merchant.quota.v1.AccountLimit()),
             ];
-            client.descriptors.page.listQuotaGroups.asyncIterate = stubAsyncIterationCall(expectedResponse);
-            const responses: protos.google.shopping.merchant.quota.v1.IQuotaGroup[] = [];
-            const iterable = client.listQuotaGroupsAsync(request);
+            client.descriptors.page.listAccountLimits.asyncIterate = stubAsyncIterationCall(expectedResponse);
+            const responses: protos.google.shopping.merchant.quota.v1.IAccountLimit[] = [];
+            const iterable = client.listAccountLimitsAsync(request);
             for await (const resource of iterable) {
                 responses.push(resource!);
             }
             assert.deepStrictEqual(responses, expectedResponse);
             assert.deepStrictEqual(
-                (client.descriptors.page.listQuotaGroups.asyncIterate as SinonStub)
+                (client.descriptors.page.listAccountLimits.asyncIterate as SinonStub)
                     .getCall(0).args[1], request);
             assert(
-                (client.descriptors.page.listQuotaGroups.asyncIterate as SinonStub)
+                (client.descriptors.page.listAccountLimits.asyncIterate as SinonStub)
                     .getCall(0).args[2].otherArgs.headers['x-goog-request-params'].includes(
                         expectedHeaderRequestParams
                     )
             );
         });
 
-        it('uses async iteration with listQuotaGroups with error', async () => {
-            const client = new quotaserviceModule.v1.QuotaServiceClient({
+        it('uses async iteration with listAccountLimits with error', async () => {
+            const client = new accountlimitsserviceModule.v1.AccountLimitsServiceClient({
                 credentials: {client_email: 'bogus', private_key: 'bogus'},
                 projectId: 'bogus',
             });
             await client.initialize();
             const request = generateSampleMessage(
-              new protos.google.shopping.merchant.quota.v1.ListQuotaGroupsRequest()
+              new protos.google.shopping.merchant.quota.v1.ListAccountLimitsRequest()
             );
             const defaultValue1 =
-              getTypeDefaultValue('.google.shopping.merchant.quota.v1.ListQuotaGroupsRequest', ['parent']);
+              getTypeDefaultValue('.google.shopping.merchant.quota.v1.ListAccountLimitsRequest', ['parent']);
             request.parent = defaultValue1;
             const expectedHeaderRequestParams = `parent=${defaultValue1 ?? '' }`;
             const expectedError = new Error('expected');
-            client.descriptors.page.listQuotaGroups.asyncIterate = stubAsyncIterationCall(undefined, expectedError);
-            const iterable = client.listQuotaGroupsAsync(request);
+            client.descriptors.page.listAccountLimits.asyncIterate = stubAsyncIterationCall(undefined, expectedError);
+            const iterable = client.listAccountLimitsAsync(request);
             await assert.rejects(async () => {
-                const responses: protos.google.shopping.merchant.quota.v1.IQuotaGroup[] = [];
+                const responses: protos.google.shopping.merchant.quota.v1.IAccountLimit[] = [];
                 for await (const resource of iterable) {
                     responses.push(resource!);
                 }
             });
             assert.deepStrictEqual(
-                (client.descriptors.page.listQuotaGroups.asyncIterate as SinonStub)
+                (client.descriptors.page.listAccountLimits.asyncIterate as SinonStub)
                     .getCall(0).args[1], request);
             assert(
-                (client.descriptors.page.listQuotaGroups.asyncIterate as SinonStub)
+                (client.descriptors.page.listAccountLimits.asyncIterate as SinonStub)
                     .getCall(0).args[2].otherArgs.headers['x-goog-request-params'].includes(
                         expectedHeaderRequestParams
                     )
@@ -511,7 +619,7 @@ describe('v1.QuotaServiceClient', () => {
             const expectedParameters = {
                 account: "accountValue",
             };
-            const client = new quotaserviceModule.v1.QuotaServiceClient({
+            const client = new accountlimitsserviceModule.v1.AccountLimitsServiceClient({
                 credentials: {client_email: 'bogus', private_key: 'bogus'},
                 projectId: 'bogus',
             });
@@ -542,7 +650,7 @@ describe('v1.QuotaServiceClient', () => {
                 account: "accountValue",
                 limit: "limitValue",
             };
-            const client = new quotaserviceModule.v1.QuotaServiceClient({
+            const client = new accountlimitsserviceModule.v1.AccountLimitsServiceClient({
                 credentials: {client_email: 'bogus', private_key: 'bogus'},
                 projectId: 'bogus',
             });
@@ -580,7 +688,7 @@ describe('v1.QuotaServiceClient', () => {
                 account: "accountValue",
                 group: "groupValue",
             };
-            const client = new quotaserviceModule.v1.QuotaServiceClient({
+            const client = new accountlimitsserviceModule.v1.AccountLimitsServiceClient({
                 credentials: {client_email: 'bogus', private_key: 'bogus'},
                 projectId: 'bogus',
             });

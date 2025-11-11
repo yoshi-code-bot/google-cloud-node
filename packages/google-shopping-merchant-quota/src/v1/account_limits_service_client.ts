@@ -26,18 +26,18 @@ import {loggingUtils as logging, decodeAnyProtosInArray} from 'google-gax';
 
 /**
  * Client JSON configuration object, loaded from
- * `src/v1/quota_service_client_config.json`.
+ * `src/v1/account_limits_service_client_config.json`.
  * This file defines retry strategy and timeouts for all API methods in this library.
  */
-import * as gapicConfig from './quota_service_client_config.json';
+import * as gapicConfig from './account_limits_service_client_config.json';
 const version = require('../../../package.json').version;
 
 /**
- *  Service to get method call quota information per Merchant API method.
+ *  Service to retrieve account limits.
  * @class
  * @memberof v1
  */
-export class QuotaServiceClient {
+export class AccountLimitsServiceClient {
   private _terminated = false;
   private _opts: ClientOptions;
   private _providedCustomServicePath: boolean;
@@ -59,10 +59,10 @@ export class QuotaServiceClient {
   warn: (code: string, message: string, warnType?: string) => void;
   innerApiCalls: {[name: string]: Function};
   pathTemplates: {[name: string]: gax.PathTemplate};
-  quotaServiceStub?: Promise<{[name: string]: Function}>;
+  accountLimitsServiceStub?: Promise<{[name: string]: Function}>;
 
   /**
-   * Construct an instance of QuotaServiceClient.
+   * Construct an instance of AccountLimitsServiceClient.
    *
    * @param {object} [options] - The configuration object.
    * The options accepted by the constructor are described in detail
@@ -97,12 +97,12 @@ export class QuotaServiceClient {
    *     HTTP implementation. Load only fallback version and pass it to the constructor:
    *     ```
    *     const gax = require('google-gax/build/src/fallback'); // avoids loading google-gax with gRPC
-   *     const client = new QuotaServiceClient({fallback: true}, gax);
+   *     const client = new AccountLimitsServiceClient({fallback: true}, gax);
    *     ```
    */
   constructor(opts?: ClientOptions, gaxInstance?: typeof gax | typeof gax.fallback) {
     // Ensure that options include all the required fields.
-    const staticMembers = this.constructor as typeof QuotaServiceClient;
+    const staticMembers = this.constructor as typeof AccountLimitsServiceClient;
     if (opts?.universe_domain && opts?.universeDomain && opts?.universe_domain !== opts?.universeDomain) {
       throw new Error('Please set either universe_domain or universeDomain, but not both.');
     }
@@ -192,13 +192,13 @@ export class QuotaServiceClient {
     // (e.g. 50 results at a time, with tokens to get subsequent
     // pages). Denote the keys used for pagination and results.
     this.descriptors.page = {
-      listQuotaGroups:
-          new this._gaxModule.PageDescriptor('pageToken', 'nextPageToken', 'quotaGroups')
+      listAccountLimits:
+          new this._gaxModule.PageDescriptor('pageToken', 'nextPageToken', 'accountLimits')
     };
 
     // Put together the default options sent with requests.
     this._defaults = this._gaxGrpc.constructSettings(
-        'google.shopping.merchant.quota.v1.QuotaService', gapicConfig as gax.ClientConfig,
+        'google.shopping.merchant.quota.v1.AccountLimitsService', gapicConfig as gax.ClientConfig,
         opts.clientConfig || {}, {'x-goog-api-client': clientHeader.join(' ')});
 
     // Set up a dictionary of "inner API calls"; the core implementation
@@ -223,25 +223,25 @@ export class QuotaServiceClient {
    */
   initialize() {
     // If the client stub promise is already initialized, return immediately.
-    if (this.quotaServiceStub) {
-      return this.quotaServiceStub;
+    if (this.accountLimitsServiceStub) {
+      return this.accountLimitsServiceStub;
     }
 
     // Put together the "service stub" for
-    // google.shopping.merchant.quota.v1.QuotaService.
-    this.quotaServiceStub = this._gaxGrpc.createStub(
+    // google.shopping.merchant.quota.v1.AccountLimitsService.
+    this.accountLimitsServiceStub = this._gaxGrpc.createStub(
         this._opts.fallback ?
-          (this._protos as protobuf.Root).lookupService('google.shopping.merchant.quota.v1.QuotaService') :
+          (this._protos as protobuf.Root).lookupService('google.shopping.merchant.quota.v1.AccountLimitsService') :
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          (this._protos as any).google.shopping.merchant.quota.v1.QuotaService,
+          (this._protos as any).google.shopping.merchant.quota.v1.AccountLimitsService,
         this._opts, this._providedCustomServicePath) as Promise<{[method: string]: Function}>;
 
     // Iterate over each of the methods that the service provides
     // and create an API call method for each.
-    const quotaServiceStubMethods =
-        ['listQuotaGroups'];
-    for (const methodName of quotaServiceStubMethods) {
-      const callPromise = this.quotaServiceStub.then(
+    const accountLimitsServiceStubMethods =
+        ['getAccountLimit', 'listAccountLimits'];
+    for (const methodName of accountLimitsServiceStubMethods) {
+      const callPromise = this.accountLimitsServiceStub.then(
         stub => (...args: Array<{}>) => {
           if (this._terminated) {
             return Promise.reject('The client has already been closed.');
@@ -266,7 +266,7 @@ export class QuotaServiceClient {
       this.innerApiCalls[methodName] = apiCall;
     }
 
-    return this.quotaServiceStub;
+    return this.accountLimitsServiceStub;
   }
 
   /**
@@ -342,69 +342,171 @@ export class QuotaServiceClient {
   // -------------------
   // -- Service calls --
   // -------------------
+/**
+ * Retrieves an account limit.
+ *
+ * @param {Object} request
+ *   The request object that will be sent.
+ * @param {string} request.name
+ *   Required. The name of the limit to retrieve.
+ *   Format: `accounts/{account}/limits/{limit}`
+ *   For example: `accounts/123/limits/products~ADS_NON_EEA`
+ * @param {object} [options]
+ *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
+ * @returns {Promise} - The promise which resolves to an array.
+ *   The first element of the array is an object representing {@link protos.google.shopping.merchant.quota.v1.AccountLimit|AccountLimit}.
+ *   Please see the {@link https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#regular-methods | documentation }
+ *   for more details and examples.
+ * @example <caption>include:samples/generated/v1/account_limits_service.get_account_limit.js</caption>
+ * region_tag:merchantapi_v1_generated_AccountLimitsService_GetAccountLimit_async
+ */
+  getAccountLimit(
+      request?: protos.google.shopping.merchant.quota.v1.IGetAccountLimitRequest,
+      options?: CallOptions):
+      Promise<[
+        protos.google.shopping.merchant.quota.v1.IAccountLimit,
+        protos.google.shopping.merchant.quota.v1.IGetAccountLimitRequest|undefined, {}|undefined
+      ]>;
+  getAccountLimit(
+      request: protos.google.shopping.merchant.quota.v1.IGetAccountLimitRequest,
+      options: CallOptions,
+      callback: Callback<
+          protos.google.shopping.merchant.quota.v1.IAccountLimit,
+          protos.google.shopping.merchant.quota.v1.IGetAccountLimitRequest|null|undefined,
+          {}|null|undefined>): void;
+  getAccountLimit(
+      request: protos.google.shopping.merchant.quota.v1.IGetAccountLimitRequest,
+      callback: Callback<
+          protos.google.shopping.merchant.quota.v1.IAccountLimit,
+          protos.google.shopping.merchant.quota.v1.IGetAccountLimitRequest|null|undefined,
+          {}|null|undefined>): void;
+  getAccountLimit(
+      request?: protos.google.shopping.merchant.quota.v1.IGetAccountLimitRequest,
+      optionsOrCallback?: CallOptions|Callback<
+          protos.google.shopping.merchant.quota.v1.IAccountLimit,
+          protos.google.shopping.merchant.quota.v1.IGetAccountLimitRequest|null|undefined,
+          {}|null|undefined>,
+      callback?: Callback<
+          protos.google.shopping.merchant.quota.v1.IAccountLimit,
+          protos.google.shopping.merchant.quota.v1.IGetAccountLimitRequest|null|undefined,
+          {}|null|undefined>):
+      Promise<[
+        protos.google.shopping.merchant.quota.v1.IAccountLimit,
+        protos.google.shopping.merchant.quota.v1.IGetAccountLimitRequest|undefined, {}|undefined
+      ]>|void {
+    request = request || {};
+    let options: CallOptions;
+    if (typeof optionsOrCallback === 'function' && callback === undefined) {
+      callback = optionsOrCallback;
+      options = {};
+    }
+    else {
+      options = optionsOrCallback as CallOptions;
+    }
+    options = options || {};
+    options.otherArgs = options.otherArgs || {};
+    options.otherArgs.headers = options.otherArgs.headers || {};
+    options.otherArgs.headers[
+      'x-goog-request-params'
+    ] = this._gaxModule.routingHeader.fromParams({
+      'name': request.name ?? '',
+    });
+    this.initialize().catch(err => {throw err});
+    this._log.info('getAccountLimit request %j', request);
+    const wrappedCallback: Callback<
+        protos.google.shopping.merchant.quota.v1.IAccountLimit,
+        protos.google.shopping.merchant.quota.v1.IGetAccountLimitRequest|null|undefined,
+        {}|null|undefined>|undefined = callback
+      ? (error, response, options, rawResponse) => {
+          this._log.info('getAccountLimit response %j', response);
+          callback!(error, response, options, rawResponse); // We verified callback above.
+        }
+      : undefined;
+    return this.innerApiCalls.getAccountLimit(request, options, wrappedCallback)
+      ?.then(([response, options, rawResponse]: [
+        protos.google.shopping.merchant.quota.v1.IAccountLimit,
+        protos.google.shopping.merchant.quota.v1.IGetAccountLimitRequest|undefined,
+        {}|undefined
+      ]) => {
+        this._log.info('getAccountLimit response %j', response);
+        return [response, options, rawResponse];
+      }).catch((error: any) => {
+        if (error && 'statusDetails' in error && error.statusDetails instanceof Array) {
+          const protos = this._gaxModule.protobuf.Root.fromJSON(jsonProtos) as unknown as gax.protobuf.Type;
+          error.statusDetails = decodeAnyProtosInArray(error.statusDetails, protos);
+        }
+        throw error;
+      });
+  }
 
  /**
- * Lists the daily call quota and usage per group for your Merchant
- * Center account.
+ * Lists the limits of an account.
  *
  * @param {Object} request
  *   The request object that will be sent.
  * @param {string} request.parent
- *   Required. The merchant account who owns the collection of method quotas
- *   Format: accounts/{account}
+ *   Required. The parent account.
+ *   Format: `accounts/{account}`
  * @param {number} [request.pageSize]
- *   Optional. The maximum number of quotas to return in the response, used
- *   for paging. Defaults to 500; values above 1000 will be coerced to 1000.
+ *   Optional. The maximum number of limits to return. The service may return
+ *   fewer than this value. If unspecified, at most 100 limits will be returned.
+ *   The maximum value is 100; values above 100 will be coerced to 100.
  * @param {string} [request.pageToken]
- *   Optional. Token (if provided) to retrieve the subsequent page. All other
- *   parameters must match the original call that provided the page token.
+ *   Optional. A page token, received from a previous `ListAccountLimits` call.
+ *   Provide this to retrieve the subsequent page.
+ *
+ *   When paginating, all other parameters provided to `ListAccountLimits` must
+ *   match the call that provided the page token.
+ * @param {string} request.filter
+ *   Required. A filter on the limit `type` is required, for example, `type =
+ *   "products"`.
  * @param {object} [options]
  *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
  * @returns {Promise} - The promise which resolves to an array.
- *   The first element of the array is Array of {@link protos.google.shopping.merchant.quota.v1.QuotaGroup|QuotaGroup}.
+ *   The first element of the array is Array of {@link protos.google.shopping.merchant.quota.v1.AccountLimit|AccountLimit}.
  *   The client library will perform auto-pagination by default: it will call the API as many
  *   times as needed and will merge results from all the pages into this array.
  *   Note that it can affect your quota.
- *   We recommend using `listQuotaGroupsAsync()`
+ *   We recommend using `listAccountLimitsAsync()`
  *   method described below for async iteration which you can stop as needed.
  *   Please see the {@link https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#auto-pagination | documentation }
  *   for more details and examples.
  */
-  listQuotaGroups(
-      request?: protos.google.shopping.merchant.quota.v1.IListQuotaGroupsRequest,
+  listAccountLimits(
+      request?: protos.google.shopping.merchant.quota.v1.IListAccountLimitsRequest,
       options?: CallOptions):
       Promise<[
-        protos.google.shopping.merchant.quota.v1.IQuotaGroup[],
-        protos.google.shopping.merchant.quota.v1.IListQuotaGroupsRequest|null,
-        protos.google.shopping.merchant.quota.v1.IListQuotaGroupsResponse
+        protos.google.shopping.merchant.quota.v1.IAccountLimit[],
+        protos.google.shopping.merchant.quota.v1.IListAccountLimitsRequest|null,
+        protos.google.shopping.merchant.quota.v1.IListAccountLimitsResponse
       ]>;
-  listQuotaGroups(
-      request: protos.google.shopping.merchant.quota.v1.IListQuotaGroupsRequest,
+  listAccountLimits(
+      request: protos.google.shopping.merchant.quota.v1.IListAccountLimitsRequest,
       options: CallOptions,
       callback: PaginationCallback<
-          protos.google.shopping.merchant.quota.v1.IListQuotaGroupsRequest,
-          protos.google.shopping.merchant.quota.v1.IListQuotaGroupsResponse|null|undefined,
-          protos.google.shopping.merchant.quota.v1.IQuotaGroup>): void;
-  listQuotaGroups(
-      request: protos.google.shopping.merchant.quota.v1.IListQuotaGroupsRequest,
+          protos.google.shopping.merchant.quota.v1.IListAccountLimitsRequest,
+          protos.google.shopping.merchant.quota.v1.IListAccountLimitsResponse|null|undefined,
+          protos.google.shopping.merchant.quota.v1.IAccountLimit>): void;
+  listAccountLimits(
+      request: protos.google.shopping.merchant.quota.v1.IListAccountLimitsRequest,
       callback: PaginationCallback<
-          protos.google.shopping.merchant.quota.v1.IListQuotaGroupsRequest,
-          protos.google.shopping.merchant.quota.v1.IListQuotaGroupsResponse|null|undefined,
-          protos.google.shopping.merchant.quota.v1.IQuotaGroup>): void;
-  listQuotaGroups(
-      request?: protos.google.shopping.merchant.quota.v1.IListQuotaGroupsRequest,
+          protos.google.shopping.merchant.quota.v1.IListAccountLimitsRequest,
+          protos.google.shopping.merchant.quota.v1.IListAccountLimitsResponse|null|undefined,
+          protos.google.shopping.merchant.quota.v1.IAccountLimit>): void;
+  listAccountLimits(
+      request?: protos.google.shopping.merchant.quota.v1.IListAccountLimitsRequest,
       optionsOrCallback?: CallOptions|PaginationCallback<
-          protos.google.shopping.merchant.quota.v1.IListQuotaGroupsRequest,
-          protos.google.shopping.merchant.quota.v1.IListQuotaGroupsResponse|null|undefined,
-          protos.google.shopping.merchant.quota.v1.IQuotaGroup>,
+          protos.google.shopping.merchant.quota.v1.IListAccountLimitsRequest,
+          protos.google.shopping.merchant.quota.v1.IListAccountLimitsResponse|null|undefined,
+          protos.google.shopping.merchant.quota.v1.IAccountLimit>,
       callback?: PaginationCallback<
-          protos.google.shopping.merchant.quota.v1.IListQuotaGroupsRequest,
-          protos.google.shopping.merchant.quota.v1.IListQuotaGroupsResponse|null|undefined,
-          protos.google.shopping.merchant.quota.v1.IQuotaGroup>):
+          protos.google.shopping.merchant.quota.v1.IListAccountLimitsRequest,
+          protos.google.shopping.merchant.quota.v1.IListAccountLimitsResponse|null|undefined,
+          protos.google.shopping.merchant.quota.v1.IAccountLimit>):
       Promise<[
-        protos.google.shopping.merchant.quota.v1.IQuotaGroup[],
-        protos.google.shopping.merchant.quota.v1.IListQuotaGroupsRequest|null,
-        protos.google.shopping.merchant.quota.v1.IListQuotaGroupsResponse
+        protos.google.shopping.merchant.quota.v1.IAccountLimit[],
+        protos.google.shopping.merchant.quota.v1.IListAccountLimitsRequest|null,
+        protos.google.shopping.merchant.quota.v1.IListAccountLimitsResponse
       ]>|void {
     request = request || {};
     let options: CallOptions;
@@ -425,53 +527,60 @@ export class QuotaServiceClient {
     });
     this.initialize().catch(err => {throw err});
     const wrappedCallback: PaginationCallback<
-      protos.google.shopping.merchant.quota.v1.IListQuotaGroupsRequest,
-      protos.google.shopping.merchant.quota.v1.IListQuotaGroupsResponse|null|undefined,
-      protos.google.shopping.merchant.quota.v1.IQuotaGroup>|undefined = callback
+      protos.google.shopping.merchant.quota.v1.IListAccountLimitsRequest,
+      protos.google.shopping.merchant.quota.v1.IListAccountLimitsResponse|null|undefined,
+      protos.google.shopping.merchant.quota.v1.IAccountLimit>|undefined = callback
       ? (error, values, nextPageRequest, rawResponse) => {
-          this._log.info('listQuotaGroups values %j', values);
+          this._log.info('listAccountLimits values %j', values);
           callback!(error, values, nextPageRequest, rawResponse); // We verified callback above.
         }
       : undefined;
-    this._log.info('listQuotaGroups request %j', request);
+    this._log.info('listAccountLimits request %j', request);
     return this.innerApiCalls
-      .listQuotaGroups(request, options, wrappedCallback)
+      .listAccountLimits(request, options, wrappedCallback)
       ?.then(([response, input, output]: [
-        protos.google.shopping.merchant.quota.v1.IQuotaGroup[],
-        protos.google.shopping.merchant.quota.v1.IListQuotaGroupsRequest|null,
-        protos.google.shopping.merchant.quota.v1.IListQuotaGroupsResponse
+        protos.google.shopping.merchant.quota.v1.IAccountLimit[],
+        protos.google.shopping.merchant.quota.v1.IListAccountLimitsRequest|null,
+        protos.google.shopping.merchant.quota.v1.IListAccountLimitsResponse
       ]) => {
-        this._log.info('listQuotaGroups values %j', response);
+        this._log.info('listAccountLimits values %j', response);
         return [response, input, output];
       });
   }
 
 /**
- * Equivalent to `listQuotaGroups`, but returns a NodeJS Stream object.
+ * Equivalent to `listAccountLimits`, but returns a NodeJS Stream object.
  * @param {Object} request
  *   The request object that will be sent.
  * @param {string} request.parent
- *   Required. The merchant account who owns the collection of method quotas
- *   Format: accounts/{account}
+ *   Required. The parent account.
+ *   Format: `accounts/{account}`
  * @param {number} [request.pageSize]
- *   Optional. The maximum number of quotas to return in the response, used
- *   for paging. Defaults to 500; values above 1000 will be coerced to 1000.
+ *   Optional. The maximum number of limits to return. The service may return
+ *   fewer than this value. If unspecified, at most 100 limits will be returned.
+ *   The maximum value is 100; values above 100 will be coerced to 100.
  * @param {string} [request.pageToken]
- *   Optional. Token (if provided) to retrieve the subsequent page. All other
- *   parameters must match the original call that provided the page token.
+ *   Optional. A page token, received from a previous `ListAccountLimits` call.
+ *   Provide this to retrieve the subsequent page.
+ *
+ *   When paginating, all other parameters provided to `ListAccountLimits` must
+ *   match the call that provided the page token.
+ * @param {string} request.filter
+ *   Required. A filter on the limit `type` is required, for example, `type =
+ *   "products"`.
  * @param {object} [options]
  *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
  * @returns {Stream}
- *   An object stream which emits an object representing {@link protos.google.shopping.merchant.quota.v1.QuotaGroup|QuotaGroup} on 'data' event.
+ *   An object stream which emits an object representing {@link protos.google.shopping.merchant.quota.v1.AccountLimit|AccountLimit} on 'data' event.
  *   The client library will perform auto-pagination by default: it will call the API as many
  *   times as needed. Note that it can affect your quota.
- *   We recommend using `listQuotaGroupsAsync()`
+ *   We recommend using `listAccountLimitsAsync()`
  *   method described below for async iteration which you can stop as needed.
  *   Please see the {@link https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#auto-pagination | documentation }
  *   for more details and examples.
  */
-  listQuotaGroupsStream(
-      request?: protos.google.shopping.merchant.quota.v1.IListQuotaGroupsRequest,
+  listAccountLimitsStream(
+      request?: protos.google.shopping.merchant.quota.v1.IListAccountLimitsRequest,
       options?: CallOptions):
     Transform{
     request = request || {};
@@ -483,48 +592,55 @@ export class QuotaServiceClient {
     ] = this._gaxModule.routingHeader.fromParams({
       'parent': request.parent ?? '',
     });
-    const defaultCallSettings = this._defaults['listQuotaGroups'];
+    const defaultCallSettings = this._defaults['listAccountLimits'];
     const callSettings = defaultCallSettings.merge(options);
     this.initialize().catch(err => {throw err});
-    this._log.info('listQuotaGroups stream %j', request);
-    return this.descriptors.page.listQuotaGroups.createStream(
-      this.innerApiCalls.listQuotaGroups as GaxCall,
+    this._log.info('listAccountLimits stream %j', request);
+    return this.descriptors.page.listAccountLimits.createStream(
+      this.innerApiCalls.listAccountLimits as GaxCall,
       request,
       callSettings
     );
   }
 
 /**
- * Equivalent to `listQuotaGroups`, but returns an iterable object.
+ * Equivalent to `listAccountLimits`, but returns an iterable object.
  *
  * `for`-`await`-`of` syntax is used with the iterable to get response elements on-demand.
  * @param {Object} request
  *   The request object that will be sent.
  * @param {string} request.parent
- *   Required. The merchant account who owns the collection of method quotas
- *   Format: accounts/{account}
+ *   Required. The parent account.
+ *   Format: `accounts/{account}`
  * @param {number} [request.pageSize]
- *   Optional. The maximum number of quotas to return in the response, used
- *   for paging. Defaults to 500; values above 1000 will be coerced to 1000.
+ *   Optional. The maximum number of limits to return. The service may return
+ *   fewer than this value. If unspecified, at most 100 limits will be returned.
+ *   The maximum value is 100; values above 100 will be coerced to 100.
  * @param {string} [request.pageToken]
- *   Optional. Token (if provided) to retrieve the subsequent page. All other
- *   parameters must match the original call that provided the page token.
+ *   Optional. A page token, received from a previous `ListAccountLimits` call.
+ *   Provide this to retrieve the subsequent page.
+ *
+ *   When paginating, all other parameters provided to `ListAccountLimits` must
+ *   match the call that provided the page token.
+ * @param {string} request.filter
+ *   Required. A filter on the limit `type` is required, for example, `type =
+ *   "products"`.
  * @param {object} [options]
  *   Call options. See {@link https://googleapis.dev/nodejs/google-gax/latest/interfaces/CallOptions.html|CallOptions} for more details.
  * @returns {Object}
  *   An iterable Object that allows {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols | async iteration }.
  *   When you iterate the returned iterable, each element will be an object representing
- *   {@link protos.google.shopping.merchant.quota.v1.QuotaGroup|QuotaGroup}. The API will be called under the hood as needed, once per the page,
+ *   {@link protos.google.shopping.merchant.quota.v1.AccountLimit|AccountLimit}. The API will be called under the hood as needed, once per the page,
  *   so you can stop the iteration when you don't need more results.
  *   Please see the {@link https://github.com/googleapis/gax-nodejs/blob/master/client-libraries.md#auto-pagination | documentation }
  *   for more details and examples.
- * @example <caption>include:samples/generated/v1/quota_service.list_quota_groups.js</caption>
- * region_tag:merchantapi_v1_generated_QuotaService_ListQuotaGroups_async
+ * @example <caption>include:samples/generated/v1/account_limits_service.list_account_limits.js</caption>
+ * region_tag:merchantapi_v1_generated_AccountLimitsService_ListAccountLimits_async
  */
-  listQuotaGroupsAsync(
-      request?: protos.google.shopping.merchant.quota.v1.IListQuotaGroupsRequest,
+  listAccountLimitsAsync(
+      request?: protos.google.shopping.merchant.quota.v1.IListAccountLimitsRequest,
       options?: CallOptions):
-    AsyncIterable<protos.google.shopping.merchant.quota.v1.IQuotaGroup>{
+    AsyncIterable<protos.google.shopping.merchant.quota.v1.IAccountLimit>{
     request = request || {};
     options = options || {};
     options.otherArgs = options.otherArgs || {};
@@ -534,15 +650,15 @@ export class QuotaServiceClient {
     ] = this._gaxModule.routingHeader.fromParams({
       'parent': request.parent ?? '',
     });
-    const defaultCallSettings = this._defaults['listQuotaGroups'];
+    const defaultCallSettings = this._defaults['listAccountLimits'];
     const callSettings = defaultCallSettings.merge(options);
     this.initialize().catch(err => {throw err});
-    this._log.info('listQuotaGroups iterate %j', request);
-    return this.descriptors.page.listQuotaGroups.asyncIterate(
-      this.innerApiCalls['listQuotaGroups'] as GaxCall,
+    this._log.info('listAccountLimits iterate %j', request);
+    return this.descriptors.page.listAccountLimits.asyncIterate(
+      this.innerApiCalls['listAccountLimits'] as GaxCall,
       request as {},
       callSettings
-    ) as AsyncIterable<protos.google.shopping.merchant.quota.v1.IQuotaGroup>;
+    ) as AsyncIterable<protos.google.shopping.merchant.quota.v1.IAccountLimit>;
   }
   // --------------------
   // -- Path templates --
@@ -650,8 +766,8 @@ export class QuotaServiceClient {
    * @returns {Promise} A promise that resolves when the client is closed.
    */
   close(): Promise<void> {
-    if (this.quotaServiceStub && !this._terminated) {
-      return this.quotaServiceStub.then(stub => {
+    if (this.accountLimitsServiceStub && !this._terminated) {
+      return this.accountLimitsServiceStub.then(stub => {
         this._log.info('ending gRPC channel');
         this._terminated = true;
         stub.close();
