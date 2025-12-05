@@ -20,8 +20,8 @@
 
 'use strict';
 
-function main(workerPool) {
-  // [START cloudbuild_v1_generated_CloudBuild_UpdateWorkerPool_async]
+function main(name) {
+  // [START cloudbuild_v1_generated_CloudBuild_GetDefaultServiceAccount_async]
   /**
    * This snippet has been automatically generated and should be regarded as a code template only.
    * It will require modifications to work.
@@ -29,20 +29,11 @@ function main(workerPool) {
    * TODO(developer): Uncomment these variables before running the sample.
    */
   /**
-   *  Required. The `WorkerPool` to update.
-   *  The `name` field is used to identify the `WorkerPool` to update.
-   *  Format: `projects/{project}/locations/{location}/workerPools/{workerPool}`.
+   *  Required. The name of the `DefaultServiceAccount` to retrieve.
+   *  Format:
+   *  `projects/{project}/locations/{location}/defaultServiceAccount`
    */
-  // const workerPool = {}
-  /**
-   *  Optional. A mask specifying which fields in `worker_pool` to update.
-   */
-  // const updateMask = {}
-  /**
-   *  If set, validate the request and preview the response, but do not actually
-   *  post it.
-   */
-  // const validateOnly = true
+  // const name = 'abc123'
 
   // Imports the Cloudbuild library
   const {CloudBuildClient} = require('@google-cloud/cloudbuild').v1;
@@ -50,20 +41,19 @@ function main(workerPool) {
   // Instantiates a client
   const cloudbuildClient = new CloudBuildClient();
 
-  async function callUpdateWorkerPool() {
+  async function callGetDefaultServiceAccount() {
     // Construct request
     const request = {
-      workerPool,
+      name,
     };
 
     // Run request
-    const [operation] = await cloudbuildClient.updateWorkerPool(request);
-    const [response] = await operation.promise();
+    const response = await cloudbuildClient.getDefaultServiceAccount(request);
     console.log(response);
   }
 
-  callUpdateWorkerPool();
-  // [END cloudbuild_v1_generated_CloudBuild_UpdateWorkerPool_async]
+  callGetDefaultServiceAccount();
+  // [END cloudbuild_v1_generated_CloudBuild_GetDefaultServiceAccount_async]
 }
 
 process.on('unhandledRejection', err => {
