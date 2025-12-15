@@ -1,4 +1,4 @@
-// Copyright 2024 Google LLC
+// Copyright 2025 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -16,9 +16,12 @@
 // ** https://github.com/googleapis/gapic-generator-typescript **
 // ** All changes to this file may be overwritten. **
 
+
+
 'use strict';
 
-function main(bucketName) {
+function main(name) {
+  // [START storage_v2_generated_Storage_DeleteBucket_async]
   /**
    * This snippet has been automatically generated and should be regarded as a code template only.
    * It will require modifications to work.
@@ -26,32 +29,38 @@ function main(bucketName) {
    * TODO(developer): Uncomment these variables before running the sample.
    */
   /**
-   *  Required. Name of the bucket for which to get the layout
+   *  Required. Name of a bucket to delete.
    */
-  // const bucketName = 'abc123'
+  // const name = 'abc123'
+  /**
+   *  If set, only deletes the bucket if its metageneration matches this value.
+   */
+  // const ifMetagenerationMatch = 1234
+  /**
+   *  If set, only deletes the bucket if its metageneration does not match this
+   *  value.
+   */
+  // const ifMetagenerationNotMatch = 1234
 
-  // Imports the Control library
-  const {StorageControlClient} = require('@google-cloud/storage-control').v2;
+  // Imports the Storage library
+  const {StorageClient} = require('@google-cloud/storage').v2;
 
   // Instantiates a client
-  const controlClient = new StorageControlClient();
+  const storageClient = new StorageClient();
 
-  async function callGetStorageLayout() {
+  async function callDeleteBucket() {
     // Construct request
     const request = {
-      name: `projects/_/buckets/${bucketName}/storageLayout`,
+      name,
     };
 
     // Run request
-    const [layout] = await controlClient.getStorageLayout(request);
-
-    // Use response
-    console.log(
-      `Bucket ${bucketName} has location type ${layout.locationType}.`,
-    );
+    const response = await storageClient.deleteBucket(request);
+    console.log(response);
   }
 
-  callGetStorageLayout();
+  callDeleteBucket();
+  // [END storage_v2_generated_Storage_DeleteBucket_async]
 }
 
 process.on('unhandledRejection', err => {
