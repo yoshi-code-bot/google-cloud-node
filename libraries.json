@@ -3045,6 +3045,24 @@
     "support_documentation": "https://cloud.google.com/chronicle/docs/getting-support"
   },
   {
+    "name": "hypercomputecluster",
+    "name_pretty": "Cluster Director API",
+    "product_documentation": "https://cloud.google.com/blog/products/compute/managed-slurm-and-other-cluster-director-enhancements",
+    "client_documentation": "https://cloud.google.com/nodejs/docs/reference/hypercomputecluster/latest",
+    "issue_tracker": "https://github.com/googleapis/google-cloud-node/issues",
+    "release_level": "preview",
+    "language": "nodejs",
+    "repo": "googleapis/google-cloud-node",
+    "distribution_name": "@google-cloud/hypercomputecluster",
+    "api_id": "hypercomputecluster.googleapis.com",
+    "default_version": "v1beta",
+    "requires_billing": true,
+    "library_type": "GAPIC_AUTO",
+    "api_shortname": "hypercomputecluster",
+    "linkToRepoHomepage": "https://github.com/googleapis/google-cloud-node/tree/main/packages/google-cloud-hypercomputecluster",
+    "support_documentation": "https://cloud.google.com/blog/products/compute/managed-slurm-and-other-cluster-director-enhancements/docs/getting-support"
+  },
+  {
     "name": "configdelivery",
     "name_pretty": "Config Delivery API",
     "product_documentation": "https://cloud.google.com/kubernetes-engine/enterprise/config-sync/docs/concepts/fleet-packages",
