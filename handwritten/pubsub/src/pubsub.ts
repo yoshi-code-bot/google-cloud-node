@@ -67,7 +67,7 @@ type SchemaServiceClient = v1.SchemaServiceClient;
  */
 const PROJECT_ID_PLACEHOLDER = '{{projectId}}';
 
-export type Omit<T, K extends keyof any> = Pick<T, Exclude<keyof T, K>>;
+export type Omit<T, K extends PropertyKey> = Pick<T, Exclude<keyof T, K>>;
 
 export interface ClientConfig extends Omit<gax.GrpcClientOptions, 'port'> {
   apiEndpoint?: string;
@@ -87,7 +87,7 @@ export interface ClientConfig extends Omit<gax.GrpcClientOptions, 'port'> {
   emulatorMode?: boolean;
 
   servicePath?: string;
-  port?: number;
+  port?: string | number;
   sslCreds?: gax.grpc.ChannelCredentials;
 
   /**
