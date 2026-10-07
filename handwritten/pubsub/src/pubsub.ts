@@ -1285,10 +1285,8 @@ export class PubSub {
    */
   getClient_(config: GetClientConfig, callback: GetClientCallback) {
     this.getClientAsync_(config)
-      // eslint-disable-next-line promise/no-callback-in-promise
-      .then(client => callback(null, client))
-      // eslint-disable-next-line promise/no-callback-in-promise
-      .catch(callback);
+      .then(client => process.nextTick(callback, null, client))
+      .catch(err => process.nextTick(callback, err));
   }
   /**
    * Get the PubSub client object.
