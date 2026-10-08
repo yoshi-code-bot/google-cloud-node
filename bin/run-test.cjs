@@ -55,11 +55,6 @@ const SHIM_FLAGS = [
     envOut: 'BUN_ENABLE_PROXYQUIRE_SHIM',
   },
   {
-    flag: '--keypair-shim',
-    envIn: 'BUN_KEYPAIR_SHIM',
-    envOut: 'BUN_ENABLE_KEYPAIR_SHIM',
-  },
-  {
     flag: '--require-shim',
     envIn: 'BUN_REQUIRE_SHIM',
     envOut: 'BUN_ENABLE_REQUIRE_SHIM',
